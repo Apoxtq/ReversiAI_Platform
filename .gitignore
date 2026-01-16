@@ -1,0 +1,89 @@
+# Build directories
+build/
+cmake-build-*/
+out/
+bin/
+lib/
+
+# Qt Creator
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+Makefile*
+
+# Visual Studio
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.log
+*.svclog
+*.scc
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Executables
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Qt specific
+object_script.*
+*.qm
+
+# Academic Project Documentation
+# Note: This project is part of University of Liverpool COMP390 Honours Year Project
+# All generated documentation and research data should be preserved
+# research_data/
+# experiment_results/
+# benchmark_reports/
+
+# Temporary research files (uncomment if needed for backup)
+# *.csv.tmp
+# *.json.tmp
+# analysis_*.tmp

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "post_edit": [
+      {
+        "command": "python .project-config/hooks/validate.py",
+        "description": "代码质量自动验证"
+      }
+    ],
+    "pre_commit": [
+      {
+        "command": "python .project-config/hooks/validate.py",
+        "description": "提交前质量检查"
+      }
+    ]
+  }
+}
