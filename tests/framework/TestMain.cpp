@@ -73,7 +73,7 @@ public:
         }
     }
 
-    void OnTestProgramEnd(const ::testing::UnitTest& unit_test) override {
+    void OnTestProgramEnd(const ::testing::UnitTest& /*unit_test*/) override {
         std::cout << "\n=== Final Results ===" << std::endl;
         std::cout << "Total tests: " << test_count_ << std::endl;
         std::cout << "Passed: " << pass_count_ << std::endl;
@@ -87,6 +87,25 @@ public:
             std::cout << "\n✅ All tests passed!" << std::endl;
         }
     }
+
+    // Required pure virtual functions from TestEventListener
+    void OnTestIterationStart(const ::testing::UnitTest& /*unit_test*/, int iteration) override {
+        std::cout << "Test iteration " << iteration << " starting..." << std::endl;
+    }
+
+    void OnEnvironmentsSetUpStart(const ::testing::UnitTest& /*unit_test*/) override {}
+    void OnEnvironmentsSetUpEnd(const ::testing::UnitTest& /*unit_test*/) override {}
+
+    void OnTestPartResult(const ::testing::TestPartResult& test_part_result) override {
+        if (test_part_result.failed()) {
+            std::cout << "Test part failed: " << test_part_result.summary() << std::endl;
+        }
+    }
+
+    void OnEnvironmentsTearDownStart(const ::testing::UnitTest& /*unit_test*/) override {}
+    void OnEnvironmentsTearDownEnd(const ::testing::UnitTest& /*unit_test*/) override {}
+
+    void OnTestIterationEnd(const ::testing::UnitTest& /*unit_test*/, int /*iteration*/) override {}
 
 private:
     int test_count_;

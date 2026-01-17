@@ -1,0 +1,49 @@
+name: Perft Benchmark
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # daily at 02:00 UTC
+  workflow_dispatch:
+
+jobs:
+  perft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential cmake
+
+      - name: Configure
+        run: |
+          cmake -S . -B build_perft -DBUILD_TESTS=ON -DPERFORMANCE_TESTING=ON -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build perft
+        run: |
+          cmake --build build_perft --config Release --target perft_performance -- -j2
+
+      - name: Run perft and save results
+        run: |
+          mkdir -p perft_results
+          ./build_perft/bin/perft_performance 2000000 > perft_results/perft_output.txt
+          # Convert to simple CSV: iterations,time,calls_per_sec,avg_moves_per_call
+          python3 - <<'PY'
+import re
+txt = open('perft_results/perft_output.txt').read()
+iters = re.search(r'Iterations:\s*(\d+)', txt).group(1)
+time = re.search(r'Time:\s*([\d\.]+)', txt).group(1)
+calls = re.search(r'Calls/sec:\s*([\d\.]+)', txt).group(1)
+avg = re.search(r'Avg moves per call:\s*([\d\.]+)', txt).group(1)
+open('perft_results/perft_results.csv','w').write('iterations,time,calls_per_sec,avg_moves_per_call\\n%s,%s,%s,%s\\n' % (iters,time,calls,avg))
+print('Wrote perft_results/perft_results.csv')
+PY
+
+      - name: Upload perft results
+        uses: actions/upload-artifact@v4
+        with:
+          name: perft-results
+          path: perft_results/perft_results.csv
+
+

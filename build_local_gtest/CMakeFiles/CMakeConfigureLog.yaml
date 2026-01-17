@@ -1,0 +1,2338 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineSystem.cmake:212 (message)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      The system is: Windows - 10.0.26200 - AMD64
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeMinGWFindMake.cmake:5 (find_program)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_MAKE_PROGRAM"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "mingw32-make.exe"
+    candidate_directories:
+      - "D:/Project/Reversi/thirdparty/gtest-install/bin/"
+      - "D:/Project/Reversi/thirdparty/gtest-install/sbin/"
+      - "D:/Project/Reversi/thirdparty/gtest-install/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "/REGISTRY-NOTFOUND/bin/"
+      - "c:/MinGW/bin/"
+      - "/MinGW/bin/"
+      - "/REGISTRY-NOTFOUND/MinGW/bin/"
+    searched_directories:
+      - "D:/Project/Reversi/thirdparty/gtest-install/bin/mingw32-make.exe.com"
+      - "D:/Project/Reversi/thirdparty/gtest-install/bin/mingw32-make.exe"
+      - "D:/Project/Reversi/thirdparty/gtest-install/sbin/mingw32-make.exe.com"
+      - "D:/Project/Reversi/thirdparty/gtest-install/sbin/mingw32-make.exe"
+      - "D:/Project/Reversi/thirdparty/gtest-install/mingw32-make.exe.com"
+      - "D:/Project/Reversi/thirdparty/gtest-install/mingw32-make.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/mingw32-make.exe.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/mingw32-make.exe"
+      - "C:/Windows/System32/mingw32-make.exe.com"
+      - "C:/Windows/System32/mingw32-make.exe"
+      - "C:/Windows/mingw32-make.exe.com"
+      - "C:/Windows/mingw32-make.exe"
+      - "C:/Windows/System32/wbem/mingw32-make.exe.com"
+      - "C:/Windows/System32/wbem/mingw32-make.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/mingw32-make.exe.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/mingw32-make.exe"
+      - "C:/Windows/System32/OpenSSH/mingw32-make.exe.com"
+      - "C:/Windows/System32/OpenSSH/mingw32-make.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/mingw32-make.exe.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/mingw32-make.exe"
+      - "C:/Program Files/dotnet/mingw32-make.exe.com"
+      - "C:/Program Files/dotnet/mingw32-make.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/mingw32-make.exe.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/mingw32-make.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/mingw32-make.exe.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/mingw32-make.exe"
+      - "C:/Program Files/Tencent/QQNT/mingw32-make.exe.com"
+      - "C:/Program Files/Tencent/QQNT/mingw32-make.exe"
+      - "C:/Program Files/cursor/resources/app/bin/mingw32-make.exe.com"
+      - "C:/Program Files/cursor/resources/app/bin/mingw32-make.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/mingw32-make.exe.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/mingw32-make.exe"
+      - "D:/Dev/Scoop/shims/mingw32-make.exe.com"
+      - "D:/Dev/Scoop/shims/mingw32-make.exe"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/mingw32-make.exe.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/mingw32-make.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompiler.cmake:63 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:69 (_cmake_find_compiler)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER"
+    description: "CXX compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: false
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "c++"
+      - "g++"
+      - "cl"
+      - "bcc"
+      - "icx"
+      - "clang++"
+    candidate_directories:
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+    searched_directories:
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/c++.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/c++.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/c++"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/g++.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/g++.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/g++"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/cl.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/cl.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/cl"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/bcc.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/bcc.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/bcc"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/icx.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/icx.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/icx"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/clang++.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/clang++.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/clang++"
+      - "C:/Windows/System32/c++.com"
+      - "C:/Windows/System32/c++.exe"
+      - "C:/Windows/System32/c++"
+      - "C:/Windows/System32/g++.com"
+      - "C:/Windows/System32/g++.exe"
+      - "C:/Windows/System32/g++"
+      - "C:/Windows/System32/cl.com"
+      - "C:/Windows/System32/cl.exe"
+      - "C:/Windows/System32/cl"
+      - "C:/Windows/System32/bcc.com"
+      - "C:/Windows/System32/bcc.exe"
+      - "C:/Windows/System32/bcc"
+      - "C:/Windows/System32/icx.com"
+      - "C:/Windows/System32/icx.exe"
+      - "C:/Windows/System32/icx"
+      - "C:/Windows/System32/clang++.com"
+      - "C:/Windows/System32/clang++.exe"
+      - "C:/Windows/System32/clang++"
+      - "C:/Windows/c++.com"
+      - "C:/Windows/c++.exe"
+      - "C:/Windows/c++"
+      - "C:/Windows/g++.com"
+      - "C:/Windows/g++.exe"
+      - "C:/Windows/g++"
+      - "C:/Windows/cl.com"
+      - "C:/Windows/cl.exe"
+      - "C:/Windows/cl"
+      - "C:/Windows/bcc.com"
+      - "C:/Windows/bcc.exe"
+      - "C:/Windows/bcc"
+      - "C:/Windows/icx.com"
+      - "C:/Windows/icx.exe"
+      - "C:/Windows/icx"
+      - "C:/Windows/clang++.com"
+      - "C:/Windows/clang++.exe"
+      - "C:/Windows/clang++"
+      - "C:/Windows/System32/wbem/c++.com"
+      - "C:/Windows/System32/wbem/c++.exe"
+      - "C:/Windows/System32/wbem/c++"
+      - "C:/Windows/System32/wbem/g++.com"
+      - "C:/Windows/System32/wbem/g++.exe"
+      - "C:/Windows/System32/wbem/g++"
+      - "C:/Windows/System32/wbem/cl.com"
+      - "C:/Windows/System32/wbem/cl.exe"
+      - "C:/Windows/System32/wbem/cl"
+      - "C:/Windows/System32/wbem/bcc.com"
+      - "C:/Windows/System32/wbem/bcc.exe"
+      - "C:/Windows/System32/wbem/bcc"
+      - "C:/Windows/System32/wbem/icx.com"
+      - "C:/Windows/System32/wbem/icx.exe"
+      - "C:/Windows/System32/wbem/icx"
+      - "C:/Windows/System32/wbem/clang++.com"
+      - "C:/Windows/System32/wbem/clang++.exe"
+      - "C:/Windows/System32/wbem/clang++"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/c++.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/c++.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/c++"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/g++.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/g++.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/g++"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/cl.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/cl.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/cl"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/bcc.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/bcc.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/bcc"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/icx.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/icx.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/icx"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/clang++.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/clang++.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/clang++"
+      - "C:/Windows/System32/OpenSSH/c++.com"
+      - "C:/Windows/System32/OpenSSH/c++.exe"
+      - "C:/Windows/System32/OpenSSH/c++"
+      - "C:/Windows/System32/OpenSSH/g++.com"
+      - "C:/Windows/System32/OpenSSH/g++.exe"
+      - "C:/Windows/System32/OpenSSH/g++"
+      - "C:/Windows/System32/OpenSSH/cl.com"
+      - "C:/Windows/System32/OpenSSH/cl.exe"
+      - "C:/Windows/System32/OpenSSH/cl"
+      - "C:/Windows/System32/OpenSSH/bcc.com"
+      - "C:/Windows/System32/OpenSSH/bcc.exe"
+      - "C:/Windows/System32/OpenSSH/bcc"
+      - "C:/Windows/System32/OpenSSH/icx.com"
+      - "C:/Windows/System32/OpenSSH/icx.exe"
+      - "C:/Windows/System32/OpenSSH/icx"
+      - "C:/Windows/System32/OpenSSH/clang++.com"
+      - "C:/Windows/System32/OpenSSH/clang++.exe"
+      - "C:/Windows/System32/OpenSSH/clang++"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/c++.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/c++.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/c++"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/g++.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/g++.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/g++"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/cl.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/cl.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/cl"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/bcc.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/bcc.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/bcc"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/icx.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/icx.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/icx"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/clang++.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/clang++.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/clang++"
+      - "C:/Program Files/dotnet/c++.com"
+      - "C:/Program Files/dotnet/c++.exe"
+      - "C:/Program Files/dotnet/c++"
+      - "C:/Program Files/dotnet/g++.com"
+      - "C:/Program Files/dotnet/g++.exe"
+      - "C:/Program Files/dotnet/g++"
+      - "C:/Program Files/dotnet/cl.com"
+      - "C:/Program Files/dotnet/cl.exe"
+      - "C:/Program Files/dotnet/cl"
+      - "C:/Program Files/dotnet/bcc.com"
+      - "C:/Program Files/dotnet/bcc.exe"
+      - "C:/Program Files/dotnet/bcc"
+      - "C:/Program Files/dotnet/icx.com"
+      - "C:/Program Files/dotnet/icx.exe"
+      - "C:/Program Files/dotnet/icx"
+      - "C:/Program Files/dotnet/clang++.com"
+      - "C:/Program Files/dotnet/clang++.exe"
+      - "C:/Program Files/dotnet/clang++"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/c++.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/c++.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/c++"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/g++.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/g++.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/g++"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/cl.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/cl.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/cl"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/bcc.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/bcc.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/bcc"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/icx.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/icx.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/icx"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/clang++.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/clang++.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/clang++"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/c++.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/c++.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/c++"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/g++.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/g++.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/g++"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/cl.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/cl.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/cl"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/bcc.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/bcc.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/bcc"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/icx.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/icx.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/icx"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/clang++.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/clang++.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/clang++"
+      - "C:/Program Files/Tencent/QQNT/c++.com"
+      - "C:/Program Files/Tencent/QQNT/c++.exe"
+      - "C:/Program Files/Tencent/QQNT/c++"
+      - "C:/Program Files/Tencent/QQNT/g++.com"
+      - "C:/Program Files/Tencent/QQNT/g++.exe"
+      - "C:/Program Files/Tencent/QQNT/g++"
+      - "C:/Program Files/Tencent/QQNT/cl.com"
+      - "C:/Program Files/Tencent/QQNT/cl.exe"
+      - "C:/Program Files/Tencent/QQNT/cl"
+      - "C:/Program Files/Tencent/QQNT/bcc.com"
+      - "C:/Program Files/Tencent/QQNT/bcc.exe"
+      - "C:/Program Files/Tencent/QQNT/bcc"
+      - "C:/Program Files/Tencent/QQNT/icx.com"
+      - "C:/Program Files/Tencent/QQNT/icx.exe"
+      - "C:/Program Files/Tencent/QQNT/icx"
+      - "C:/Program Files/Tencent/QQNT/clang++.com"
+      - "C:/Program Files/Tencent/QQNT/clang++.exe"
+      - "C:/Program Files/Tencent/QQNT/clang++"
+      - "C:/Program Files/cursor/resources/app/bin/c++.com"
+      - "C:/Program Files/cursor/resources/app/bin/c++.exe"
+      - "C:/Program Files/cursor/resources/app/bin/c++"
+      - "C:/Program Files/cursor/resources/app/bin/g++.com"
+      - "C:/Program Files/cursor/resources/app/bin/g++.exe"
+      - "C:/Program Files/cursor/resources/app/bin/g++"
+      - "C:/Program Files/cursor/resources/app/bin/cl.com"
+      - "C:/Program Files/cursor/resources/app/bin/cl.exe"
+      - "C:/Program Files/cursor/resources/app/bin/cl"
+      - "C:/Program Files/cursor/resources/app/bin/bcc.com"
+      - "C:/Program Files/cursor/resources/app/bin/bcc.exe"
+      - "C:/Program Files/cursor/resources/app/bin/bcc"
+      - "C:/Program Files/cursor/resources/app/bin/icx.com"
+      - "C:/Program Files/cursor/resources/app/bin/icx.exe"
+      - "C:/Program Files/cursor/resources/app/bin/icx"
+      - "C:/Program Files/cursor/resources/app/bin/clang++.com"
+      - "C:/Program Files/cursor/resources/app/bin/clang++.exe"
+      - "C:/Program Files/cursor/resources/app/bin/clang++"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/c++.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/c++.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/c++"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/g++.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/g++.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/g++"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/cl.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/cl.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/cl"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/bcc.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/bcc.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/bcc"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/icx.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/icx.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/icx"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/clang++.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/clang++.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/clang++"
+      - "D:/Dev/Scoop/shims/c++.com"
+      - "D:/Dev/Scoop/shims/c++.exe"
+      - "D:/Dev/Scoop/shims/c++"
+      - "D:/Dev/Scoop/shims/g++.com"
+      - "D:/Dev/Scoop/shims/g++.exe"
+      - "D:/Dev/Scoop/shims/g++"
+      - "D:/Dev/Scoop/shims/cl.com"
+      - "D:/Dev/Scoop/shims/cl.exe"
+      - "D:/Dev/Scoop/shims/cl"
+      - "D:/Dev/Scoop/shims/bcc.com"
+      - "D:/Dev/Scoop/shims/bcc.exe"
+      - "D:/Dev/Scoop/shims/bcc"
+      - "D:/Dev/Scoop/shims/icx.com"
+      - "D:/Dev/Scoop/shims/icx.exe"
+      - "D:/Dev/Scoop/shims/icx"
+      - "D:/Dev/Scoop/shims/clang++.com"
+      - "D:/Dev/Scoop/shims/clang++.exe"
+      - "D:/Dev/Scoop/shims/clang++"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/c++.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/c++.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/"
+    found: "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: D:/Dev/Compilers/MinGW/12.2.0/bin/c++.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.exe"
+      
+      The CXX compiler identification is GNU, found in:
+        D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/4.2.1/CompilerIdCXX/a.exe
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_AR"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ar"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/ar.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/ar.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_RANLIB"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ranlib"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/ranlib.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/ranlib.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_STRIP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "strip"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/strip.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/strip.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_LINKER"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ld"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/ld.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/ld.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_NM"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "nm"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/nm.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/nm.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJDUMP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "objdump"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/objdump.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/objdump.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJCOPY"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "objcopy"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/objcopy.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/objcopy.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_READELF"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "readelf"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/readelf.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/readelf.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_DLLTOOL"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "dlltool"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/dlltool.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/dlltool.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_ADDR2LINE"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "addr2line"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/addr2line.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/addr2line.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_TAPI"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "tapi"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/tapi.com"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/tapi.exe"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/tapi"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/tapi.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/tapi.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/tapi"
+      - "C:/Windows/System32/tapi.com"
+      - "C:/Windows/System32/tapi.exe"
+      - "C:/Windows/System32/tapi"
+      - "C:/Windows/tapi.com"
+      - "C:/Windows/tapi.exe"
+      - "C:/Windows/tapi"
+      - "C:/Windows/System32/wbem/tapi.com"
+      - "C:/Windows/System32/wbem/tapi.exe"
+      - "C:/Windows/System32/wbem/tapi"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/tapi.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/tapi.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/tapi"
+      - "C:/Windows/System32/OpenSSH/tapi.com"
+      - "C:/Windows/System32/OpenSSH/tapi.exe"
+      - "C:/Windows/System32/OpenSSH/tapi"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/tapi.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/tapi.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/tapi"
+      - "C:/Program Files/dotnet/tapi.com"
+      - "C:/Program Files/dotnet/tapi.exe"
+      - "C:/Program Files/dotnet/tapi"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/tapi.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/tapi.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/tapi"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/tapi.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/tapi.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/tapi"
+      - "C:/Program Files/Tencent/QQNT/tapi.com"
+      - "C:/Program Files/Tencent/QQNT/tapi.exe"
+      - "C:/Program Files/Tencent/QQNT/tapi"
+      - "C:/Program Files/cursor/resources/app/bin/tapi.com"
+      - "C:/Program Files/cursor/resources/app/bin/tapi.exe"
+      - "C:/Program Files/cursor/resources/app/bin/tapi"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/tapi.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/tapi.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/tapi"
+      - "D:/Dev/Scoop/shims/tapi.com"
+      - "D:/Dev/Scoop/shims/tapi.exe"
+      - "D:/Dev/Scoop/shims/tapi"
+    found: false
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/Compiler/GNU-FindBinUtils.cmake:18 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_AR"
+    description: "A wrapper around 'ar' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "gcc-ar-12.2"
+      - "gcc-ar-12"
+      - "gcc-ar12"
+      - "gcc-ar"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar-12.2.com"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar-12.2.exe"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar-12.2"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ar-12.2.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ar-12.2.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ar-12.2"
+      - "C:/Windows/System32/gcc-ar-12.2.com"
+      - "C:/Windows/System32/gcc-ar-12.2.exe"
+      - "C:/Windows/System32/gcc-ar-12.2"
+      - "C:/Windows/gcc-ar-12.2.com"
+      - "C:/Windows/gcc-ar-12.2.exe"
+      - "C:/Windows/gcc-ar-12.2"
+      - "C:/Windows/System32/wbem/gcc-ar-12.2.com"
+      - "C:/Windows/System32/wbem/gcc-ar-12.2.exe"
+      - "C:/Windows/System32/wbem/gcc-ar-12.2"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ar-12.2.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ar-12.2.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ar-12.2"
+      - "C:/Windows/System32/OpenSSH/gcc-ar-12.2.com"
+      - "C:/Windows/System32/OpenSSH/gcc-ar-12.2.exe"
+      - "C:/Windows/System32/OpenSSH/gcc-ar-12.2"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ar-12.2.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ar-12.2.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ar-12.2"
+      - "C:/Program Files/dotnet/gcc-ar-12.2.com"
+      - "C:/Program Files/dotnet/gcc-ar-12.2.exe"
+      - "C:/Program Files/dotnet/gcc-ar-12.2"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ar-12.2.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ar-12.2.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ar-12.2"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ar-12.2.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ar-12.2.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ar-12.2"
+      - "C:/Program Files/Tencent/QQNT/gcc-ar-12.2.com"
+      - "C:/Program Files/Tencent/QQNT/gcc-ar-12.2.exe"
+      - "C:/Program Files/Tencent/QQNT/gcc-ar-12.2"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ar-12.2.com"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ar-12.2.exe"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ar-12.2"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ar-12.2.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ar-12.2.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ar-12.2"
+      - "D:/Dev/Scoop/shims/gcc-ar-12.2.com"
+      - "D:/Dev/Scoop/shims/gcc-ar-12.2.exe"
+      - "D:/Dev/Scoop/shims/gcc-ar-12.2"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar-12.com"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar-12.exe"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar-12"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ar-12.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ar-12.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ar-12"
+      - "C:/Windows/System32/gcc-ar-12.com"
+      - "C:/Windows/System32/gcc-ar-12.exe"
+      - "C:/Windows/System32/gcc-ar-12"
+      - "C:/Windows/gcc-ar-12.com"
+      - "C:/Windows/gcc-ar-12.exe"
+      - "C:/Windows/gcc-ar-12"
+      - "C:/Windows/System32/wbem/gcc-ar-12.com"
+      - "C:/Windows/System32/wbem/gcc-ar-12.exe"
+      - "C:/Windows/System32/wbem/gcc-ar-12"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ar-12.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ar-12.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ar-12"
+      - "C:/Windows/System32/OpenSSH/gcc-ar-12.com"
+      - "C:/Windows/System32/OpenSSH/gcc-ar-12.exe"
+      - "C:/Windows/System32/OpenSSH/gcc-ar-12"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ar-12.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ar-12.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ar-12"
+      - "C:/Program Files/dotnet/gcc-ar-12.com"
+      - "C:/Program Files/dotnet/gcc-ar-12.exe"
+      - "C:/Program Files/dotnet/gcc-ar-12"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ar-12.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ar-12.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ar-12"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ar-12.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ar-12.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ar-12"
+      - "C:/Program Files/Tencent/QQNT/gcc-ar-12.com"
+      - "C:/Program Files/Tencent/QQNT/gcc-ar-12.exe"
+      - "C:/Program Files/Tencent/QQNT/gcc-ar-12"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ar-12.com"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ar-12.exe"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ar-12"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ar-12.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ar-12.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ar-12"
+      - "D:/Dev/Scoop/shims/gcc-ar-12.com"
+      - "D:/Dev/Scoop/shims/gcc-ar-12.exe"
+      - "D:/Dev/Scoop/shims/gcc-ar-12"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar12.com"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar12.exe"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar12"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ar12.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ar12.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ar12"
+      - "C:/Windows/System32/gcc-ar12.com"
+      - "C:/Windows/System32/gcc-ar12.exe"
+      - "C:/Windows/System32/gcc-ar12"
+      - "C:/Windows/gcc-ar12.com"
+      - "C:/Windows/gcc-ar12.exe"
+      - "C:/Windows/gcc-ar12"
+      - "C:/Windows/System32/wbem/gcc-ar12.com"
+      - "C:/Windows/System32/wbem/gcc-ar12.exe"
+      - "C:/Windows/System32/wbem/gcc-ar12"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ar12.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ar12.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ar12"
+      - "C:/Windows/System32/OpenSSH/gcc-ar12.com"
+      - "C:/Windows/System32/OpenSSH/gcc-ar12.exe"
+      - "C:/Windows/System32/OpenSSH/gcc-ar12"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ar12.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ar12.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ar12"
+      - "C:/Program Files/dotnet/gcc-ar12.com"
+      - "C:/Program Files/dotnet/gcc-ar12.exe"
+      - "C:/Program Files/dotnet/gcc-ar12"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ar12.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ar12.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ar12"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ar12.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ar12.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ar12"
+      - "C:/Program Files/Tencent/QQNT/gcc-ar12.com"
+      - "C:/Program Files/Tencent/QQNT/gcc-ar12.exe"
+      - "C:/Program Files/Tencent/QQNT/gcc-ar12"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ar12.com"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ar12.exe"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ar12"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ar12.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ar12.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ar12"
+      - "D:/Dev/Scoop/shims/gcc-ar12.com"
+      - "D:/Dev/Scoop/shims/gcc-ar12.exe"
+      - "D:/Dev/Scoop/shims/gcc-ar12"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ar.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/Compiler/GNU-FindBinUtils.cmake:30 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_RANLIB"
+    description: "A wrapper around 'ranlib' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "gcc-ranlib-12.2"
+      - "gcc-ranlib-12"
+      - "gcc-ranlib12"
+      - "gcc-ranlib"
+    candidate_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+    searched_directories:
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib-12.2.com"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib-12.2.exe"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib-12.2"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ranlib-12.2.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ranlib-12.2.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ranlib-12.2"
+      - "C:/Windows/System32/gcc-ranlib-12.2.com"
+      - "C:/Windows/System32/gcc-ranlib-12.2.exe"
+      - "C:/Windows/System32/gcc-ranlib-12.2"
+      - "C:/Windows/gcc-ranlib-12.2.com"
+      - "C:/Windows/gcc-ranlib-12.2.exe"
+      - "C:/Windows/gcc-ranlib-12.2"
+      - "C:/Windows/System32/wbem/gcc-ranlib-12.2.com"
+      - "C:/Windows/System32/wbem/gcc-ranlib-12.2.exe"
+      - "C:/Windows/System32/wbem/gcc-ranlib-12.2"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ranlib-12.2.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ranlib-12.2.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ranlib-12.2"
+      - "C:/Windows/System32/OpenSSH/gcc-ranlib-12.2.com"
+      - "C:/Windows/System32/OpenSSH/gcc-ranlib-12.2.exe"
+      - "C:/Windows/System32/OpenSSH/gcc-ranlib-12.2"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ranlib-12.2.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ranlib-12.2.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ranlib-12.2"
+      - "C:/Program Files/dotnet/gcc-ranlib-12.2.com"
+      - "C:/Program Files/dotnet/gcc-ranlib-12.2.exe"
+      - "C:/Program Files/dotnet/gcc-ranlib-12.2"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ranlib-12.2.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ranlib-12.2.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ranlib-12.2"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ranlib-12.2.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ranlib-12.2.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ranlib-12.2"
+      - "C:/Program Files/Tencent/QQNT/gcc-ranlib-12.2.com"
+      - "C:/Program Files/Tencent/QQNT/gcc-ranlib-12.2.exe"
+      - "C:/Program Files/Tencent/QQNT/gcc-ranlib-12.2"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ranlib-12.2.com"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ranlib-12.2.exe"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ranlib-12.2"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ranlib-12.2.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ranlib-12.2.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ranlib-12.2"
+      - "D:/Dev/Scoop/shims/gcc-ranlib-12.2.com"
+      - "D:/Dev/Scoop/shims/gcc-ranlib-12.2.exe"
+      - "D:/Dev/Scoop/shims/gcc-ranlib-12.2"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib-12.com"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib-12.exe"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib-12"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ranlib-12.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ranlib-12.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ranlib-12"
+      - "C:/Windows/System32/gcc-ranlib-12.com"
+      - "C:/Windows/System32/gcc-ranlib-12.exe"
+      - "C:/Windows/System32/gcc-ranlib-12"
+      - "C:/Windows/gcc-ranlib-12.com"
+      - "C:/Windows/gcc-ranlib-12.exe"
+      - "C:/Windows/gcc-ranlib-12"
+      - "C:/Windows/System32/wbem/gcc-ranlib-12.com"
+      - "C:/Windows/System32/wbem/gcc-ranlib-12.exe"
+      - "C:/Windows/System32/wbem/gcc-ranlib-12"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ranlib-12.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ranlib-12.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ranlib-12"
+      - "C:/Windows/System32/OpenSSH/gcc-ranlib-12.com"
+      - "C:/Windows/System32/OpenSSH/gcc-ranlib-12.exe"
+      - "C:/Windows/System32/OpenSSH/gcc-ranlib-12"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ranlib-12.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ranlib-12.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ranlib-12"
+      - "C:/Program Files/dotnet/gcc-ranlib-12.com"
+      - "C:/Program Files/dotnet/gcc-ranlib-12.exe"
+      - "C:/Program Files/dotnet/gcc-ranlib-12"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ranlib-12.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ranlib-12.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ranlib-12"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ranlib-12.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ranlib-12.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ranlib-12"
+      - "C:/Program Files/Tencent/QQNT/gcc-ranlib-12.com"
+      - "C:/Program Files/Tencent/QQNT/gcc-ranlib-12.exe"
+      - "C:/Program Files/Tencent/QQNT/gcc-ranlib-12"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ranlib-12.com"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ranlib-12.exe"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ranlib-12"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ranlib-12.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ranlib-12.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ranlib-12"
+      - "D:/Dev/Scoop/shims/gcc-ranlib-12.com"
+      - "D:/Dev/Scoop/shims/gcc-ranlib-12.exe"
+      - "D:/Dev/Scoop/shims/gcc-ranlib-12"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib12.com"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib12.exe"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib12"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ranlib12.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ranlib12.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/gcc-ranlib12"
+      - "C:/Windows/System32/gcc-ranlib12.com"
+      - "C:/Windows/System32/gcc-ranlib12.exe"
+      - "C:/Windows/System32/gcc-ranlib12"
+      - "C:/Windows/gcc-ranlib12.com"
+      - "C:/Windows/gcc-ranlib12.exe"
+      - "C:/Windows/gcc-ranlib12"
+      - "C:/Windows/System32/wbem/gcc-ranlib12.com"
+      - "C:/Windows/System32/wbem/gcc-ranlib12.exe"
+      - "C:/Windows/System32/wbem/gcc-ranlib12"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ranlib12.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ranlib12.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/gcc-ranlib12"
+      - "C:/Windows/System32/OpenSSH/gcc-ranlib12.com"
+      - "C:/Windows/System32/OpenSSH/gcc-ranlib12.exe"
+      - "C:/Windows/System32/OpenSSH/gcc-ranlib12"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ranlib12.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ranlib12.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/gcc-ranlib12"
+      - "C:/Program Files/dotnet/gcc-ranlib12.com"
+      - "C:/Program Files/dotnet/gcc-ranlib12.exe"
+      - "C:/Program Files/dotnet/gcc-ranlib12"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ranlib12.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ranlib12.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/gcc-ranlib12"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ranlib12.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ranlib12.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/gcc-ranlib12"
+      - "C:/Program Files/Tencent/QQNT/gcc-ranlib12.com"
+      - "C:/Program Files/Tencent/QQNT/gcc-ranlib12.exe"
+      - "C:/Program Files/Tencent/QQNT/gcc-ranlib12"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ranlib12.com"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ranlib12.exe"
+      - "C:/Program Files/cursor/resources/app/bin/gcc-ranlib12"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ranlib12.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ranlib12.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/gcc-ranlib12"
+      - "D:/Dev/Scoop/shims/gcc-ranlib12.com"
+      - "D:/Dev/Scoop/shims/gcc-ranlib12.exe"
+      - "D:/Dev/Scoop/shims/gcc-ranlib12"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/gcc-ranlib.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineRCCompiler.cmake:40 (find_program)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/Platform/Windows-GNU.cmake:167 (enable_language)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/Platform/Windows-GNU-CXX.cmake:2 (__windows_compiler_gnu)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeCXXInformation.cmake:48 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_RC_COMPILER"
+    description: "RC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "windres"
+      - "windres"
+    candidate_directories:
+      - "D:/Project/Reversi/thirdparty/gtest-install/bin/"
+      - "D:/Project/Reversi/thirdparty/gtest-install/sbin/"
+      - "D:/Project/Reversi/thirdparty/gtest-install/"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/"
+      - "C:/Program Files/Tencent/QQNT/"
+      - "C:/Program Files/cursor/resources/app/bin/"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/"
+      - "D:/Dev/Scoop/shims/"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/"
+      - "C:/Program Files/bin/"
+      - "C:/Program Files/sbin/"
+      - "C:/Program Files/"
+      - "C:/Program Files (x86)/bin/"
+      - "C:/Program Files (x86)/sbin/"
+      - "C:/Program Files (x86)/"
+      - "D:/Dev/Scoop/apps/cmake/current/bin/"
+      - "D:/Dev/Scoop/apps/cmake/current/sbin/"
+      - "D:/Dev/Scoop/apps/cmake/current/"
+      - "C:/Program Files (x86)/ReversiAI_Platform/bin/"
+      - "C:/Program Files (x86)/ReversiAI_Platform/sbin/"
+      - "C:/Program Files (x86)/ReversiAI_Platform/"
+    searched_directories:
+      - "D:/Project/Reversi/thirdparty/gtest-install/bin/windres.com"
+      - "D:/Project/Reversi/thirdparty/gtest-install/bin/windres.exe"
+      - "D:/Project/Reversi/thirdparty/gtest-install/bin/windres"
+      - "D:/Project/Reversi/thirdparty/gtest-install/sbin/windres.com"
+      - "D:/Project/Reversi/thirdparty/gtest-install/sbin/windres.exe"
+      - "D:/Project/Reversi/thirdparty/gtest-install/sbin/windres"
+      - "D:/Project/Reversi/thirdparty/gtest-install/windres.com"
+      - "D:/Project/Reversi/thirdparty/gtest-install/windres.exe"
+      - "D:/Project/Reversi/thirdparty/gtest-install/windres"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/windres.com"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/windres.exe"
+      - "C:/Users/15155/AppData/Local/Programs/cursor/resources/app/bin/windres"
+      - "C:/Windows/System32/windres.com"
+      - "C:/Windows/System32/windres.exe"
+      - "C:/Windows/System32/windres"
+      - "C:/Windows/windres.com"
+      - "C:/Windows/windres.exe"
+      - "C:/Windows/windres"
+      - "C:/Windows/System32/wbem/windres.com"
+      - "C:/Windows/System32/wbem/windres.exe"
+      - "C:/Windows/System32/wbem/windres"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/windres.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/windres.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/windres"
+      - "C:/Windows/System32/OpenSSH/windres.com"
+      - "C:/Windows/System32/OpenSSH/windres.exe"
+      - "C:/Windows/System32/OpenSSH/windres"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/windres.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/windres.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/windres"
+      - "C:/Program Files/dotnet/windres.com"
+      - "C:/Program Files/dotnet/windres.exe"
+      - "C:/Program Files/dotnet/windres"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/windres.com"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/windres.exe"
+      - "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/windres"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/windres.com"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/windres.exe"
+      - "C:/Users/15155/AppData/Roaming/Programs/Zero Install/windres"
+      - "C:/Program Files/Tencent/QQNT/windres.com"
+      - "C:/Program Files/Tencent/QQNT/windres.exe"
+      - "C:/Program Files/Tencent/QQNT/windres"
+      - "C:/Program Files/cursor/resources/app/bin/windres.com"
+      - "C:/Program Files/cursor/resources/app/bin/windres.exe"
+      - "C:/Program Files/cursor/resources/app/bin/windres"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/windres.com"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/windres.exe"
+      - "D:/Dev/Scoop/apps/vscode/current/bin/windres"
+      - "D:/Dev/Scoop/shims/windres.com"
+      - "D:/Dev/Scoop/shims/windres.exe"
+      - "D:/Dev/Scoop/shims/windres"
+      - "D:/Dev/Compilers/MinGW/12.2.0/bin/windres.com"
+    found: "D:/Dev/Compilers/MinGW/12.2.0/bin/windres.exe"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/ReversiAI_Platform"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "D:/Dev/Scoop/apps/cmake/current"
+        - "C:/Program Files (x86)/ReversiAI_Platform"
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/CMakeScratch/TryCompile-4083zn"
+      binary: "D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/CMakeScratch/TryCompile-4083zn"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/CMakeScratch/TryCompile-4083zn'
+        
+        Run Build Command(s): D:/Dev/Scoop/apps/cmake/current/bin/cmake.exe -E env VERBOSE=1 D:/Dev/Compilers/MinGW/12.2.0/bin/mingw32-make.exe -f Makefile cmTC_c58c7/fast
+        D:/Dev/Compilers/MinGW/12.2.0/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_c58c7.dir\\build.make CMakeFiles/cmTC_c58c7.dir/build
+        mingw32-make.exe[1]: Entering directory 'D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/CMakeScratch/TryCompile-4083zn'
+        Building CXX object CMakeFiles/cmTC_c58c7.dir/CMakeCXXCompilerABI.cpp.obj
+        D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin\\c++.exe   -v -o CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.obj -c D:\\Dev\\Scoop\\apps\\cmake\\current\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp
+        Using built-in specs.
+        COLLECT_GCC=D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin\\c++.exe
+        Target: x86_64-w64-mingw32
+        Configured with: ../../../src/gcc-12.2.0/configure --host=x86_64-w64-mingw32 --build=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --prefix=/mingw64 --with-sysroot=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 --enable-host-shared --disable-multilib --enable-languages=c,c++,fortran,lto --enable-libstdcxx-time=yes --enable-threads=posix --enable-libgomp --enable-libatomic --enable-lto --enable-graphite --enable-checking=release --enable-fully-dynamic-string --enable-version-specific-runtime-libs --enable-libstdcxx-filesystem-ts=yes --disable-libstdcxx-pch --disable-libstdcxx-debug --enable-bootstrap --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-gnu-as --with-gnu-ld --with-arch=nocona --with-tune=core2 --with-libiconv --with-system-zlib --with-gmp=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpfr=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpc=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-isl=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-pkgversion='x86_64-posix-seh-rev2, Built by MinGW-W64 project' --with-bugurl=https://sourceforge.net/projects/mingw-w64 CFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CXXFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CPPFLAGS=' -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' LDFLAGS='-pipe -fno-ident -L/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/lib ' LD_FOR_TARGET=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/bin/ld.exe --with-boot-ldflags=' -Wl,--disable-dynamicbase -static-libstdc++ -static-libgcc'
+        Thread model: posix
+        Supported LTO compression algorithms: zlib
+        gcc version 12.2.0 (x86_64-posix-seh-rev2, Built by MinGW-W64 project) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c58c7.dir\\'
+         D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/cc1plus.exe -quiet -v -iprefix D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/ -D_REENTRANT D:\\Dev\\Scoop\\apps\\cmake\\current\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles\\cmTC_c58c7.dir\\ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=core2 -march=nocona -version -o C:\\Users\\15155\\AppData\\Local\\Temp\\cc2UZR6y.s
+        GNU C++17 (x86_64-posix-seh-rev2, Built by MinGW-W64 project) version 12.2.0 (x86_64-w64-mingw32)
+        	compiled by GNU C version 12.2.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.25-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "D:\\workspaces\\Scoop\\apps\\gcc\\current\\include"
+        ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++"
+        ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/x86_64-w64-mingw32"
+        ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/backward"
+        ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/include"
+        ignoring nonexistent directory "C:/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../include"
+        ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed"
+        ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/include"
+        ignoring nonexistent directory "C:/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/mingw/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++
+         D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/x86_64-w64-mingw32
+         D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/backward
+         D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include
+         D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed
+         D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/include
+        End of search list.
+        GNU C++17 (x86_64-posix-seh-rev2, Built by MinGW-W64 project) version 12.2.0 (x86_64-w64-mingw32)
+        	compiled by GNU C version 12.2.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.25-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        Compiler executable checksum: bd871182343e24686b6070b103904810
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c58c7.dir\\'
+         D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.obj C:\\Users\\15155\\AppData\\Local\\Temp\\cc2UZR6y.s
+        GNU assembler version 2.39 (x86_64-w64-mingw32) using BFD version (GNU Binutils) 2.39
+        COMPILER_PATH=D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/;D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/bin/
+        LIBRARY_PATH=D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../lib/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.'
+        Linking CXX executable cmTC_c58c7.exe
+        D:\\Dev\\Scoop\\apps\\cmake\\current\\bin\\cmake.exe -E cmake_link_script CMakeFiles\\cmTC_c58c7.dir\\link.txt --verbose=1
+        Using built-in specs.
+        COLLECT_GCC=D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin\\c++.exe
+        COLLECT_LTO_WRAPPER=D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/lto-wrapper.exe
+        Target: x86_64-w64-mingw32
+        Configured with: ../../../src/gcc-12.2.0/configure --host=x86_64-w64-mingw32 --build=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --prefix=/mingw64 --with-sysroot=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 --enable-host-shared --disable-multilib --enable-languages=c,c++,fortran,lto --enable-libstdcxx-time=yes --enable-threads=posix --enable-libgomp --enable-libatomic --enable-lto --enable-graphite --enable-checking=release --enable-fully-dynamic-string --enable-version-specific-runtime-libs --enable-libstdcxx-filesystem-ts=yes --disable-libstdcxx-pch --disable-libstdcxx-debug --enable-bootstrap --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-gnu-as --with-gnu-ld --with-arch=nocona --with-tune=core2 --with-libiconv --with-system-zlib --with-gmp=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpfr=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpc=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-isl=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-pkgversion='x86_64-posix-seh-rev2, Built by MinGW-W64 project' --with-bugurl=https://sourceforge.net/projects/mingw-w64 CFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CXXFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CPPFLAGS=' -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' LDFLAGS='-pipe -fno-ident -L/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/lib ' LD_FOR_TARGET=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/bin/ld.exe --with-boot-ldflags=' -Wl,--disable-dynamicbase -static-libstdc++ -static-libgcc'
+        Thread model: posix
+        Supported LTO compression algorithms: zlib
+        gcc version 12.2.0 (x86_64-posix-seh-rev2, Built by MinGW-W64 project) 
+        COMPILER_PATH=D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/;D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/bin/
+        LIBRARY_PATH=D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../lib/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/;D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c58c7.exe' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_c58c7.'
+         D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/collect2.exe -plugin D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/liblto_plugin.dll -plugin-opt=D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\15155\\AppData\\Local\\Temp\\ccODqevK.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 -m i386pep -Bdynamic -o cmTC_c58c7.exe D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtbegin.o -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0 -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../lib -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_c58c7.dir/objects.a --no-whole-archive --out-implib libcmTC_c58c7.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtend.o
+        collect2 version 12.2.0
+        D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe -plugin D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/liblto_plugin.dll -plugin-opt=D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\15155\\AppData\\Local\\Temp\\ccODqevK.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 -m i386pep -Bdynamic -o cmTC_c58c7.exe D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtbegin.o -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0 -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../lib -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_c58c7.dir/objects.a --no-whole-archive --out-implib libcmTC_c58c7.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtend.o
+        GNU ld (GNU Binutils) 2.39
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c58c7.exe' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_c58c7.'
+        D:\\Dev\\Scoop\\apps\\cmake\\current\\bin\\cmake.exe -E rm -f CMakeFiles\\cmTC_c58c7.dir/objects.a
+        D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin\\ar.exe qc CMakeFiles\\cmTC_c58c7.dir/objects.a @CMakeFiles\\cmTC_c58c7.dir\\objects1.rsp
+        D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin\\c++.exe  -v -Wl,-v -Wl,--whole-archive CMakeFiles\\cmTC_c58c7.dir/objects.a -Wl,--no-whole-archive -o cmTC_c58c7.exe -Wl,--out-implib,libcmTC_c58c7.dll.a -Wl,--major-image-version,0,--minor-image-version,0
+        mingw32-make.exe[1]: Leaving directory 'D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/CMakeScratch/TryCompile-4083zn'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:217 (message)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++]
+          add: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/x86_64-w64-mingw32]
+          add: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/backward]
+          add: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include]
+          add: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed]
+          add: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/include]
+        end of search list found
+        collapse include dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++]
+        collapse include dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/x86_64-w64-mingw32] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/x86_64-w64-mingw32]
+        collapse include dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/backward] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/backward]
+        collapse include dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include]
+        collapse include dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed]
+        collapse include dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/include] ==> [D:/Dev/Compilers/MinGW/12.2.0/x86_64-w64-mingw32/include]
+        implicit include dirs: [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++;D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/x86_64-w64-mingw32;D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/backward;D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include;D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed;D:/Dev/Compilers/MinGW/12.2.0/x86_64-w64-mingw32/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
+        ignore line: [Change Dir: 'D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/CMakeScratch/TryCompile-4083zn']
+        ignore line: []
+        ignore line: [Run Build Command(s): D:/Dev/Scoop/apps/cmake/current/bin/cmake.exe -E env VERBOSE=1 D:/Dev/Compilers/MinGW/12.2.0/bin/mingw32-make.exe -f Makefile cmTC_c58c7/fast]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_c58c7.dir\\build.make CMakeFiles/cmTC_c58c7.dir/build]
+        ignore line: [mingw32-make.exe[1]: Entering directory 'D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/CMakeScratch/TryCompile-4083zn']
+        ignore line: [Building CXX object CMakeFiles/cmTC_c58c7.dir/CMakeCXXCompilerABI.cpp.obj]
+        ignore line: [D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin\\c++.exe   -v -o CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.obj -c D:\\Dev\\Scoop\\apps\\cmake\\current\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin\\c++.exe]
+        ignore line: [Target: x86_64-w64-mingw32]
+        ignore line: [Configured with: ../../../src/gcc-12.2.0/configure --host=x86_64-w64-mingw32 --build=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --prefix=/mingw64 --with-sysroot=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 --enable-host-shared --disable-multilib --enable-languages=c,c++,fortran,lto --enable-libstdcxx-time=yes --enable-threads=posix --enable-libgomp --enable-libatomic --enable-lto --enable-graphite --enable-checking=release --enable-fully-dynamic-string --enable-version-specific-runtime-libs --enable-libstdcxx-filesystem-ts=yes --disable-libstdcxx-pch --disable-libstdcxx-debug --enable-bootstrap --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-gnu-as --with-gnu-ld --with-arch=nocona --with-tune=core2 --with-libiconv --with-system-zlib --with-gmp=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpfr=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpc=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-isl=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-pkgversion='x86_64-posix-seh-rev2, Built by MinGW-W64 project' --with-bugurl=https://sourceforge.net/projects/mingw-w64 CFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CXXFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CPPFLAGS=' -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' LDFLAGS='-pipe -fno-ident -L/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/lib ' LD_FOR_TARGET=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/bin/ld.exe --with-boot-ldflags=' -Wl,--disable-dynamicbase -static-libstdc++ -static-libgcc']
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib]
+        ignore line: [gcc version 12.2.0 (x86_64-posix-seh-rev2  Built by MinGW-W64 project) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c58c7.dir\\']
+        ignore line: [ D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/cc1plus.exe -quiet -v -iprefix D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/ -D_REENTRANT D:\\Dev\\Scoop\\apps\\cmake\\current\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles\\cmTC_c58c7.dir\\ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=core2 -march=nocona -version -o C:\\Users\\15155\\AppData\\Local\\Temp\\cc2UZR6y.s]
+        ignore line: [GNU C++17 (x86_64-posix-seh-rev2  Built by MinGW-W64 project) version 12.2.0 (x86_64-w64-mingw32)]
+        ignore line: [	compiled by GNU C version 12.2.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.25-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "D:\\workspaces\\Scoop\\apps\\gcc\\current\\include"]
+        ignore line: [ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++"]
+        ignore line: [ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/x86_64-w64-mingw32"]
+        ignore line: [ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/backward"]
+        ignore line: [ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/include"]
+        ignore line: [ignoring nonexistent directory "C:/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../include"]
+        ignore line: [ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed"]
+        ignore line: [ignoring duplicate directory "D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/include"]
+        ignore line: [ignoring nonexistent directory "C:/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/mingw/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++]
+        ignore line: [ D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/x86_64-w64-mingw32]
+        ignore line: [ D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/backward]
+        ignore line: [ D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include]
+        ignore line: [ D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed]
+        ignore line: [ D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/include]
+        ignore line: [End of search list.]
+        ignore line: [GNU C++17 (x86_64-posix-seh-rev2  Built by MinGW-W64 project) version 12.2.0 (x86_64-w64-mingw32)]
+        ignore line: [	compiled by GNU C version 12.2.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.25-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [Compiler executable checksum: bd871182343e24686b6070b103904810]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c58c7.dir\\']
+        ignore line: [ D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.obj C:\\Users\\15155\\AppData\\Local\\Temp\\cc2UZR6y.s]
+        ignore line: [GNU assembler version 2.39 (x86_64-w64-mingw32) using BFD version (GNU Binutils) 2.39]
+        ignore line: [COMPILER_PATH=D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/bin/]
+        ignore line: [LIBRARY_PATH=D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../lib/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c58c7.dir\\CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX executable cmTC_c58c7.exe]
+        ignore line: [D:\\Dev\\Scoop\\apps\\cmake\\current\\bin\\cmake.exe -E cmake_link_script CMakeFiles\\cmTC_c58c7.dir\\link.txt --verbose=1]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin\\c++.exe]
+        ignore line: [COLLECT_LTO_WRAPPER=D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/lto-wrapper.exe]
+        ignore line: [Target: x86_64-w64-mingw32]
+        ignore line: [Configured with: ../../../src/gcc-12.2.0/configure --host=x86_64-w64-mingw32 --build=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --prefix=/mingw64 --with-sysroot=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 --enable-host-shared --disable-multilib --enable-languages=c,c++,fortran,lto --enable-libstdcxx-time=yes --enable-threads=posix --enable-libgomp --enable-libatomic --enable-lto --enable-graphite --enable-checking=release --enable-fully-dynamic-string --enable-version-specific-runtime-libs --enable-libstdcxx-filesystem-ts=yes --disable-libstdcxx-pch --disable-libstdcxx-debug --enable-bootstrap --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-gnu-as --with-gnu-ld --with-arch=nocona --with-tune=core2 --with-libiconv --with-system-zlib --with-gmp=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpfr=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpc=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-isl=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-pkgversion='x86_64-posix-seh-rev2, Built by MinGW-W64 project' --with-bugurl=https://sourceforge.net/projects/mingw-w64 CFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CXXFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CPPFLAGS=' -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' LDFLAGS='-pipe -fno-ident -L/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/lib ' LD_FOR_TARGET=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/bin/ld.exe --with-boot-ldflags=' -Wl,--disable-dynamicbase -static-libstdc++ -static-libgcc']
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib]
+        ignore line: [gcc version 12.2.0 (x86_64-posix-seh-rev2  Built by MinGW-W64 project) ]
+        ignore line: [COMPILER_PATH=D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/bin/]
+        ignore line: [LIBRARY_PATH=D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../lib/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/]
+        ignore line: [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c58c7.exe' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_c58c7.']
+        link line: [ D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/collect2.exe -plugin D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/liblto_plugin.dll -plugin-opt=D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\15155\\AppData\\Local\\Temp\\ccODqevK.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 -m i386pep -Bdynamic -o cmTC_c58c7.exe D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtbegin.o -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0 -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../lib -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib -LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_c58c7.dir/objects.a --no-whole-archive --out-implib libcmTC_c58c7.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtend.o]
+          arg [D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/collect2.exe] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/liblto_plugin.dll] ==> ignore
+          arg [-plugin-opt=D:/Dev/Compilers/MinGW/12.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/12.2.0/lto-wrapper.exe] ==> ignore
+          arg [-plugin-opt=-fresolution=C:\\Users\\15155\\AppData\\Local\\Temp\\ccODqevK.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lmingw32] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lmoldname] ==> ignore
+          arg [-plugin-opt=-pass-through=-lmingwex] ==> ignore
+          arg [-plugin-opt=-pass-through=-lmsvcrt] ==> ignore
+          arg [-plugin-opt=-pass-through=-lkernel32] ==> ignore
+          arg [-plugin-opt=-pass-through=-lpthread] ==> ignore
+          arg [-plugin-opt=-pass-through=-ladvapi32] ==> ignore
+          arg [-plugin-opt=-pass-through=-lshell32] ==> ignore
+          arg [-plugin-opt=-pass-through=-luser32] ==> ignore
+          arg [-plugin-opt=-pass-through=-lkernel32] ==> ignore
+          arg [-plugin-opt=-pass-through=-liconv] ==> ignore
+          arg [-plugin-opt=-pass-through=-lmingw32] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lmoldname] ==> ignore
+          arg [-plugin-opt=-pass-through=-lmingwex] ==> ignore
+          arg [-plugin-opt=-pass-through=-lmsvcrt] ==> ignore
+          arg [-plugin-opt=-pass-through=-lkernel32] ==> ignore
+          arg [--sysroot=C:/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64] ==> ignore
+          arg [-m] ==> ignore
+          arg [i386pep] ==> ignore
+          arg [-Bdynamic] ==> search dynamic
+          arg [-o] ==> ignore
+          arg [cmTC_c58c7.exe] ==> ignore
+          arg [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o] ==> obj [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o]
+          arg [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtbegin.o] ==> obj [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtbegin.o]
+          arg [-LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0] ==> dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0]
+          arg [-LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc] ==> dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc]
+          arg [-LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib] ==> dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib]
+          arg [-LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../lib] ==> dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../lib]
+          arg [-LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib] ==> dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib]
+          arg [-LD:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../..] ==> dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../..]
+          arg [-v] ==> ignore
+          arg [--whole-archive] ==> ignore
+          arg [CMakeFiles\\cmTC_c58c7.dir/objects.a] ==> ignore
+          arg [--no-whole-archive] ==> ignore
+          arg [--out-implib] ==> ignore
+          arg [libcmTC_c58c7.dll.a] ==> ignore
+          arg [--major-image-version] ==> ignore
+          arg [0] ==> ignore
+          arg [--minor-image-version] ==> ignore
+          arg [0] ==> ignore
+          arg [-lstdc++] ==> lib [stdc++]
+          arg [-lmingw32] ==> lib [mingw32]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lmoldname] ==> lib [moldname]
+          arg [-lmingwex] ==> lib [mingwex]
+          arg [-lmsvcrt] ==> lib [msvcrt]
+          arg [-lkernel32] ==> lib [kernel32]
+          arg [-lpthread] ==> lib [pthread]
+          arg [-ladvapi32] ==> lib [advapi32]
+          arg [-lshell32] ==> lib [shell32]
+          arg [-luser32] ==> lib [user32]
+          arg [-lkernel32] ==> lib [kernel32]
+          arg [-liconv] ==> lib [iconv]
+          arg [-lmingw32] ==> lib [mingw32]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lmoldname] ==> lib [moldname]
+          arg [-lmingwex] ==> lib [mingwex]
+          arg [-lmsvcrt] ==> lib [msvcrt]
+          arg [-lkernel32] ==> lib [kernel32]
+          arg [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtend.o] ==> obj [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtend.o]
+        linker tool for 'CXX': ../src/gcc-12.2.0/configure --host=x86_64-w64-mingw32 --build=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --prefix=/mingw64 --with-sysroot=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 --enable-host-shared --disable-multilib --enable-languages=c,c++,fortran,lto --enable-libstdcxx-time=yes --enable-threads=posix --enable-libgomp --enable-libatomic --enable-lto --enable-graphite --enable-checking=release --enable-fully-dynamic-string --enable-version-specific-runtime-libs --enable-libstdcxx-filesystem-ts=yes --disable-libstdcxx-pch --disable-libstdcxx-debug --enable-bootstrap --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-gnu-as --with-gnu-ld --with-arch=nocona --with-tune=core2 --with-libiconv --with-system-zlib --with-gmp=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpfr=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpc=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-isl=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-pkgversion='x86_64-posix-seh-rev2, Built by MinGW-W64 project' --with-bugurl=https:/sourceforge.net/projects/mingw-w64 CFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CXXFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CPPFLAGS=' -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' LDFLAGS='-pipe -fno-ident -L/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/lib ' LD_FOR_TARGET=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/bin/ld.exe
+        remove lib [msvcrt]
+        remove lib [msvcrt]
+        collapse obj [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o] ==> [D:/Dev/Compilers/MinGW/12.2.0/x86_64-w64-mingw32/lib/crt2.o]
+        collapse obj [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtbegin.o] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/crtbegin.o]
+        collapse obj [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/crtend.o] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/crtend.o]
+        collapse library dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0]
+        collapse library dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc]
+        collapse library dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib/../lib] ==> [D:/Dev/Compilers/MinGW/12.2.0/x86_64-w64-mingw32/lib]
+        collapse library dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../lib] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib]
+        collapse library dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/lib] ==> [D:/Dev/Compilers/MinGW/12.2.0/x86_64-w64-mingw32/lib]
+        collapse library dir [D:/Dev/Compilers/MinGW/12.2.0/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../..] ==> [D:/Dev/Compilers/MinGW/12.2.0/lib]
+        implicit libs: [stdc++;mingw32;gcc_s;gcc;moldname;mingwex;kernel32;pthread;advapi32;shell32;user32;kernel32;iconv;mingw32;gcc_s;gcc;moldname;mingwex;kernel32]
+        implicit objs: [D:/Dev/Compilers/MinGW/12.2.0/x86_64-w64-mingw32/lib/crt2.o;D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/crtbegin.o;D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/crtend.o]
+        implicit dirs: [D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0;D:/Dev/Compilers/MinGW/12.2.0/lib/gcc;D:/Dev/Compilers/MinGW/12.2.0/x86_64-w64-mingw32/lib;D:/Dev/Compilers/MinGW/12.2.0/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Running the CXX compiler's linker: "../src/gcc-12.2.0/configure --host=x86_64-w64-mingw32 --build=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --prefix=/mingw64 --with-sysroot=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 --enable-host-shared --disable-multilib --enable-languages=c,c++,fortran,lto --enable-libstdcxx-time=yes --enable-threads=posix --enable-libgomp --enable-libatomic --enable-lto --enable-graphite --enable-checking=release --enable-fully-dynamic-string --enable-version-specific-runtime-libs --enable-libstdcxx-filesystem-ts=yes --disable-libstdcxx-pch --disable-libstdcxx-debug --enable-bootstrap --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-gnu-as --with-gnu-ld --with-arch=nocona --with-tune=core2 --with-libiconv --with-system-zlib --with-gmp=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpfr=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpc=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-isl=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-pkgversion='x86_64-posix-seh-rev2, Built by MinGW-W64 project' --with-bugurl=https:/sourceforge.net/projects/mingw-w64 CFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CXXFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CPPFLAGS=' -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' LDFLAGS='-pipe -fno-ident -L/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/lib ' LD_FOR_TARGET=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/bin/ld.exe" "-v"
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Running the CXX compiler's linker: "../src/gcc-12.2.0/configure --host=x86_64-w64-mingw32 --build=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --prefix=/mingw64 --with-sysroot=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 --enable-host-shared --disable-multilib --enable-languages=c,c++,fortran,lto --enable-libstdcxx-time=yes --enable-threads=posix --enable-libgomp --enable-libatomic --enable-lto --enable-graphite --enable-checking=release --enable-fully-dynamic-string --enable-version-specific-runtime-libs --enable-libstdcxx-filesystem-ts=yes --disable-libstdcxx-pch --disable-libstdcxx-debug --enable-bootstrap --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-gnu-as --with-gnu-ld --with-arch=nocona --with-tune=core2 --with-libiconv --with-system-zlib --with-gmp=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpfr=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpc=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-isl=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-pkgversion='x86_64-posix-seh-rev2, Built by MinGW-W64 project' --with-bugurl=https:/sourceforge.net/projects/mingw-w64 CFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CXXFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CPPFLAGS=' -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' LDFLAGS='-pipe -fno-ident -L/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/lib ' LD_FOR_TARGET=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/bin/ld.exe" "-V"
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Running the CXX compiler's linker: "../src/gcc-12.2.0/configure --host=x86_64-w64-mingw32 --build=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --prefix=/mingw64 --with-sysroot=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64 --enable-host-shared --disable-multilib --enable-languages=c,c++,fortran,lto --enable-libstdcxx-time=yes --enable-threads=posix --enable-libgomp --enable-libatomic --enable-lto --enable-graphite --enable-checking=release --enable-fully-dynamic-string --enable-version-specific-runtime-libs --enable-libstdcxx-filesystem-ts=yes --disable-libstdcxx-pch --disable-libstdcxx-debug --enable-bootstrap --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-gnu-as --with-gnu-ld --with-arch=nocona --with-tune=core2 --with-libiconv --with-system-zlib --with-gmp=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpfr=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-mpc=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-isl=/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static --with-pkgversion='x86_64-posix-seh-rev2, Built by MinGW-W64 project' --with-bugurl=https:/sourceforge.net/projects/mingw-w64 CFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CXXFLAGS='-O2 -pipe -fno-ident -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' CPPFLAGS=' -I/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/include -I/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/include' LDFLAGS='-pipe -fno-ident -L/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/opt/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-zlib-static/lib -L/c/mingw-builds/ucrt64-seh-posix/prerequisites/x86_64-w64-mingw32-static/lib ' LD_FOR_TARGET=/c/mingw-builds/ucrt64-seh-posix/x86_64-1220-posix-seh-ucrt-rt_v10-rev2/mingw64/bin/ld.exe" "--version"
+      
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FindGTest.cmake:345 (find_package)"
+      - "Tests/framework/CMakeLists.txt:7 (find_package)"
+    name: "GTest"
+    configs:
+      -
+        filename: "GTestConfig.cmake"
+        kind: "cmake"
+      -
+        filename: "gtest-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "optional"
+      quiet: true
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "GTest"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: true
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/pkgRedirects/GTestConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/pkgRedirects/gtest-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Project/Reversi/thirdparty/gtest-install/GTestConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Project/Reversi/thirdparty/gtest-install/gtest-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found:
+      path: "D:/Project/Reversi/thirdparty/gtest-install/lib/cmake/GTest/GTestConfig.cmake"
+      mode: "config"
+      version: "1.16.0"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/ReversiAI_Platform"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "D:/Dev/Scoop/apps/cmake/current"
+        - "C:/Program Files (x86)/ReversiAI_Platform"
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "Tests/framework/CMakeLists.txt:22 (find_package)"
+    name: "benchmark"
+    configs:
+      -
+        filename: "benchmarkConfig.cmake"
+        kind: "cmake"
+      -
+        filename: "benchmark-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "optional"
+      quiet: true
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "benchmark"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: true
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/pkgRedirects/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Project/Reversi/ReversiAI_Platform/build_local_gtest/CMakeFiles/pkgRedirects/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Project/Reversi/thirdparty/gtest-install/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Project/Reversi/thirdparty/gtest-install/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Windows/System32/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Windows/System32/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Windows/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Windows/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Windows/System32/wbem/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Windows/System32/wbem/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Windows/System32/WindowsPowerShell/v1.0/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Windows/System32/WindowsPowerShell/v1.0/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Windows/System32/OpenSSH/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Windows/System32/OpenSSH/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files/dotnet/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files/dotnet/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Users/15155/AppData/Local/Microsoft/WindowsApps/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Users/15155/AppData/Roaming/Programs/Zero Install/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Users/15155/AppData/Roaming/Programs/Zero Install/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files/Tencent/QQNT/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files/Tencent/QQNT/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files/cursor/resources/app/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files/cursor/resources/app/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Dev/Scoop/apps/vscode/current/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Dev/Scoop/apps/vscode/current/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Dev/Scoop/shims/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Dev/Scoop/shims/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Dev/Compilers/MinGW/12.2.0/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Dev/Compilers/MinGW/12.2.0/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files (x86)/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/Program Files (x86)/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Dev/Scoop/apps/cmake/current/benchmarkConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "D:/Dev/Scoop/apps/cmake/current/benchmark-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found: null
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "D:/Project/Reversi/thirdparty/gtest-install"
+      ENV{PATH}:
+        - "c:\\Users\\15155\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "C:\\Program Files\\Tencent\\QQNT"
+        - "C:\\Program Files\\cursor\\resources\\app\\bin"
+        - "D:\\Dev\\Scoop\\apps\\vscode\\current\\bin"
+        - "D:\\Dev\\Scoop\\shims"
+        - "C:\\Users\\15155\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\15155\\AppData\\Roaming\\Programs\\Zero Install"
+        - "D:\\Dev\\Compilers\\MinGW\\12.2.0\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/ReversiAI_Platform"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "D:/Dev/Scoop/apps/cmake/current"
+        - "C:/Program Files (x86)/ReversiAI_Platform"
+...

@@ -1,0 +1,3 @@
+D:/Project/Reversi/ReversiAI_Platform/build_mingw/CMakeFiles/ReversiAI_Platform_Console.dir
+D:/Project/Reversi/ReversiAI_Platform/build_mingw/CMakeFiles/edit_cache.dir
+D:/Project/Reversi/ReversiAI_Platform/build_mingw/CMakeFiles/rebuild_cache.dir

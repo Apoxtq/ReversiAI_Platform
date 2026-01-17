@@ -13,6 +13,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Option to build with Qt GUI (default OFF until Qt is configured)
 option(BUILD_QT_GUI "Build Qt GUI application" OFF)
 
+# Set Qt installation path (modify this to your Qt installation directory)
+# Example: set(QT_DIR "C:/Qt/6.5.0/msvc2019_64")
+# set(QT_DIR "")
+
 # Testing options
 option(BUILD_TESTS "Build test executables" ON)
 option(COVERAGE "Enable code coverage analysis" OFF)
@@ -22,11 +26,21 @@ option(PERFORMANCE_TESTING "Enable performance testing features" OFF)
 add_executable(ReversiAI_Platform_Console
     main_console.cpp
     ai/MCTS.cpp
-    src/core/BitBoard.cpp
 )
 
 # Include directories
 target_include_directories(ReversiAI_Platform_Console PRIVATE include ai)
+
+# Core library: compile central sources once and link where needed
+add_library(core_lib STATIC
+    src/core/BitBoard.cpp
+    src/Board.cpp
+)
+target_include_directories(core_lib PUBLIC include include/core)
+target_compile_features(core_lib PUBLIC cxx_std_17)
+
+# Link core_lib into console executable
+target_link_libraries(ReversiAI_Platform_Console PRIVATE core_lib)
 
 # Console app for testing core functionality
 if(BUILD_QT_GUI)
@@ -66,26 +80,28 @@ endif()
 
 # Testing configuration
 if(BUILD_TESTS)
-    # Enable testing
+    # Enable CTest
     enable_testing()
 
-    # Add test framework
+    # Add test framework (will fetch GoogleTest if not available)
     add_subdirectory(Tests/framework)
 
     # Add unit tests
     add_subdirectory(Tests/unit)
 
-    # Add integration tests
-    add_subdirectory(Tests/integration)
-
-    # Add performance tests
-    add_subdirectory(Tests/performance)
-
-    # Add system tests
-    add_subdirectory(Tests/system)
-
-    # Add regression tests
-    add_subdirectory(Tests/regression)
+    # Optional test suites (uncomment when implemented)
+    if(EXISTS "${CMAKE_SOURCE_DIR}/Tests/integration")
+        add_subdirectory(Tests/integration)
+    endif()
+    if(EXISTS "${CMAKE_SOURCE_DIR}/Tests/performance")
+        add_subdirectory(Tests/performance)
+    endif()
+    if(EXISTS "${CMAKE_SOURCE_DIR}/Tests/system")
+        add_subdirectory(Tests/system)
+    endif()
+    if(EXISTS "${CMAKE_SOURCE_DIR}/Tests/regression")
+        add_subdirectory(Tests/regression)
+    endif()
 
     # Code coverage (GCC/Clang)
     if(COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")

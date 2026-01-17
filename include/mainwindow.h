@@ -5,8 +5,8 @@
 #include "QMutex"
 #include "QButtonGroup"
 #include "MCTS.h"
-
-using namespace std;
+// Avoid `using namespace std;` in headers to prevent name collisions (e.g. `byte`)
+// Use explicit `std::` qualifiers instead.
 
 
 
@@ -79,7 +79,7 @@ private:
     bool gameOver = false;
     int playerTile, computerTile;
     QMutex mutex;
-    string turn;
+    std::string turn;
     Postion Last;
 
 
@@ -101,8 +101,8 @@ public:
     Board* getBoardCopy(Board* board);
     void resetBoard(Board* board);
     bool makeMove(Board* mainboard, int playerTile, int col, int row);
-    vector<Postion> isValidMove(Board* board, int tile, int xstart, int ystart);
-    vector<Postion> getValidMove(Board* board, int tile,  bool forpolicy=false);
+    std::vector<Postion> isValidMove(Board* board, int tile, int xstart, int ystart);
+    std::vector<Postion> getValidMove(Board* board, int tile,  bool forpolicy=false);
     bool isOnBoard(int x, int y);
     void printBoard(Board* board);
     bool isGameOver(Board* board);

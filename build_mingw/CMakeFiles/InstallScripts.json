@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/build_mingw/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
