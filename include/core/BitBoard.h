@@ -408,3 +408,20 @@ struct Move {
 using ReversiBitBoard = Reversi::BitBoard;
 using ReversiPlayerColor = Reversi::PlayerColor;
 using ReversiMove = Reversi::Move;
+
+// 为Move结构体提供哈希函数支持，使其可以用作unordered_map的key
+namespace std {
+
+template<>
+struct hash<Reversi::Move> {
+    size_t operator()(const Reversi::Move& move) const {
+        // 简单的哈希函数：组合row, col和is_pass
+        size_t h = 0;
+        h = h * 31 + static_cast<size_t>(move.row + 1);      // +1 to handle -1
+        h = h * 31 + static_cast<size_t>(move.col + 1);      // +1 to handle -1
+        h = h * 31 + static_cast<size_t>(move.is_pass ? 1 : 0);
+        return h;
+    }
+};
+
+} // namespace std

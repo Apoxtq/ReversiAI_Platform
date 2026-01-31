@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "ui/MenuWindow.h"
 #include <QApplication>
 #include <QMessageBox>
 
@@ -15,17 +16,17 @@ int main(int argc, char *argv[])
 
     // 设置应用程序信息
     a.setApplicationName("ReversiAI_Platform");
-    a.setApplicationVersion("0.2.0-dev");
+    a.setApplicationVersion("0.4.0");
     a.setOrganizationName("University of Liverpool");
 
     try {
         // 测试核心功能
         testBitBoard();
 
-        // 创建主窗口
-        MainWindow w;
-        w.setWindowTitle("ReversiAI_Platform - 学术项目演示");
-        w.show();
+        // 创建目录界面
+        MenuWindow menu;
+        menu.setWindowTitle("ReversiAI_Platform v0.4.0");
+        menu.show();
 
         return a.exec();
     }

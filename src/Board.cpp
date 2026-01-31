@@ -77,6 +77,22 @@ std::optional<PlayerColor> Board::getWinner() const {
     return bitboard_.getWinner();
 }
 
+int Board::at(int row, int col) const {
+    // 将行列转换为位索引 (0-63)
+    int pos = row * 8 + col;
+    uint64_t blackMask = bitboard_.getPlayerBits();
+    uint64_t whiteMask = bitboard_.getOpponentBits();
+
+    uint64_t posMask = (uint64_t)1 << pos;
+
+    if (blackMask & posMask) {
+        return 2;  // 黑棋
+    } else if (whiteMask & posMask) {
+        return 1;  // 白棋
+    }
+    return 0;  // 空位
+}
+
 } // namespace Reversi
 
 

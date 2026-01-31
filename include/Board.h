@@ -33,6 +33,14 @@ public:
 
     int getMoveCount() const { return move_count_; }
 
+    /**
+     * @brief 获取指定位置的棋子值
+     * @param row 行 (0-7)
+     * @param col 列 (0-7)
+     * @return 0=空, 1=白棋, 2=黑棋
+     */
+    int at(int row, int col) const;
+
 private:
     BitBoard bitboard_;
     PlayerColor current_turn_ = PlayerColor::Black;

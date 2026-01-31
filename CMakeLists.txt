@@ -1,14 +1,16 @@
 cmake_minimum_required(VERSION 3.16)
 project(ReversiAI_Platform VERSION 1.0.0 LANGUAGES CXX)
 
-# Set MinGW as default generator on Windows for better compatibility
-if(WIN32 AND NOT CMAKE_GENERATOR)
-    set(CMAKE_GENERATOR "MinGW Makefiles" CACHE INTERNAL "" FORCE)
-endif()
+# Use default generator on Windows
 
 # C++ Standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Qt settings - AUTOMOC handles Qt's MOC automatically
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 # Option to build with Qt GUI (default OFF until Qt is configured)
 option(BUILD_QT_GUI "Build Qt GUI application" OFF)
@@ -25,7 +27,7 @@ option(PERFORMANCE_TESTING "Enable performance testing features" OFF)
 # Console application (no Qt dependency)
 add_executable(ReversiAI_Platform_Console
     main_console.cpp
-    ai/MCTS.cpp
+    # ai/MCTS.cpp  # 旧的MCTS实现，暂时移除
 )
 
 # Include directories
@@ -39,8 +41,33 @@ add_library(core_lib STATIC
 target_include_directories(core_lib PUBLIC include include/core)
 target_compile_features(core_lib PUBLIC cxx_std_17)
 
-# Link core_lib into console executable
-target_link_libraries(ReversiAI_Platform_Console PRIVATE core_lib)
+# AI library: compile AI algorithms
+add_library(ai_lib STATIC
+    src/ai/Evaluator.cpp
+    src/ai/AIStrategy.cpp
+    src/ai/MinimaxAI.cpp
+    # src/ai/MCTSAI.cpp  # 暂时注释掉，等待完善
+    src/ai/RandomAI.cpp
+    src/ai/AIBattle.cpp
+)
+target_include_directories(ai_lib PUBLIC include include/ai)
+target_compile_features(ai_lib PUBLIC cxx_std_17)
+target_link_libraries(ai_lib PUBLIC core_lib)
+
+# UI library: compile UI components (GameController, StatisticsManager)
+# Requires Qt for signals/slots and QObject base class
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+
+add_library(ui_lib STATIC
+    src/ui/GameController.cpp
+    src/ui/StatisticsManager.cpp
+)
+target_include_directories(ui_lib PUBLIC include include/ui)
+target_compile_features(ui_lib PUBLIC cxx_std_17)
+target_link_libraries(ui_lib PRIVATE Qt6::Core Qt6::Widgets)
+
+# Link libraries into console executable
+target_link_libraries(ReversiAI_Platform_Console PRIVATE core_lib ai_lib)
 
 # Console app for testing core functionality
 if(BUILD_QT_GUI)
@@ -52,30 +79,49 @@ if(BUILD_QT_GUI)
 
     # Add Qt executable
     if(Qt6_FOUND)
-        qt6_wrap_cpp(MOC_SOURCES src/mainwindow.h)
+        qt6_wrap_cpp(MOC_SOURCES
+            include/mainwindow.h
+            include/ui/GameController.h
+            include/ui/MenuWindow.h
+            include/ui/PvEWindow.h
+            include/ui/PvPWindow.h
+            include/ui/StatisticsManager.h
+        )
         qt6_add_resources(QRC_SOURCES src/rsc.qrc)
     else()
-        qt5_wrap_cpp(MOC_SOURCES src/mainwindow.h)
+        qt5_wrap_cpp(MOC_SOURCES
+            include/mainwindow.h
+            include/ui/GameController.h
+            include/ui/MenuWindow.h
+            include/ui/PvEWindow.h
+            include/ui/PvPWindow.h
+            include/ui/StatisticsManager.h
+        )
         qt5_add_resources(QRC_SOURCES src/rsc.qrc)
     endif()
 
     add_executable(ReversiAI_Platform
         main.cpp
         ui/mainwindow.cpp
-        ai/MCTS.cpp
+        ui/menuwindow.cpp
+        ui/pvewindow.cpp
+        ui/pvpwindow.cpp
         ${MOC_SOURCES}
         ${QRC_SOURCES}
     )
 
     # Link Qt libraries
     if(Qt6_FOUND)
-        target_link_libraries(ReversiAI_Platform Qt6::Core Qt6::Widgets)
+        target_link_libraries(ReversiAI_Platform PRIVATE Qt6::Core Qt6::Widgets)
     else()
-        target_link_libraries(ReversiAI_Platform Qt5::Core Qt5::Widgets)
+        target_link_libraries(ReversiAI_Platform PRIVATE Qt5::Core Qt5::Widgets)
     endif()
 
     # Include directories for Qt app
-    target_include_directories(ReversiAI_Platform PRIVATE include ui ai)
+    target_include_directories(ReversiAI_Platform PRIVATE include ui ai src)
+
+    # Link all required libraries
+    target_link_libraries(ReversiAI_Platform PRIVATE ui_lib core_lib ai_lib)
 endif()
 
 # Testing configuration

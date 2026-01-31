@@ -1,29 +1,28 @@
 /**
- * @file mainwindow.cpp
- * @brief 主窗口实现 - V0.4.0重构版本
+ * @file PvEWindow.cpp
+ * @brief 人机对战窗口实现
  *
- * 重构内容:
- * - 使用GameController管理游戏状态
- * - 移除全局变量
- * - 添加信号槽连接
- * - 保留paintEvent和mousePressEvent核心逻辑
+ * 功能:
+ * - 人机对战模式
+ * - AI难度选择
+ * - 先手/后手选择
+ * - 返回菜单功能
  *
  * @reference QtReversi/代码/chess/widget.cpp - 游戏规则和界面交互
  * @reference MCTS-AI-Reversi/mainwindow.cpp - paintEvent()实现保留
  */
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "ui/PvEWindow.h"
+#include "ui_pvewindow.h"
 #include "QPainter"
 #include "QPixmap"
 #include "QMouseEvent"
 #include "QDebug"
 #include "QTimer"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+PvEWindow::PvEWindow(QWidget* parent)
+    : QMainWindow(parent)
+    , ui(new Ui::PvEWindow) {
     ui->setupUi(this);
 
     // 初始化UI组件
@@ -35,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // 连接信号槽
     setupConnections();
 
-    // 保留资源加载（原有代码）
+    // 加载资源文件
     background.load(":/rsc/board.png");
     black.load(":/rsc/black.png");
     white.load(":/rsc/white.png");
@@ -43,44 +42,44 @@ MainWindow::MainWindow(QWidget *parent) :
     hintblack.load(":/rsc/blackpotential.png");
     hintred.load(":/rsc/redpotential.png");
 
-    // 连接按钮信号（使用新的槽函数）
+    // 连接按钮信号
     connect(ui->pushButton, &QPushButton::clicked,
-            this, &MainWindow::onStartGameClicked);
+            this, &PvEWindow::onStartGameClicked);
+    connect(ui->backButton, &QPushButton::clicked,
+            this, &PvEWindow::onBackToMenuClicked);
 }
 
-MainWindow::~MainWindow() {
+PvEWindow::~PvEWindow() {
     delete ui;
 }
 
-void MainWindow::initUI() {
-    // 保留原有init()调用
-    // init() 在ui_mainwindow.h中定义，由uic自动生成
+void PvEWindow::initUI() {
+    // init() 在 ui_pvewindow.h 中定义，由 uic 自动生成
 }
 
-void MainWindow::setupConnections() {
-    // GameController信号槽连接
+void PvEWindow::setupConnections() {
+    // GameController 信号槽连接
     connect(gameController_.get(), &Reversi::GameController::gameStarted,
-            this, &MainWindow::onGameStarted);
+            this, &PvEWindow::onGameStarted);
     connect(gameController_.get(), &Reversi::GameController::phaseChanged,
-            this, &MainWindow::onPhaseChanged);
+            this, &PvEWindow::onPhaseChanged);
     connect(gameController_.get(), &Reversi::GameController::turnChanged,
-            this, &MainWindow::onTurnChanged);
+            this, &PvEWindow::onTurnChanged);
     connect(gameController_.get(), &Reversi::GameController::moveMade,
-            this, &MainWindow::onMoveMade);
+            this, &PvEWindow::onMoveMade);
     connect(gameController_.get(), &Reversi::GameController::gameEnded,
-            this, &MainWindow::onGameEnded);
+            this, &PvEWindow::onGameEnded);
     connect(gameController_.get(), &Reversi::GameController::aiThinkingStarted,
-            this, &MainWindow::onAIThinkingStarted);
+            this, &PvEWindow::onAIThinkingStarted);
     connect(gameController_.get(), &Reversi::GameController::aiThinkingFinished,
-            this, &MainWindow::onAIThinkingFinished);
+            this, &PvEWindow::onAIThinkingFinished);
     connect(gameController_.get(), &Reversi::GameController::aiStatsUpdated,
-            this, &MainWindow::onAIStatsUpdated);
+            this, &PvEWindow::onAIStatsUpdated);
     connect(gameController_.get(), &Reversi::GameController::errorOccurred,
-            this, &MainWindow::onErrorOccurred);
+            this, &PvEWindow::onErrorOccurred);
 }
 
-void MainWindow::paintEvent(QPaintEvent *event) {
-    // 保留原有实现逻辑，只修改数据来源
+void PvEWindow::paintEvent(QPaintEvent* event) {
     this->resize(600, 400);
     QPainter painter(this);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
@@ -125,15 +124,9 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             }
         }
     }
-
-    // 绘制最后落子位置（从GameController获取）
-    // TODO: 需要在GameController中添加getLastMove()方法
-    // if (Last.x != -1) {
-    //     painter.drawPixmap(0 + 50 * Last.x, 0 + 50 * Last.y, 50, 50, hintred);
-    // }
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *e) {
+void PvEWindow::mousePressEvent(QMouseEvent* e) {
     // 检查游戏状态
     if (gameController_->getCurrentPhase() != Reversi::GamePhase::HumanTurn) {
         return;
@@ -152,7 +145,7 @@ void MainWindow::mousePressEvent(QMouseEvent *e) {
     gameController_->makeHumanMove(row, col);
 }
 
-void MainWindow::updateScoreDisplay() {
+void PvEWindow::updateScoreDisplay() {
     // 从GameController获取分数
     const Reversi::Board& board = gameController_->getBoard();
 
@@ -177,16 +170,12 @@ void MainWindow::updateScoreDisplay() {
     }
 }
 
-// ============ 信号槽实现 ============
-
-void MainWindow::onStartGameClicked() {
+void PvEWindow::onStartGameClicked() {
     // 确定游戏模式：默认是人机对战 (PvE)
     Reversi::GameMode mode = Reversi::GameMode::PvE;
     Reversi::Difficulty difficulty = Reversi::Difficulty::MEDIUM;
 
     // 确定人类玩家颜色（根据UI选择谁先手）
-    // AIchoice (AI First) → AI先手，人类是白棋
-    // playerchoice (Player First) → 玩家先手，人类是黑棋
     Reversi::PlayerColor humanColor;
     if (ui->AIchoice && ui->AIchoice->isChecked()) {
         humanColor = Reversi::PlayerColor::White;  // AI先手，人类是白棋
@@ -197,56 +186,52 @@ void MainWindow::onStartGameClicked() {
         humanColor = Reversi::PlayerColor::Black;
     }
 
-    qDebug() << "MainWindow: Starting game, humanColor:" << (int)humanColor;
+    qDebug() << "PvEWindow: Starting game, humanColor:" << (int)humanColor;
 
     // 开始游戏（始终是人机对战PvE模式）
     gameController_->startNewGame(mode, humanColor, difficulty);
 }
 
-void MainWindow::onGameStarted(Reversi::GameMode mode, Reversi::PlayerColor humanColor) {
-    qDebug() << "MainWindow: Game started, mode:" << (int)mode
+void PvEWindow::onGameStarted(Reversi::GameMode mode, Reversi::PlayerColor humanColor) {
+    qDebug() << "PvEWindow: Game started, mode:" << (int)mode
              << "humanColor:" << (int)humanColor;
     updateScoreDisplay();
     repaint();
 }
 
-void MainWindow::onPhaseChanged(Reversi::GamePhase phase) {
-    qDebug() << "MainWindow: Phase changed to" << (int)phase;
+void PvEWindow::onPhaseChanged(Reversi::GamePhase phase) {
+    qDebug() << "PvEWindow: Phase changed to" << (int)phase;
 
     // 根据阶段更新UI
     switch (phase) {
     case Reversi::GamePhase::Waiting:
-        // 等待开始状态
         break;
     case Reversi::GamePhase::HumanTurn:
-        // 人类玩家回合
         break;
     case Reversi::GamePhase::AITurn:
-        // AI回合，UI会显示AI状态
         break;
     case Reversi::GamePhase::GameOver:
-        // 游戏结束
-        qDebug() << "MainWindow: Game Over";
+        qDebug() << "PvEWindow: Game Over";
         break;
     }
 
     repaint();
 }
 
-void MainWindow::onTurnChanged(Reversi::PlayerColor player) {
-    qDebug() << "MainWindow: Turn changed to" << (int)player;
+void PvEWindow::onTurnChanged(Reversi::PlayerColor player) {
+    qDebug() << "PvEWindow: Turn changed to" << (int)player;
     updateScoreDisplay();
     repaint();
 }
 
-void MainWindow::onMoveMade(int row, int col, Reversi::PlayerColor player) {
-    qDebug() << "MainWindow: Move made at" << row << col << "by player" << (int)player;
+void PvEWindow::onMoveMade(int row, int col, Reversi::PlayerColor player) {
+    qDebug() << "PvEWindow: Move made at" << row << col << "by player" << (int)player;
     updateScoreDisplay();
     repaint();
 }
 
-void MainWindow::onGameEnded(Reversi::GameResult result) {
-    qDebug() << "MainWindow: Game ended, result:" << (int)result;
+void PvEWindow::onGameEnded(Reversi::GameResult result) {
+    qDebug() << "PvEWindow: Game ended, result:" << (int)result;
 
     QString resultText;
     switch (result) {
@@ -273,28 +258,30 @@ void MainWindow::onGameEnded(Reversi::GameResult result) {
     repaint();
 }
 
-void MainWindow::onAIThinkingStarted(const QString& aiName) {
-    qDebug() << "MainWindow: AI thinking started:" << aiName;
+void PvEWindow::onAIThinkingStarted(const QString& aiName) {
+    qDebug() << "PvEWindow: AI thinking started:" << aiName;
     if (ui->AIGO) {
         ui->AIGO->setText("AI思考中: " + aiName);
     }
 }
 
-void MainWindow::onAIThinkingFinished(int row, int col) {
-    qDebug() << "MainWindow: AI move finished at" << row << col;
+void PvEWindow::onAIThinkingFinished(int row, int col) {
+    qDebug() << "PvEWindow: AI move finished at" << row << col;
     if (ui->AIGO) {
         ui->AIGO->setText(QString("AI落子: %1,%2").arg(col).arg(row));
     }
 }
 
-void MainWindow::onAIStatsUpdated(const Reversi::AIStats& stats) {
-    // 更新AI统计显示（如果有对应的UI元素）
-    // TODO: 添加AI统计显示UI元素
-    qDebug() << "MainWindow: AI stats - nodes:" << stats.nodesExplored
+void PvEWindow::onAIStatsUpdated(const Reversi::AIStats& stats) {
+    qDebug() << "PvEWindow: AI stats - nodes:" << stats.nodesExplored
              << "time:" << stats.timeUsed.count() << "ms";
 }
 
-void MainWindow::onErrorOccurred(const QString& message) {
-    qDebug() << "MainWindow: Error -" << message;
-    // 可以添加错误提示UI
+void PvEWindow::onErrorOccurred(const QString& message) {
+    qDebug() << "PvEWindow: Error -" << message;
 }
+
+void PvEWindow::onBackToMenuClicked() {
+    emit backToMenu();
+}
+
