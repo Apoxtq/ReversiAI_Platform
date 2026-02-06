@@ -1,4 +1,4 @@
-name: Perft Benchmark
+name: Network Module Tests
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  perft:
+  network-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,36 +14,34 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y build-essential cmake
+          sudo apt install -y build-essential cmake qt6-base-dev qt6-base-dev-tools
 
       - name: Configure
         run: |
-          cmake -S . -B build_perft -DBUILD_TESTS=ON -DPERFORMANCE_TESTING=ON -DCMAKE_BUILD_TYPE=Release
+          cmake -S . -B build_network -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
 
-      - name: Build perft
+      - name: Build network module
         run: |
-          cmake --build build_perft --config Release --target perft_performance -- -j2
+          cmake --build build_network --config Release --target network_lib -- -j2
 
-      - name: Run perft and save results
+      - name: Run message tests
         run: |
-          mkdir -p perft_results
-          ./build_perft/bin/perft_performance 2000000 > perft_results/perft_output.txt
-          # Convert to simple CSV: iterations,time,calls_per_sec,avg_moves_per_call
-          python3 - <<'PY'
-import re
-txt = open('perft_results/perft_output.txt').read()
-iters = re.search(r'Iterations:\s*(\d+)', txt).group(1)
-time = re.search(r'Time:\s*([\d\.]+)', txt).group(1)
-calls = re.search(r'Calls/sec:\s*([\d\.]+)', txt).group(1)
-avg = re.search(r'Avg moves per call:\s*([\d\.]+)', txt).group(1)
-open('perft_results/perft_results.csv','w').write('iterations,time,calls_per_sec,avg_moves_per_call\\n%s,%s,%s,%s\\n' % (iters,time,calls,avg))
-print('Wrote perft_results/perft_results.csv')
-PY
+          echo "=== Running Message Tests ==="
+          ./build_network/bin/network_test_message
 
-      - name: Upload perft results
-        uses: actions/upload-artifact@v4
-        with:
-          name: perft-results
-          path: perft_results/perft_results.csv
+      - name: Run discovery & sync tests
+        run: |
+          echo "=== Running Discovery & Sync Tests ==="
+          ./build_network/bin/network_test_discovery_sync
 
+      - name: Run room & reconnect tests
+        run: |
+          echo "=== Running Room & Reconnect Tests ==="
+          ./build_network/bin/network_test_room_reconnect
 
+      - name: Run integration tests
+        run: |
+          echo "=== Running Integration Tests ==="
+          ./build_network/bin/network_test_integration
+          echo ""
+          echo "=== All Network Tests PASSED ==="

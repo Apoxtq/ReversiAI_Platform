@@ -54,17 +54,27 @@ target_include_directories(ai_lib PUBLIC include include/ai)
 target_compile_features(ai_lib PUBLIC cxx_std_17)
 target_link_libraries(ai_lib PUBLIC core_lib)
 
+# Network library: compile network components for LAN multiplayer (v0.5.0)
+# Reference: Egaroucid ggs.hpp protocol implementation
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/network/CMakeLists.txt)
+    add_subdirectory(network)
+    target_link_libraries(ai_lib PRIVATE network_lib)
+    target_link_libraries(ReversiAI_Platform_Console PRIVATE network_lib)
+endif()
+
 # UI library: compile UI components (GameController, StatisticsManager)
 # Requires Qt for signals/slots and QObject base class
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network)
 
 add_library(ui_lib STATIC
     src/ui/GameController.cpp
     src/ui/StatisticsManager.cpp
+    src/ui/NetworkLobbyWindow.cpp
+    src/ui/NetworkGameWindow.cpp
 )
-target_include_directories(ui_lib PUBLIC include include/ui)
+target_include_directories(ui_lib PUBLIC include include/ui network/include)
 target_compile_features(ui_lib PUBLIC cxx_std_17)
-target_link_libraries(ui_lib PRIVATE Qt6::Core Qt6::Widgets)
+target_link_libraries(ui_lib PRIVATE Qt6::Core Qt6::Widgets Qt6::Network network_lib)
 
 # Link libraries into console executable
 target_link_libraries(ReversiAI_Platform_Console PRIVATE core_lib ai_lib)
@@ -72,9 +82,9 @@ target_link_libraries(ReversiAI_Platform_Console PRIVATE core_lib ai_lib)
 # Console app for testing core functionality
 if(BUILD_QT_GUI)
     # Qt6 support with fallback to Qt5
-    find_package(Qt6 QUIET COMPONENTS Core Widgets)
+    find_package(Qt6 QUIET COMPONENTS Core Widgets Network)
     if(NOT Qt6_FOUND)
-        find_package(Qt5 REQUIRED COMPONENTS Core Widgets)
+        find_package(Qt5 REQUIRED COMPONENTS Core Widgets Network)
     endif()
 
     # Add Qt executable
@@ -85,6 +95,8 @@ if(BUILD_QT_GUI)
             include/ui/MenuWindow.h
             include/ui/PvEWindow.h
             include/ui/PvPWindow.h
+            include/ui/NetworkLobbyWindow.h
+            include/ui/NetworkGameWindow.h
             include/ui/StatisticsManager.h
         )
         qt6_add_resources(QRC_SOURCES src/rsc.qrc)
@@ -95,6 +107,8 @@ if(BUILD_QT_GUI)
             include/ui/MenuWindow.h
             include/ui/PvEWindow.h
             include/ui/PvPWindow.h
+            include/ui/NetworkLobbyWindow.h
+            include/ui/NetworkGameWindow.h
             include/ui/StatisticsManager.h
         )
         qt5_add_resources(QRC_SOURCES src/rsc.qrc)
@@ -106,22 +120,27 @@ if(BUILD_QT_GUI)
         ui/menuwindow.cpp
         ui/pvewindow.cpp
         ui/pvpwindow.cpp
+        src/ui/networklobbywindow.cpp
+        src/ui/networkgamewindow.cpp
         ${MOC_SOURCES}
         ${QRC_SOURCES}
     )
 
     # Link Qt libraries
     if(Qt6_FOUND)
-        target_link_libraries(ReversiAI_Platform PRIVATE Qt6::Core Qt6::Widgets)
+        target_link_libraries(ReversiAI_Platform PRIVATE Qt6::Core Qt6::Widgets Qt6::Network)
     else()
-        target_link_libraries(ReversiAI_Platform PRIVATE Qt5::Core Qt5::Widgets)
+        target_link_libraries(ReversiAI_Platform PRIVATE Qt5::Core Qt5::Widgets Qt5::Network)
     endif()
+    
+    # Link internal libraries
+    target_link_libraries(ReversiAI_Platform PRIVATE network_lib ui_lib ai_lib)
 
     # Include directories for Qt app
-    target_include_directories(ReversiAI_Platform PRIVATE include ui ai src)
+    target_include_directories(ReversiAI_Platform PRIVATE include ui ai src network/include)
 
     # Link all required libraries
-    target_link_libraries(ReversiAI_Platform PRIVATE ui_lib core_lib ai_lib)
+    target_link_libraries(ReversiAI_Platform PRIVATE ui_lib core_lib ai_lib network_lib)
 endif()
 
 # Testing configuration

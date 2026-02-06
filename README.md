@@ -1,7 +1,7 @@
 # ReversiAI_Platform 🎓
 
-|**Version**: v0.4.0  
-|**Status**: ✅ 本地多人对战功能已完成  
+|**Version**: v0.5.0  
+|**Status**: ✅ LAN网络对战功能已完成  
 |**Project**: University of Liverpool COMP390 Honours Year Project
 
 A comprehensive Othello/Reversi AI research and benchmarking platform implemented in modern C++, demonstrating academic excellence in open-source learning and software engineering.
@@ -30,16 +30,27 @@ A comprehensive Othello/Reversi AI research and benchmarking platform implemente
 - **Difficulty Levels**: Easy/Medium/Hard AI opponents
 
 ### 🎮 User Interface (v0.4.0 ✅ Completed)
-- **MenuWindow**: Game mode selection interface (PvE/PvP)
+- **MenuWindow**: Game mode selection interface (PvE/PvP/Network)
 - **PvEWindow**: Human vs AI gameplay with difficulty selection
 - **PvPWindow**: Local two-player mode with undo functionality
 - **Real-time Display**: Board visualization and move highlighting
 - **Statistics**: Game history and win rate tracking
 
-### 📊 Research Framework (v0.5.0 📅 Planned)
-- **Network Multiplayer**: LAN-based online gameplay
-- **Benchmarking Suite**: Comprehensive AI algorithm comparison
-- **Statistical Analysis**: Performance metrics and significance testing
+### 🌐 Network Multiplayer (v0.5.0 ✅ Completed)
+- **TCP Communication**: Stable client-server architecture
+- **LAN Discovery**: Automatic host detection via UDP broadcast
+- **Game State Synchronization**: Real-time board sync with Zobrist hashing
+- **Room System**: Create/Join rooms with customizable settings
+- **Reconnection Handling**: Exponential backoff reconnection with auto-retry
+- **Heartbeat Mechanism**: 30-second keep-alive for connection stability
+- **Network Lobby**: Room browser with auto-refresh
+- **Network Game Window**: Full-featured online gameplay with chat
+- **Latency Monitoring**: Real-time ping display
+
+### 📊 Research Framework (v0.6.0 📅 Planned)
+- AI benchmarking suite
+- Statistical analysis tools
+- Experiment management
 
 ---
 
@@ -66,6 +77,9 @@ cmake .. -DBUILD_QT_GUI=ON -DCMAKE_BUILD_TYPE=Release
 # Build the project
 cmake --build . --config Release
 
+# Deploy Qt dependencies (Windows)
+windeployqt ReversiAI_Platform.exe
+
 # Run the GUI application
 ./ReversiAI_Platform
 ```
@@ -79,10 +93,16 @@ Main Menu (目录界面)
 │   ├── Choose who plays first (AI First / Player First)
 │   ├── View AI thinking stats (nodes, time)
 │   └── Back to menu option
-└── PvP Button (本地双人) → PvP Window
-    ├── Two-player local gameplay
-    ├── Undo functionality
-    └── Back to menu option
+├── PvP Button (本地双人) → PvP Window
+│   ├── Two-player local gameplay
+│   ├── Undo functionality
+│   └── Back to menu option
+└── Network Button (线上对战) → Network Lobby
+    ├── Create new room
+    ├── Browse and join existing rooms
+    ├── Online multiplayer gameplay
+    ├── Real-time chat
+    └── Latency display
 ```
 
 ---
@@ -98,6 +118,7 @@ All documentation is available in the `项目计划（文档放置）/` director
 ### Version Documentation
 - **[v0.4.0-完成报告.md](项目计划（文档放置）/v0.4.0-完成报告.md)** - v0.4.0 completion report
 - **[v0.5.0-设计规划.md](项目计划（文档放置）/v0.5.0-设计规划.md)** - v0.5.0 network features design
+- **[v0.5.0-完成报告.md](项目计划（文档放置）/v0.5.0-完成报告.md)** - v0.5.0 completion report
 
 ### Core Documents
 - **[技术债务与开源参考.md](项目计划（文档放置）/技术债务与开源参考.md)** - Open-source reference guide
@@ -124,8 +145,25 @@ ReversiAI_Platform/
 │       ├── MenuWindow.h  # Main menu
 │       ├── PvEWindow.h   # PvE game window
 │       ├── PvPWindow.h   # PvP game window
-│       ├── GameController.h # Game state management
-│       └── StatisticsManager.h # Game statistics
+│       ├── NetworkLobbyWindow.h  # Network lobby
+│       ├── NetworkGameWindow.h   # Network game
+│       ├── GameController.h       # Game state management
+│       └── StatisticsManager.h    # Game statistics
+├── network/               # Network module (v0.5.0)
+│   ├── include/network/
+│   │   ├── message.hpp           # Message serialization
+│   │   ├── networkclient.hpp     # TCP client
+│   │   ├── networkdiscovery.hpp  # UDP discovery
+│   │   ├── gamesynchronizer.hpp  # State sync
+│   │   ├── roommanager.hpp       # Room management
+│   │   └── reconnectionmanager.hpp # Reconnection
+│   └── src/
+│       ├── message.cpp
+│       ├── networkclient.cpp
+│       ├── networkdiscovery.cpp
+│       ├── gamesynchronizer.cpp
+│       ├── roommanager.cpp
+│       └── reconnectionmanager.cpp
 ├── src/
 │   ├── core/             # Core implementation
 │   ├── ai/               # AI implementation
@@ -147,7 +185,23 @@ ReversiAI_Platform/
 
 ### ✅ Completed Versions
 
-#### v0.4.0 (Current - January 2026)
+#### v0.5.0 (Current - February 2026)
+- **Features**: LAN network multiplayer, TCP/UDP communication, Room system
+- **Status**: 100% Complete
+- **Git Commit**: `Network module implemented UDP discovery, room management`
+ with TCP client,- **Code Lines**: ~5,000 new lines
+- **Key Features**:
+  - ✅ TCP Communication Framework
+  - ✅ LAN Network Discovery (UDP Broadcast)
+  - ✅ Game State Synchronization (Zobrist Hashing)
+  - ✅ Room System (Create/Join/Leave)
+  - ✅ Heartbeat Mechanism (30s keep-alive)
+  - ✅ Reconnection Handling (Exponential backoff)
+  - ✅ Network Lobby UI
+  - ✅ Network Game Window with Chat
+  - ✅ Latency Monitoring
+
+#### v0.4.0 (January 2026)
 - **Features**: Menu interface, PvE mode, PvP mode
 - **Status**: 100% Complete
 - **Git Commit**: `259d367` - feat: v0.4.0 - 实现本地多人对战功能
@@ -166,27 +220,17 @@ ReversiAI_Platform/
 
 ### 📅 Planned Versions
 
-#### v0.5.0 (March 2026) - Network Features
-| Priority | Feature | Status |
-|----------|---------|--------|
-| P0 | Message serialization | 📅 Planned |
-| P0 | TCP communication | 📅 Planned |
-| P0 | Connection state management | 📅 Planned |
-| P1 | LAN network discovery | 📅 Planned |
-| P1 | Game state synchronization | 📅 Planned |
-| P1 | Heartbeat mechanism | 📅 Planned |
-| P2 | Room system | 📅 Planned |
-| P2 | Reconnection handling | 📅 Planned |
-
 #### v0.6.0 (March 2026) - Research Framework
 - AI benchmarking suite
 - Statistical analysis tools
 - Experiment management
+- Performance metrics dashboard
 
 #### v1.0.0 (March 2026) - Final Release
 - Complete feature set
 - Performance optimization
 - Final documentation
+- Academic presentation materials
 
 ---
 
@@ -205,25 +249,30 @@ This project learns from and builds upon excellent open-source implementations:
 
 | Project | Reference | Contribution |
 |---------|-----------|--------------|
-| **[Egaroucid](https://github.com/Nyanyan/Egaroucid)** | ⭐⭐⭐⭐⭐ | Primary technical reference (world-class Othello AI) |
-| **[edax-reversi](https://github.com/abulmo/edax-reversi)** | ⭐⭐⭐⭐ | Classic C implementation guidance |
+| **[Egaroucid](https://github.com/Nyanyan/Egaroucid)** | ⭐⭐⭐⭐⭐ | Primary technical reference (world-class Othello AI) - GGS protocol, GTP commands, network architecture |
+| **[edax-reversi](https://github.com/abulmo/edax-reversi)** | ⭐⭐⭐⭐ | Classic C implementation guidance - XBoard protocol |
 | **[Reversi(Java)](https://github.com/abulmo/Reversi)** | ⭐⭐⭐ | Clean object-oriented architecture |
 | **[MCTS-AI-Reversi](https://github.com/whatlulumomo/MCTS-AI-Reversi)** | ⭐⭐⭐ | Initial framework and Qt integration |
+| **[QtReversi](OtherProjects/QtReversi)** | ⭐⭐⭐ | Qt UI patterns and widget layout |
 
 ---
 
 ## 🧪 Testing
 
 ### Current Test Coverage
-- **Unit Tests**: Basic game logic tests
-- **Integration Tests**: AI vs AI battles
-- **Manual Testing**: UI functionality verification
+- **Unit Tests**: Network message serialization, TCP communication
+- **Integration Tests**: AI vs AI battles, Network discovery
+- **Manual Testing**: UI functionality verification, Network gameplay
+- **GUI Tests**: Menu navigation, Lobby operations, Gameplay
 
-### Test Results (v0.4.0)
-- ✅ PvE mode: Working correctly
-- ✅ PvP mode: Both players can move
-- ✅ Menu navigation: Smooth transitions
-- ✅ Undo functionality: Working
+### Test Results (v0.5.0)
+- ✅ TCP connection: Working correctly
+- ✅ UDP discovery: Hosts detected reliably
+- ✅ Room creation/joining: All operations functional
+- ✅ Game sync: Real-time board synchronization
+- ✅ Reconnection: Auto-retry with exponential backoff
+- ✅ Chat: Message sending/receiving
+- ✅ Latency: Accurate ping measurement
 
 ---
 
@@ -235,6 +284,7 @@ This project learns from and builds upon excellent open-source implementations:
 | v0.2.0 | Core logic | ~2,500 | 30 |
 | v0.3.0 | AI algorithms | ~4,000 | 40 |
 | v0.4.0 | UI system | ~5,500 | 45 |
+| v0.5.0 | Network features | ~10,500 | 69 |
 
 ---
 
@@ -273,7 +323,7 @@ This is an academic project, but contributions and feedback are welcome:
 This project stands on the shoulders of excellent open-source projects and academic research in the field of game AI and Othello algorithms.
 
 ### Special Thanks
-- **Egaroucid Project**: For providing world-class Othello AI implementation
+- **Egaroucid Project**: For providing world-class Othello AI implementation and network protocol reference
 - **edax-reversi Team**: For the classic C implementation that inspired many
 - **University of Liverpool**: For the academic environment and support
 - **Open-Source Community**: For making knowledge freely available
@@ -310,4 +360,4 @@ This project serves as an excellent example for:
 
 |**⭐ Star this repository to support academic open-source development!**  
 |**🎓 University of Liverpool COMP390 Honours Year Project**  
-|**Current Version**: v0.4.0 | **Next Version**: v0.5.0 (Network Features)
+|**Current Version**: v0.5.0 | **Next Version**: v0.6.0 (Research Framework)**

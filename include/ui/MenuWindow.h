@@ -14,7 +14,7 @@ QT_END_NAMESPACE
  *
  * 功能:
  * - 显示游戏标题
- * - 提供人机对战 (PvE) 和双人对战 (PvP) 入口
+ * - 提供人机对战 (PvE)、双人对战 (PvP) 和网络对战 (PvN) 入口
  * - 点击按钮后打开对应游戏窗口
  */
 class MenuWindow : public QMainWindow {
@@ -25,12 +25,14 @@ public:
     ~MenuWindow() override;
 
 signals:
-    void startPvEGame();    // 开始人机对战
-    void startPvPGame();    // 开始双人对战
+    void startPvEGame();      // 开始人机对战
+    void startPvPGame();      // 开始双人对战
+    void startPvNGame();      // 开始网络对战
 
 private slots:
     void onPvEButtonClicked();
     void onPvPButtonClicked();
+    void onNetworkButtonClicked();  // 网络对战按钮
 
 private:
     Ui::MenuWindow* ui;

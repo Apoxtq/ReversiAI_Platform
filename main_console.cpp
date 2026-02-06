@@ -2,14 +2,28 @@
 #include <iomanip>
 #include <string>
 #include <chrono>
+#include <locale>
 #include "core/BitBoard.h"
 #include "Board.h"
 #include "ai/AIStrategy.h"
 #include "ai/Evaluator.h"
 #include "ai/AIBattle.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 int main(int argc, char *argv[])
 {
+    // 设置控制台编码为UTF-8
+    #ifdef _WIN32
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+    #endif
+    
+    // 设置C++ locale以支持UTF-8
+    std::locale::global(std::locale(""));
+    
     std::cout << "=== ReversiAI_Platform 控制台版本 ===" << std::endl;
     std::cout << "测试BitBoard和MCTS算法基础功能" << std::endl;
     std::cout << std::string(50, '=') << std::endl;
