@@ -1,48 +1,54 @@
 # ReversiAI_Platform 🎓
 
-**Version: v0.2.0-dev**
-
-**University of Liverpool COMP390 Honours Year Project**
+|**Version**: v0.4.0  
+|**Status**: ✅ 本地多人对战功能已完成  
+|**Project**: University of Liverpool COMP390 Honours Year Project
 
 A comprehensive Othello/Reversi AI research and benchmarking platform implemented in modern C++, demonstrating academic excellence in open-source learning and software engineering.
 
 [![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://isocpp.org/)
+[![Qt](https://img.shields.io/badge/Qt-6.10-blue.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-green.svg)](https://cmake.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Academic Project](https://img.shields.io/badge/Academic-University%20of%20Liverpool-red.svg)](https://www.liverpool.ac.uk/)
 
+---
+
 ## ✨ Core Features
 
-### 🔢 BitBoard System (v0.2.0-dev ✅)
+### 🔢 BitBoard System (v0.2.0 ✅ Completed)
 - **Efficient Implementation**: uint64_t bitboard with 10M+ ops/sec performance
 - **Complete Game Logic**: Precise Othello flip rules and move generation
 - **Cross-Platform**: CMake build system supporting Windows/Linux/macOS
 - **Academic Validation**: Thoroughly tested with standard opening scenarios
 
-### 🤖 AI Algorithms (Upcoming)
-- **Minimax with Alpha-Beta**: Classical game tree search
-- **Monte Carlo Tree Search**: Modern probabilistic algorithm
+### 🤖 AI Algorithms (v0.3.0 ✅ Completed)
+- **MinimaxAI**: Classical game tree search with Alpha-Beta pruning
+- **MCTSAI**: Monte Carlo Tree Search probabilistic algorithm
+- **RandomAI**: Baseline AI for benchmarking and testing
 - **Evaluation Functions**: Dynamic heuristic assessment
 - **Difficulty Levels**: Easy/Medium/Hard AI opponents
 
-### 🎮 User Interface (Upcoming)
-- **Qt-based GUI**: Modern graphical interface
-- **Game Visualization**: Real-time board display and move highlighting
-- **Statistics Dashboard**: Performance metrics and game analytics
-- **Multiplayer Support**: Local and network gameplay
+### 🎮 User Interface (v0.4.0 ✅ Completed)
+- **MenuWindow**: Game mode selection interface (PvE/PvP)
+- **PvEWindow**: Human vs AI gameplay with difficulty selection
+- **PvPWindow**: Local two-player mode with undo functionality
+- **Real-time Display**: Board visualization and move highlighting
+- **Statistics**: Game history and win rate tracking
 
-### 📊 Research Framework (Upcoming)
+### 📊 Research Framework (v0.5.0 📅 Planned)
+- **Network Multiplayer**: LAN-based online gameplay
 - **Benchmarking Suite**: Comprehensive AI algorithm comparison
 - **Statistical Analysis**: Performance metrics and significance testing
-- **Experiment Management**: Reproducible research workflows
-- **Data Visualization**: Charts and graphs for research presentation
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - **C++ Compiler**: GCC 9+, Clang 10+, or MSVC 2019+
 - **CMake**: Version 3.16 or higher
-- **Qt6** (optional): For GUI version
+- **Qt6**: Version 6.10 or higher (for GUI)
 
 ### Build Instructions
 
@@ -54,55 +60,135 @@ cd ReversiAI_Platform
 # Create build directory
 mkdir build && cd build
 
-# Configure with CMake
-cmake .. -DCMAKE_BUILD_TYPE=Release
+# Configure with CMake (GUI mode)
+cmake .. -DBUILD_QT_GUI=ON -DCMAKE_BUILD_TYPE=Release
 
 # Build the project
 cmake --build . --config Release
 
-# Run the console demo
-./ReversiAI_Platform_Console
+# Run the GUI application
+./ReversiAI_Platform
 ```
 
-### Expected Output
+### GUI Features
+
 ```
-=== ReversiAI_Platform 控制台版本 ===
-测试BitBoard和MCTS算法基础功能
-==================================================
-
-🎯 测试BitBoard核心功能
-------------------------------
-标准开局:
-........
-........
-........
-...BW...
-...WB...
-........
-........
-........
-
-2. 测试有效移动生成...
-黑方有效移动数量: 4
-白方有效移动数量: 4
-黑方有效移动位置: (2,4) (3,5) (4,2) (5,3)
-
-✅ BitBoard功能测试完成
+Main Menu (目录界面)
+├── PvE Button (人机对战) → PvE Window
+│   ├── Select AI difficulty (Easy/Medium/Hard)
+│   ├── Choose who plays first (AI First / Player First)
+│   ├── View AI thinking stats (nodes, time)
+│   └── Back to menu option
+└── PvP Button (本地双人) → PvP Window
+    ├── Two-player local gameplay
+    ├── Undo functionality
+    └── Back to menu option
 ```
+
+---
 
 ## 📚 Documentation
 
 All documentation is available in the `项目计划（文档放置）/` directory:
 
-### Core Documents
-- **[技术债务与开源参考.md](项目计划（文档放置）/技术债务与开源参考.md)** - Complete open-source reference guide
-- **[学术项目检查清单.md](项目计划（文档放置）/学术项目检查清单.md)** - Academic compliance verification
-- **[项目可行性分析报告.md](项目计划（文档放置）/项目可行性分析报告.md)** - Technical feasibility analysis
-
-### Development Plans
-- **[v0.2.0-设计规划.md](项目计划（文档放置）/v0.2.0-设计规划.md)** - Current version implementation details
-- **[v0.3.0-设计规划.md](项目计划（文档放置）/v0.3.0-设计规划.md)** - Next version AI algorithms
+### Project Tracking
+- **[项目进展跟踪.md](项目计划（文档放置）/项目进展跟踪.md)** - Project progress and milestone tracking
 - **[ReversiAI_Platform_项目计划.md](项目计划（文档放置）/ReversiAI_Platform_项目计划.md)** - Complete project roadmap
+
+### Version Documentation
+- **[v0.4.0-完成报告.md](项目计划（文档放置）/v0.4.0-完成报告.md)** - v0.4.0 completion report
+- **[v0.5.0-设计规划.md](项目计划（文档放置）/v0.5.0-设计规划.md)** - v0.5.0 network features design
+
+### Core Documents
+- **[技术债务与开源参考.md](项目计划（文档放置）/技术债务与开源参考.md)** - Open-source reference guide
+- **[学术项目检查清单.md](项目计划（文档放置）/学术项目检查清单.md)** - Academic compliance verification
+- **[API设计规范.md](项目计划（文档放置）/API设计规范.md)** - Code design standards
+
+---
+
+## 🏗️ Architecture
+
+```
+ReversiAI_Platform/
+├── include/
+│   ├── core/              # Core game logic
+│   │   ├── Board.h       # Board representation
+│   │   ├── BitBoard.h    # BitBoard optimization
+│   │   └── Move.h        # Move structure
+│   ├── ai/               # AI algorithms
+│   │   ├── AIStrategy.h  # AI interface
+│   │   ├── MinimaxAI.h   # Minimax algorithm
+│   │   ├── MCTSAI.h      # MCTS algorithm
+│   │   └── RandomAI.h    # Random AI
+│   └── ui/               # User interface
+│       ├── MenuWindow.h  # Main menu
+│       ├── PvEWindow.h   # PvE game window
+│       ├── PvPWindow.h   # PvP game window
+│       ├── GameController.h # Game state management
+│       └── StatisticsManager.h # Game statistics
+├── src/
+│   ├── core/             # Core implementation
+│   ├── ai/               # AI implementation
+│   └── ui/               # UI implementation
+├── ui/                   # Qt UI files (.ui)
+└── 项目计划（文档放置）/   # Academic documentation
+```
+
+### Design Principles
+- **Academic Rigor**: Harvard citation standards and ethical compliance
+- **Modern C++**: C++17 features with RAII and smart pointers
+- **Modular Design**: Clean separation of concerns for research and extension
+- **Qt Framework**: Signal/slot mechanism for inter-object communication
+- **Cross-Platform**: Native support for Windows, Linux, and macOS
+
+---
+
+## 📈 Development Roadmap
+
+### ✅ Completed Versions
+
+#### v0.4.0 (Current - January 2026)
+- **Features**: Menu interface, PvE mode, PvP mode
+- **Status**: 100% Complete
+- **Git Commit**: `259d367` - feat: v0.4.0 - 实现本地多人对战功能
+
+#### v0.3.0 (January 2026)
+- **Features**: AIStrategy pattern, MinimaxAI, MCTSAI, RandomAI
+- **Status**: 100% Complete
+
+#### v0.2.0 (January 2026)
+- **Features**: BitBoard system, Board logic, Move validation
+- **Status**: 100% Complete
+
+#### v0.1.0 (January 2026)
+- **Features**: CMake build system, project structure, compilation verification
+- **Status**: 100% Complete
+
+### 📅 Planned Versions
+
+#### v0.5.0 (March 2026) - Network Features
+| Priority | Feature | Status |
+|----------|---------|--------|
+| P0 | Message serialization | 📅 Planned |
+| P0 | TCP communication | 📅 Planned |
+| P0 | Connection state management | 📅 Planned |
+| P1 | LAN network discovery | 📅 Planned |
+| P1 | Game state synchronization | 📅 Planned |
+| P1 | Heartbeat mechanism | 📅 Planned |
+| P2 | Room system | 📅 Planned |
+| P2 | Reconnection handling | 📅 Planned |
+
+#### v0.6.0 (March 2026) - Research Framework
+- AI benchmarking suite
+- Statistical analysis tools
+- Experiment management
+
+#### v1.0.0 (March 2026) - Final Release
+- Complete feature set
+- Performance optimization
+- Final documentation
+
+---
 
 ## 🎓 Academic Background
 
@@ -114,70 +200,43 @@ This project is part of the **COMP390 Honours Year Project** at the University o
 - **Engineering Excellence**: Modern C++ practices in academic software development
 
 ### Learning Sources
+
 This project learns from and builds upon excellent open-source implementations:
 
-- **[Egaroucid](https://github.com/Nyanyan/Egaroucid)** - Primary technical reference (world-class Othello AI)
-- **[edax-reversi](https://github.com/abulmo/edax-reversi)** - Classic C implementation guidance
-- **[Reversi(Java)](https://github.com/abulmo/Reversi)** - Clean object-oriented architecture
-- **[MCTS-AI-Reversi](https://github.com/whatlulumomo/MCTS-AI-Reversi)** - Initial framework and Qt integration
+| Project | Reference | Contribution |
+|---------|-----------|--------------|
+| **[Egaroucid](https://github.com/Nyanyan/Egaroucid)** | ⭐⭐⭐⭐⭐ | Primary technical reference (world-class Othello AI) |
+| **[edax-reversi](https://github.com/abulmo/edax-reversi)** | ⭐⭐⭐⭐ | Classic C implementation guidance |
+| **[Reversi(Java)](https://github.com/abulmo/Reversi)** | ⭐⭐⭐ | Clean object-oriented architecture |
+| **[MCTS-AI-Reversi](https://github.com/whatlulumomo/MCTS-AI-Reversi)** | ⭐⭐⭐ | Initial framework and Qt integration |
 
-## 🏗️ Architecture
+---
 
-```
-ReversiAI_Platform/
-├── include/core/          # Core BitBoard implementation
-├── src/core/             # BitBoard source code
-├── Tests/                # Complete testing framework
-├── 项目计划（文档放置）/   # Academic documentation (16 docs)
-├── .project-config/      # Development workflow configuration
-├── CMakeLists.txt        # Modern build system
-└── README.md             # This file
-```
+## 🧪 Testing
 
-### Design Principles
-- **Academic Rigor**: Harvard citation standards and ethical compliance
-- **Modern C++**: C++17 features with RAII and smart pointers
-- **Modular Design**: Clean separation of concerns for research and extension
-- **Cross-Platform**: Native support for Windows, Linux, and macOS
-- **Test-Driven**: Comprehensive testing framework for quality assurance
+### Current Test Coverage
+- **Unit Tests**: Basic game logic tests
+- **Integration Tests**: AI vs AI battles
+- **Manual Testing**: UI functionality verification
 
-## 🔬 Technical Highlights
+### Test Results (v0.4.0)
+- ✅ PvE mode: Working correctly
+- ✅ PvP mode: Both players can move
+- ✅ Menu navigation: Smooth transitions
+- ✅ Undo functionality: Working
 
-### BitBoard Performance
-```cpp
-// Demonstrated performance: 10M+ flip operations per second
-// Algorithm based on Egaroucid's optimized bit manipulation
-// Efficient move generation for Othello AI research
-```
+---
 
-### Open-Source Integration
-- **Transparent Attribution**: All algorithms properly cited and documented
-- **Licensing Compliance**: Respect for all referenced project licenses
-- **Innovation Tracking**: Clear documentation of improvements and modifications
-- **Academic Integrity**: Complete disclosure of technical debt and learning sources
+## 📊 Version Statistics
 
-## 📊 Development Roadmap
+| Version | Features | Code Lines | Files |
+|---------|----------|------------|-------|
+| v0.1.0 | Build system | ~800 | 20 |
+| v0.2.0 | Core logic | ~2,500 | 30 |
+| v0.3.0 | AI algorithms | ~4,000 | 40 |
+| v0.4.0 | UI system | ~5,500 | 45 |
 
-### ✅ Completed (v0.2.0-dev)
-- [x] BitBoard core system with efficient bit operations
-- [x] Complete academic documentation suite (16 documents)
-- [x] Modern C++17 architecture with CMake
-- [x] Cross-platform build verification
-- [x] GitHub repository setup and initial release
-
-### 🔄 In Progress (v0.2.0 → v0.3.0)
-- [ ] Complete unit test suite (60+ test cases)
-- [ ] Integration testing framework
-- [ ] Performance benchmark suite
-- [ ] Minimax AI algorithm implementation
-- [ ] Evaluation function development
-
-### 📅 Planned (v0.4.0 → v1.0.0)
-- [ ] Qt GUI interface implementation
-- [ ] Network multiplayer support
-- [ ] Advanced AI algorithms (MCTS optimization)
-- [ ] Research framework and benchmarking tools
-- [ ] Complete platform with all features
+---
 
 ## 🤝 Contributing
 
@@ -195,13 +254,19 @@ This is an academic project, but contributions and feedback are welcome:
 - **Testing Standards**: All code must pass the established test suite
 - **Documentation**: New features require complete technical documentation
 
+---
+
 ## 📧 Contact & Academic Supervision
 
-- **Student**: Tianqixing (201821852)
-- **Institution**: University of Liverpool, Department of Computer Science
-- **Course**: COMP390 Honours Year Project
-- **Supervisor**: [To be assigned by department]
-- **Ethical Approval**: Reference #12779 (Low Risk, Category B/Participant 2)
+| Field | Information |
+|-------|-------------|
+| **Student** | Tianqixing (201821852) |
+| **Institution** | University of Liverpool, Department of Computer Science |
+| **Course** | COMP390 Honours Year Project |
+| **Supervisor** | [To be assigned by department] |
+| **Ethical Approval** | Reference #12779 (Low Risk, Category B/Participant 2) |
+
+---
 
 ## 🙏 Acknowledgments
 
@@ -212,6 +277,8 @@ This project stands on the shoulders of excellent open-source projects and acade
 - **edax-reversi Team**: For the classic C implementation that inspired many
 - **University of Liverpool**: For the academic environment and support
 - **Open-Source Community**: For making knowledge freely available
+
+---
 
 ## 📄 License
 
@@ -241,6 +308,6 @@ This project serves as an excellent example for:
 
 ---
 
-**⭐ Star this repository to support academic open-source development and excellence in computer science education!**
-
-**🎓 University of Liverpool COMP390 Honours Year Project - Demonstrating Academic Excellence in Software Engineering**
+|**⭐ Star this repository to support academic open-source development!**  
+|**🎓 University of Liverpool COMP390 Honours Year Project**  
+|**Current Version**: v0.4.0 | **Next Version**: v0.5.0 (Network Features)
