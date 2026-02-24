@@ -28,11 +28,13 @@ signals:
     void startPvEGame();      // 开始人机对战
     void startPvPGame();      // 开始双人对战
     void startPvNGame();      // 开始网络对战
+    void startAIResearch();   // 开始AI研究模式
 
 private slots:
     void onPvEButtonClicked();
     void onPvPButtonClicked();
     void onNetworkButtonClicked();  // 网络对战按钮
+    void onAIResearchButtonClicked();  // AI研究模式按钮
 
 private:
     Ui::MenuWindow* ui;

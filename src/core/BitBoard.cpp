@@ -4,6 +4,22 @@
 #include <stdexcept>
 #include <optional>
 
+// 跨平台位操作支持
+#if defined(_MSC_VER)
+    #include <intrin.h>
+    #define POPCOUNT64 __popcnt64
+
+    // MSVC内联函数实现CTZ (Count Trailing Zeros)
+    inline int CTZ64(uint64_t x) {
+        unsigned long index;
+        _BitScanForward64(&index, x);
+        return static_cast<int>(index);
+    }
+#else
+    #define POPCOUNT64 __builtin_popcountll
+    #define CTZ64(x) __builtin_ctzll(x)
+#endif
+
 /**
  * @file BitBoard.cpp
  * @brief 位棋盘核心实现
@@ -82,7 +98,7 @@ uint64_t BitBoard::getValidMoves(PlayerColor color) const {
     // 遍历所有空位
     uint64_t empties = empty_bits;
     while (empties) {
-        int pos = __builtin_ctzll(empties);
+        int pos = CTZ64(empties);
 
         // 检查这个位置是否有有效的翻转
         if (calculateFlips(pos, player_bits, opponent_bits) != 0) {
@@ -152,15 +168,15 @@ bool BitBoard::isGameOver() const {
 
 int BitBoard::getScore(PlayerColor color) const {
     if (color == PlayerColor::Black) {
-        return __builtin_popcountll(player_pieces_);
+        return POPCOUNT64(player_pieces_);
     } else {
-        return __builtin_popcountll(opponent_pieces_);
+        return POPCOUNT64(opponent_pieces_);
     }
 }
 
 int BitBoard::getEmptyCount() const {
     uint64_t occupied = getOccupiedBits();
-    return 64 - __builtin_popcountll(occupied);
+    return 64 - POPCOUNT64(occupied);
 }
 
 std::optional<PlayerColor> BitBoard::getWinner() const {

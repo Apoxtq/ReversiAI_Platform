@@ -16,13 +16,29 @@ namespace Reversi {
 MinimaxAI::MinimaxAI(MinimaxConfig config, std::unique_ptr<Evaluator> evaluator)
     : config_(config),
       evaluator_(evaluator ? std::move(evaluator) : EvaluatorFactory::createStaticEvaluator()) {
+    // v0.6.0: 初始化转置表
+    initTranspositionTable();
+}
+
+void MinimaxAI::initTranspositionTable() {
+    if (config_.useTranspositionTable) {
+        tt_ = std::make_unique<TranspositionTable>(config_.transpositionTableSizeMB);
+        std::cout << "[MinimaxAI] Transposition table initialized: "
+                  << config_.transpositionTableSizeMB << " MB" << std::endl;
+    }
 }
 
 Move MinimaxAI::findBestMove(const Board& board, const SearchLimits& limits) {
+    // v0.6.0: 初始化转置表（如果尚未初始化）
+    if (!tt_ && config_.useTranspositionTable) {
+        initTranspositionTable();
+    }
+
     // 重置统计信息
     stats_ = AIStats{};
     config_.nodesExplored = 0;
     config_.cutoffs = 0;
+    config_.ttHits = 0;
     bestMove_ = Move();
     bestScore_ = std::numeric_limits<int>::min();
     lastCompletedDepth_ = 0;
@@ -74,6 +90,22 @@ Move MinimaxAI::findBestMove(const Board& board, const SearchLimits& limits) {
 int MinimaxAI::minimaxAlphaBeta(const Board& board, PlayerColor currentPlayer, int depth,
                                bool isMaximizing, int alpha, int beta, const SearchLimits& limits) {
     config_.nodesExplored++;
+
+    // v0.6.0: 转置表查找
+    if (tt_ && config_.useTranspositionTable) {
+        uint32_t hash = ZobristHash::computeHash(
+            board.getBitBoard().getPlayerBits(),
+            board.getBitBoard().getOpponentBits()
+        );
+        int storedAlpha = alpha, storedBeta = beta, storedScore = 0;
+        Move storedMove;
+        if (tt_->probe(hash, depth, storedAlpha, storedBeta, storedScore, storedMove)) {
+            config_.ttHits++;
+            // 根据转置表条目的类型更新alpha/beta
+            if (storedAlpha >= beta) return storedBeta;  // 下界 >= beta，剪枝
+            if (storedBeta <= alpha) return storedAlpha;  // 上界 <= alpha，剪枝
+        }
+    }
 
     // 检查是否应该终止搜索（时间或深度限制）
     if (shouldStop(limits, searchStartTime_) || depth == 0) {
@@ -150,6 +182,16 @@ int MinimaxAI::minimaxAlphaBeta(const Board& board, PlayerColor currentPlayer, i
         }
     }
 
+    // v0.6.0: 存储结果到转置表
+    if (tt_ && config_.useTranspositionTable) {
+        uint32_t hash = ZobristHash::computeHash(
+            board.getBitBoard().getPlayerBits(),
+            board.getBitBoard().getOpponentBits()
+        );
+        Move bestMoveForTT = isMaximizing ? bestMove_ : Move();
+        tt_->store(hash, depth, bestScore, alpha, beta, bestMoveForTT);
+    }
+
     return bestScore;
 }
 
@@ -194,6 +236,11 @@ std::string MinimaxAI::getDescription() const {
         desc += " and iterative deepening";
     }
 
+    // v0.6.0: 转置表描述
+    if (config_.useTranspositionTable) {
+        desc += ", transposition table (" + std::to_string(config_.transpositionTableSizeMB) + " MB)";
+    }
+
     desc += ". Searches to depth " + std::to_string(config_.maxDepth);
     desc += " with time limit " + std::to_string(config_.timeLimit.count()) + "ms.";
 
@@ -204,6 +251,8 @@ std::string MinimaxAI::getConfigDescription() const {
     std::string configStr = "Depth: " + std::to_string(config_.maxDepth) + ", ";
     configStr += std::string("Alpha-Beta: ") + (config_.useAlphaBeta ? "Yes" : "No") + ", ";
     configStr += std::string("Iterative Deepening: ") + (config_.useIterativeDeepening ? "Yes" : "No") + ", ";
+    configStr += std::string("Transposition Table: ") + (config_.useTranspositionTable ? "Yes" : "No") + " ("
+                + std::to_string(config_.transpositionTableSizeMB) + " MB), ";
     configStr += "Time Limit: " + std::to_string(config_.timeLimit.count()) + "ms";
     return configStr;
 }
@@ -212,6 +261,7 @@ void MinimaxAI::reset() {
     stats_ = AIStats{};
     config_.nodesExplored = 0;
     config_.cutoffs = 0;
+    config_.ttHits = 0;
     bestMove_ = Move();
     bestScore_ = std::numeric_limits<int>::min();
     lastCompletedDepth_ = 0;
@@ -220,6 +270,7 @@ void MinimaxAI::reset() {
 bool MinimaxAI::supportsFeature(const std::string& feature) const {
     if (feature == "alpha_beta") return config_.useAlphaBeta;
     if (feature == "iterative_deepening") return config_.useIterativeDeepening;
+    if (feature == "transposition_table") return config_.useTranspositionTable;
     if (feature == "time_control") return true;
     if (feature == "depth_limit") return true;
     return AIStrategy::supportsFeature(feature);

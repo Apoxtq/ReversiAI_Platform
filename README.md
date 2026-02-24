@@ -1,7 +1,7 @@
 # ReversiAI_Platform 🎓
 
-|**Version**: v0.5.0  
-|**Status**: ✅ LAN网络对战功能已完成  
+|**Version**: v0.6.0
+|**Status**: ✅ Research Framework Completed  
 |**Project**: University of Liverpool COMP390 Honours Year Project
 
 A comprehensive Othello/Reversi AI research and benchmarking platform implemented in modern C++, demonstrating academic excellence in open-source learning and software engineering.
@@ -47,10 +47,13 @@ A comprehensive Othello/Reversi AI research and benchmarking platform implemente
 - **Network Game Window**: Full-featured online gameplay with chat
 - **Latency Monitoring**: Real-time ping display
 
-### 📊 Research Framework (v0.6.0 📅 Planned)
-- AI benchmarking suite
-- Statistical analysis tools
-- Experiment management
+### 📊 Research Framework (v0.6.0 ✅ Completed)
+- **Zobrist Hashing**: 64-bit position encoding, 2MB memory, 33M entries
+- **Transposition Table**: 112MB cache, 4.2M entries, search optimization
+- **Position Suite**: 64 standard test positions for reproducible experiments
+- **Battle Engine**: Head-to-head AI battle system with win rate statistics
+- **Statistics Tools**: Wilcoxon test, confidence intervals, statistical significance
+- **AI vs AI Window**: Visual interface for automated benchmark testing
 
 ---
 
@@ -185,7 +188,20 @@ ReversiAI_Platform/
 
 ### ✅ Completed Versions
 
-#### v0.5.0 (Current - February 2026)
+#### v0.6.0 (February 2026) - Research Framework
+- **Features**: Zobrist hashing, Transposition table, Position suite, Battle engine, Statistics
+- **Status**: 100% Complete
+- **Code Lines**: ~2,000 new lines
+- **Key Features**:
+  - ✅ Zobrist Hashing (64-bit position encoding, 2MB memory, 33M entries)
+  - ✅ Transposition Table (112MB cache, 4.2M entries, search optimization)
+  - ✅ Position Suite (64 standard test positions for reproducible experiments)
+  - ✅ Battle Engine (Head-to-head AI battle system with win rate statistics)
+  - ✅ Statistics Tools (Wilcoxon test, confidence intervals, statistical significance)
+  - ✅ AI vs AI Window (Visual interface for automated benchmark testing)
+  - ✅ MinimaxAI Integration (Transposition table search optimization)
+
+#### v0.5.0 (February 2026)
 - **Features**: LAN network multiplayer, TCP/UDP communication, Room system
 - **Status**: 100% Complete
 - **Git Commit**: `Network module implemented UDP discovery, room management`
@@ -285,6 +301,7 @@ This project learns from and builds upon excellent open-source implementations:
 | v0.3.0 | AI algorithms | ~4,000 | 40 |
 | v0.4.0 | UI system | ~5,500 | 45 |
 | v0.5.0 | Network features | ~10,500 | 69 |
+| v0.6.0 | Research framework | ~12,500 | 80 |
 
 ---
 
@@ -360,4 +377,4 @@ This project serves as an excellent example for:
 
 |**⭐ Star this repository to support academic open-source development!**  
 |**🎓 University of Liverpool COMP390 Honours Year Project**  
-|**Current Version**: v0.5.0 | **Next Version**: v0.6.0 (Research Framework)**
+|**Current Version**: v0.6.0 | **Next Version**: v1.0.0 (Final Release)**

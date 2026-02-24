@@ -1,6 +1,19 @@
 #include "Board.h"
 #include <stdexcept>
 
+// 跨平台位操作支持
+#if defined(_MSC_VER)
+    #include <intrin.h>
+    // MSVC内联函数实现CTZ (Count Trailing Zeros)
+    inline int CTZ64(uint64_t x) {
+        unsigned long index;
+        _BitScanForward64(&index, x);
+        return static_cast<int>(index);
+    }
+#else
+    #define CTZ64(x) __builtin_ctzll(x)
+#endif
+
 namespace Reversi {
 
 Board::Board() {
@@ -60,7 +73,7 @@ std::vector<Move> Board::getValidMoves() const {
     uint64_t moves = bitboard_.getValidMoves(current_turn_);
     while (moves) {
         uint64_t pos_bit = moves & -moves;
-        int pos = __builtin_ctzll(pos_bit);
+        int pos = CTZ64(pos_bit);
         int row = pos / 8;
         int col = pos % 8;
         result.emplace_back(row, col);

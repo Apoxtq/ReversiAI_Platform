@@ -229,14 +229,14 @@ void StatisticsManager::onGameEnded(GameResult result, int blackCount, int white
 bool StatisticsManager::exportToCSV(const QString& filename) {
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        emit errorOccurred(QString("无法打开文件: %1").arg(filename));
+        emit errorOccurred(QString("Failed to open file: %1").arg(filename));
         return false;
     }
 
     QTextStream out(&file);
 
     // 写入CSV头部
-    out << "时间,模式,AI类型,难度,结果,黑棋数,白棋数,回合数,时长(秒),人类颜色,人类获胜\n";
+    out << "Time,Mode,AI Type,Difficulty,Result,Black,White,Moves,Duration,Human Color,Human Won\n";
 
     // 写入每条记录
     for (const auto& record : history_) {
@@ -250,7 +250,7 @@ bool StatisticsManager::exportToCSV(const QString& filename) {
             << record.moveCount << ","
             << record.durationSeconds << ","
             << record.humanColor << ","
-            << (record.humanWon ? "是" : "否") << "\n";
+            << (record.humanWon ? "YES" : "NO") << "\n";
     }
 
     file.close();
@@ -287,7 +287,7 @@ bool StatisticsManager::exportToJSON(const QString& filename) {
 
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) {
-        emit errorOccurred(QString("无法打开文件: %1").arg(filename));
+        emit errorOccurred(QString("Failed to open file: %1").arg(filename));
         return false;
     }
 
@@ -301,7 +301,7 @@ bool StatisticsManager::exportToJSON(const QString& filename) {
 bool StatisticsManager::importFromJSON(const QString& filename) {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        emit errorOccurred(QString("无法打开文件: %1").arg(filename));
+        emit errorOccurred(QString("Failed to open file: %1").arg(filename));
         emit importCompleted(false, 0);
         return false;
     }
@@ -313,7 +313,7 @@ bool StatisticsManager::importFromJSON(const QString& filename) {
     QJsonDocument doc = QJsonDocument::fromJson(data, &error);
 
     if (error.error != QJsonParseError::NoError) {
-        emit errorOccurred(QString("JSON解析错误: %1").arg(error.errorString()));
+        emit errorOccurred(QString("JSON parse error: %1").arg(error.errorString()));
         emit importCompleted(false, 0);
         return false;
     }

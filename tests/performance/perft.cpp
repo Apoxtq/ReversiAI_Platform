@@ -2,6 +2,14 @@
 #include <chrono>
 #include "core/BitBoard.h"
 
+// 跨平台位操作支持
+#if defined(_MSC_VER)
+    #include <intrin.h>
+    #define POPCOUNT64 __popcnt64
+#else
+    #define POPCOUNT64 __builtin_popcountll
+#endif
+
 using namespace Reversi;
 
 int main(int argc, char** argv) {
@@ -14,7 +22,7 @@ int main(int argc, char** argv) {
     uint64_t acc_moves = 0;
     for (int i = 0; i < iterations; ++i) {
         uint64_t moves = board.getValidMoves(PlayerColor::Black);
-        acc_moves += __builtin_popcountll(moves);
+        acc_moves += POPCOUNT64(moves);
     }
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> dur = end - start;

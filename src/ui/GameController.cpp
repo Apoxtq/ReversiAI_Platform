@@ -55,7 +55,7 @@ void GameController::startNewGame(GameMode mode, PlayerColor humanColor,
         ai_ = AIStrategyFactory::createMinimaxAI(difficulty);
         qDebug() << "GameController: AI pointer:" << ai_.get();
         if (!ai_) {
-            emit errorOccurred("创建AI失败");
+            emit errorOccurred("Failed to create AI");
             return;
         }
         qDebug() << "GameController: AI created," << QString::fromStdString(ai_->getName());

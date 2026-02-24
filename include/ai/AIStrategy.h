@@ -40,11 +40,11 @@ struct SearchLimits {
      * @brief 创建默认搜索限制
      */
     static SearchLimits createDefault() {
-        return SearchLimits{
-            .maxDepth = 4,
-            .timeLimit = std::chrono::milliseconds(3000),
-            .maxNodes = std::nullopt
-        };
+        SearchLimits limits;
+        limits.maxDepth = 4;
+        limits.timeLimit = std::chrono::milliseconds(3000);
+        limits.maxNodes = std::nullopt;
+        return limits;
     }
 };
 

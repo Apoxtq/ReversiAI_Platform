@@ -2,6 +2,7 @@
 
 #include "ai/AIStrategy.h"
 #include "ai/Evaluator.h"
+#include "ai/TranspositionTable.h"
 #include <memory>
 #include <chrono>
 
@@ -11,6 +12,8 @@
  *
  * 基于Reversi(Java)的Minimax算法，转换为C++ BitBoard实现
  * 参考: Reversi(Java)/src/player/ai/Minimax.java
+ *
+ * v0.6.0更新: 添加转置表支持
  */
 
 namespace Reversi {
@@ -22,11 +25,16 @@ struct MinimaxConfig {
     int maxDepth = 4;                    ///< 最大搜索深度
     bool useAlphaBeta = true;            ///< 是否使用Alpha-Beta剪枝
     bool useIterativeDeepening = false;  ///< 是否使用迭代深化
+    bool useTranspositionTable = true;   ///< v0.6.0: 是否使用转置表
     std::chrono::milliseconds timeLimit = std::chrono::milliseconds(3000); ///< 时间限制
+
+    // 转置表配置 (v0.6.0)
+    size_t transpositionTableSizeMB = 64; ///< 转置表大小 (MB)
 
     // 统计信息
     mutable int nodesExplored = 0;       ///< 探索的节点数
     mutable int cutoffs = 0;             ///< 剪枝次数
+    mutable int ttHits = 0;              ///< v0.6.0: 转置表命中次数
 };
 
 /**
@@ -68,6 +76,27 @@ public:
      */
     void setConfig(const MinimaxConfig& config) { config_ = config; }
 
+    // v0.6.0: 转置表相关方法
+    /**
+     * @brief 获取转置表命中率
+     */
+    double getTranspositionTableHitRate() const {
+        return tt_ ? tt_->getHitRate() : 0.0;
+    }
+
+    /**
+     * @brief 清空转置表
+     */
+    void clearTranspositionTable() {
+        if (tt_) tt_->clear();
+    }
+
+private:
+    /**
+     * @brief 初始化转置表
+     */
+    void initTranspositionTable();
+
 private:
     /**
      * @brief Minimax搜索主函数
@@ -105,6 +134,9 @@ private:
     // 配置和组件
     MinimaxConfig config_;
     std::unique_ptr<Evaluator> evaluator_;
+
+    // v0.6.0: 转置表
+    std::unique_ptr<TranspositionTable> tt_;  ///< 转置表
 
     // 搜索状态
     mutable AIStats stats_;

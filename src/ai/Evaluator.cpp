@@ -1,4 +1,5 @@
 #include "ai/Evaluator.h"
+#include "core/PlatformUtils.h"
 #include <cmath>
 
 /**
@@ -43,8 +44,8 @@ int StaticEvaluator::evaluateMobility(const BitBoard& board, PlayerColor player)
     PlayerColor opponent = (player == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
     uint64_t opMoves = board.getValidMoves(opponent);
 
-    int myMoveCount = __builtin_popcountll(myMoves);
-    int opMoveCount = __builtin_popcountll(opMoves);
+    int myMoveCount = POPCOUNT64(myMoves);
+    int opMoveCount = POPCOUNT64(opMoves);
 
     // 避免除零错误
     int totalMoves = myMoveCount + opMoveCount;

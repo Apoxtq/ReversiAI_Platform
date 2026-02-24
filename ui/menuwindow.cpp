@@ -5,14 +5,18 @@
 #include "ui/NetworkGameWindow.h"
 #include "ui_menuwindow.h"
 #include <QVBoxLayout>
+#include <QPushButton>
 #include <QMessageBox>
 #include <QDebug>
+
+// 前向声明
+namespace Reversi { class AIvsAIWindow; }
 
 MenuWindow::MenuWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MenuWindow) {
     ui->setupUi(this);
-    setFixedSize(400, 400);  // 增加高度以容纳新按钮
+    setFixedSize(400, 500);  // 增加高度以容纳新按钮
 
     // 设置 PvE 按钮样式
     ui->pveButton->setStyleSheet(
@@ -46,7 +50,50 @@ MenuWindow::MenuWindow(QWidget* parent)
         "}"
     );
 
+    // 动态添加AI研究模式按钮
+    QPushButton* aiResearchButton = new QPushButton(tr("AI Research Mode (v0.6.0)"), this);
+    aiResearchButton->setObjectName("aiResearchButton");
+    aiResearchButton->setStyleSheet(
+        "QPushButton {"
+        "    background-color: #9b59b6;"
+        "    color: white;"
+        "    border-radius: 8px;"
+        "    padding: 10px;"
+        "    font-weight: bold;"
+        "}"
+        "QPushButton:hover {"
+        "    background-color: #8e44ad;"
+        "}"
+        "QPushButton:pressed {"
+        "    background-color: #7d3c98;"
+        "}"
+    );
+
+    // 将按钮添加到垂直布局中（位于networkButton之后）
+    QVBoxLayout* mainLayout = qobject_cast<QVBoxLayout*>(ui->verticalLayout);
+    if (mainLayout) {
+        int networkIndex = mainLayout->indexOf(ui->networkButton);
+        if (networkIndex >= 0) {
+            mainLayout->insertWidget(networkIndex + 1, aiResearchButton);
+        }
+    }
+
+    // 添加分隔线
+    QFrame* separator = new QFrame(this);
+    separator->setFrameShape(QFrame::HLine);
+    separator->setFrameShadow(QFrame::Sunken);
+    separator->setStyleSheet("background-color: #bdc3c7;");
+    if (mainLayout) {
+        int index = mainLayout->indexOf(aiResearchButton);
+        if (index >= 0) {
+            mainLayout->insertWidget(index + 1, separator);
+        }
+    }
+
     setupConnections();
+
+    // 连接新按钮
+    connect(aiResearchButton, &QPushButton::clicked, this, &MenuWindow::onAIResearchButtonClicked);
 }
 
 MenuWindow::~MenuWindow() {

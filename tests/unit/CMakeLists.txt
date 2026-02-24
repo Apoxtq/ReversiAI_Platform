@@ -13,6 +13,7 @@ add_executable(unit_tests_core
 target_link_libraries(unit_tests_core
     PRIVATE
         test_framework
+        core_lib
 )
 
 target_include_directories(unit_tests_core
@@ -30,12 +31,21 @@ endif()
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ai/MCTSTest.cpp")
     list(APPEND AI_TEST_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/ai/MCTSTest.cpp")
 endif()
+# v0.6.0 AI tests
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ai/ZobristTest.cpp")
+    list(APPEND AI_TEST_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/ai/ZobristTest.cpp")
+endif()
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ai/TranspositionTableTest.cpp")
+    list(APPEND AI_TEST_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/ai/TranspositionTableTest.cpp")
+endif()
 
 if(AI_TEST_SRCS)
     add_executable(unit_tests_ai ${AI_TEST_SRCS})
 target_link_libraries(unit_tests_ai
     PRIVATE
         test_framework
+        ai_lib
+        core_lib
 )
     target_include_directories(unit_tests_ai
         PRIVATE
@@ -124,3 +134,26 @@ set_tests_properties(UnitTests_Network PROPERTIES
     TIMEOUT 60
     LABELS "unit;network"
 )
+
+# Research unit tests (v0.6.0)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/research/BattleEngineTest.cpp")
+    add_executable(unit_tests_research research/BattleEngineTest.cpp)
+    target_link_libraries(unit_tests_research
+        PRIVATE
+            test_framework
+            research_lib
+            ai_lib
+            core_lib
+    )
+    target_include_directories(unit_tests_research
+        PRIVATE
+            ${CMAKE_SOURCE_DIR}/include
+            ${CMAKE_SOURCE_DIR}/src
+            ${CMAKE_CURRENT_SOURCE_DIR}/../framework
+    )
+    add_test(NAME UnitTests_Research COMMAND unit_tests_research)
+    set_tests_properties(UnitTests_Research PROPERTIES
+        TIMEOUT 300
+        LABELS "unit;research"
+    )
+endif()
