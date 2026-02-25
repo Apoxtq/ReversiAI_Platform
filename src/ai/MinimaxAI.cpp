@@ -18,6 +18,17 @@ MinimaxAI::MinimaxAI(MinimaxConfig config, std::unique_ptr<Evaluator> evaluator)
       evaluator_(evaluator ? std::move(evaluator) : EvaluatorFactory::createStaticEvaluator()) {
     // v0.6.0: 初始化转置表
     initTranspositionTable();
+
+    // v0.7.0: 初始化走法排序器
+    if (config_.useMoveOrdering) {
+        MoveOrdererConfig moConfig;
+        moConfig.useKillerMoves = config_.useKillerMoves;
+        moConfig.useHistoryHeuristic = config_.useHistoryHeuristic;
+        moveOrderer_ = std::make_unique<MoveOrderer>(moConfig, EvaluatorFactory::createStaticEvaluator());
+        std::cout << "[MinimaxAI] Move orderer initialized (Killer: "
+                  << (config_.useKillerMoves ? "ON" : "OFF")
+                  << ", History: " << (config_.useHistoryHeuristic ? "ON" : "OFF") << ")" << std::endl;
+    }
 }
 
 void MinimaxAI::initTranspositionTable() {
@@ -34,16 +45,32 @@ Move MinimaxAI::findBestMove(const Board& board, const SearchLimits& limits) {
         initTranspositionTable();
     }
 
+    // v0.7.0: 初始化走法排序器（如果尚未初始化）
+    if (!moveOrderer_ && config_.useMoveOrdering) {
+        MoveOrdererConfig moConfig;
+        moConfig.useKillerMoves = config_.useKillerMoves;
+        moConfig.useHistoryHeuristic = config_.useHistoryHeuristic;
+        moveOrderer_ = std::make_unique<MoveOrderer>(moConfig, EvaluatorFactory::createStaticEvaluator());
+    }
+
     // 重置统计信息
     stats_ = AIStats{};
     config_.nodesExplored = 0;
     config_.cutoffs = 0;
     config_.ttHits = 0;
+    config_.killerHits = 0;
+    config_.historyHits = 0;
     bestMove_ = Move();
     bestScore_ = std::numeric_limits<int>::min();
     lastCompletedDepth_ = 0;
 
     searchStartTime_ = std::chrono::steady_clock::now();
+
+    // v0.7.0: 在每次搜索前执行走法排序器衰减
+    if (moveOrderer_) {
+        moveOrderer_->decay();
+        moveOrderer_->resetStatistics();
+    }
 
     // 获取有效移动
     auto validMoves = board.getValidMoves();
@@ -129,6 +156,25 @@ int MinimaxAI::minimaxAlphaBeta(const Board& board, PlayerColor currentPlayer, i
 
     auto validMoves = board.getValidMoves();
 
+    // v0.7.0: 使用走法排序器对走法进行排序
+    Move pvMove;
+    if (tt_ && config_.useTranspositionTable) {
+        // 从转置表获取PV走法
+        uint32_t hash = ZobristHash::computeHash(
+            board.getBitBoard().getPlayerBits(),
+            board.getBitBoard().getOpponentBits()
+        );
+        Move ttMove;
+        int dummy1, dummy2, dummy3;
+        if (tt_->probe(hash, depth, dummy1, dummy2, dummy3, ttMove)) {
+            pvMove = ttMove;
+        }
+    }
+
+    if (moveOrderer_ && config_.useMoveOrdering) {
+        validMoves = moveOrderer_->orderMoves(board, depth, validMoves, pvMove, Move());
+    }
+
     // 处理无有效移动的情况（跳过回合）
     if (validMoves.empty()) {
         Board newBoard = board;  // 复制棋盘
@@ -168,6 +214,12 @@ int MinimaxAI::minimaxAlphaBeta(const Board& board, PlayerColor currentPlayer, i
             alpha = std::max(alpha, bestScore);
             if (beta <= alpha) {
                 config_.cutoffs++;  // Beta剪枝
+                // v0.7.0: 记录Killer/History
+                if (moveOrderer_ && config_.useMoveOrdering) {
+                    int from = 0;  // 简化：使用固定值
+                    int to = move.row * 8 + move.col;
+                    moveOrderer_->recordCutoff(from, to, depth, true);
+                }
                 break;
             }
         } else {
@@ -177,6 +229,12 @@ int MinimaxAI::minimaxAlphaBeta(const Board& board, PlayerColor currentPlayer, i
             beta = std::min(beta, bestScore);
             if (beta <= alpha) {
                 config_.cutoffs++;  // Alpha剪枝
+                // v0.7.0: 记录Killer/History
+                if (moveOrderer_ && config_.useMoveOrdering) {
+                    int from = 0;  // 简化：使用固定值
+                    int to = move.row * 8 + move.col;
+                    moveOrderer_->recordCutoff(from, to, depth, true);
+                }
                 break;
             }
         }
@@ -241,6 +299,13 @@ std::string MinimaxAI::getDescription() const {
         desc += ", transposition table (" + std::to_string(config_.transpositionTableSizeMB) + " MB)";
     }
 
+    // v0.7.0: Killer/History描述
+    if (config_.useMoveOrdering) {
+        desc += ", move ordering";
+        if (config_.useKillerMoves) desc += " (Killer)";
+        if (config_.useHistoryHeuristic) desc += " (History)";
+    }
+
     desc += ". Searches to depth " + std::to_string(config_.maxDepth);
     desc += " with time limit " + std::to_string(config_.timeLimit.count()) + "ms.";
 
@@ -253,6 +318,10 @@ std::string MinimaxAI::getConfigDescription() const {
     configStr += std::string("Iterative Deepening: ") + (config_.useIterativeDeepening ? "Yes" : "No") + ", ";
     configStr += std::string("Transposition Table: ") + (config_.useTranspositionTable ? "Yes" : "No") + " ("
                 + std::to_string(config_.transpositionTableSizeMB) + " MB), ";
+    // v0.7.0: Killer/History配置
+    configStr += std::string("Move Ordering: ") + (config_.useMoveOrdering ? "Yes" : "No") + " (";
+    configStr += "Killer: " + std::string(config_.useKillerMoves ? "On" : "Off") + ", ";
+    configStr += "History: " + std::string(config_.useHistoryHeuristic ? "On" : "Off") + "), ";
     configStr += "Time Limit: " + std::to_string(config_.timeLimit.count()) + "ms";
     return configStr;
 }
@@ -262,15 +331,26 @@ void MinimaxAI::reset() {
     config_.nodesExplored = 0;
     config_.cutoffs = 0;
     config_.ttHits = 0;
+    config_.killerHits = 0;
+    config_.historyHits = 0;
     bestMove_ = Move();
     bestScore_ = std::numeric_limits<int>::min();
     lastCompletedDepth_ = 0;
+
+    // v0.7.0: 重置走法排序器
+    if (moveOrderer_) {
+        moveOrderer_->clear();
+        moveOrderer_->resetStatistics();
+    }
 }
 
 bool MinimaxAI::supportsFeature(const std::string& feature) const {
     if (feature == "alpha_beta") return config_.useAlphaBeta;
     if (feature == "iterative_deepening") return config_.useIterativeDeepening;
     if (feature == "transposition_table") return config_.useTranspositionTable;
+    if (feature == "move_ordering") return config_.useMoveOrdering;
+    if (feature == "killer_moves") return config_.useKillerMoves;
+    if (feature == "history_heuristic") return config_.useHistoryHeuristic;
     if (feature == "time_control") return true;
     if (feature == "depth_limit") return true;
     return AIStrategy::supportsFeature(feature);

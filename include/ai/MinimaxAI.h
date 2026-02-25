@@ -3,6 +3,7 @@
 #include "ai/AIStrategy.h"
 #include "ai/Evaluator.h"
 #include "ai/TranspositionTable.h"
+#include "ai/MoveOrderer.h"
 #include <memory>
 #include <chrono>
 
@@ -26,6 +27,12 @@ struct MinimaxConfig {
     bool useAlphaBeta = true;            ///< 是否使用Alpha-Beta剪枝
     bool useIterativeDeepening = false;  ///< 是否使用迭代深化
     bool useTranspositionTable = true;   ///< v0.6.0: 是否使用转置表
+
+    // v0.7.0: Killer Moves & History Heuristic
+    bool useKillerMoves = true;          ///< 是否使用Killer Moves
+    bool useHistoryHeuristic = true;     ///< 是否使用历史启发
+    bool useMoveOrdering = true;         ///< 是否使用走法排序
+
     std::chrono::milliseconds timeLimit = std::chrono::milliseconds(3000); ///< 时间限制
 
     // 转置表配置 (v0.6.0)
@@ -35,6 +42,10 @@ struct MinimaxConfig {
     mutable int nodesExplored = 0;       ///< 探索的节点数
     mutable int cutoffs = 0;             ///< 剪枝次数
     mutable int ttHits = 0;              ///< v0.6.0: 转置表命中次数
+
+    // v0.7.0: Killer/History统计
+    mutable int killerHits = 0;          ///< Killer走法命中次数
+    mutable int historyHits = 0;         ///< History启发命中次数
 };
 
 /**
@@ -91,6 +102,42 @@ public:
         if (tt_) tt_->clear();
     }
 
+    // v0.7.0: Killer Moves & History Heuristic
+    /**
+     * @brief 获取走法排序器
+     */
+    MoveOrderer* getMoveOrderer() { return moveOrderer_.get(); }
+
+    /**
+     * @brief 获取走法排序器 (const)
+     */
+    const MoveOrderer* getMoveOrderer() const { return moveOrderer_.get(); }
+
+    /**
+     * @brief 获取Killer命中率
+     */
+    double getKillerHitRate() const {
+        if (!config_.useKillerMoves || !moveOrderer_) return 0.0;
+        const auto& stats = moveOrderer_->getStatistics();
+        return stats.totalMoves > 0 ? static_cast<double>(stats.killerHits) / stats.totalMoves : 0.0;
+    }
+
+    /**
+     * @brief 获取History命中率
+     */
+    double getHistoryHitRate() const {
+        if (!config_.useHistoryHeuristic || !moveOrderer_) return 0.0;
+        const auto& stats = moveOrderer_->getStatistics();
+        return stats.totalMoves > 0 ? static_cast<double>(stats.historyHits) / stats.totalMoves : 0.0;
+    }
+
+    /**
+     * @brief 清空走法排序数据
+     */
+    void clearMoveOrderer() {
+        if (moveOrderer_) moveOrderer_->clear();
+    }
+
 private:
     /**
      * @brief 初始化转置表
@@ -137,6 +184,9 @@ private:
 
     // v0.6.0: 转置表
     std::unique_ptr<TranspositionTable> tt_;  ///< 转置表
+
+    // v0.7.0: 走法排序器 (Killer + History)
+    std::unique_ptr<MoveOrderer> moveOrderer_;  ///< 走法排序器
 
     // 搜索状态
     mutable AIStats stats_;
