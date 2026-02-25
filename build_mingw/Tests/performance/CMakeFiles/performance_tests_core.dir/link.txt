@@ -1,3 +1,0 @@
-D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -E rm -f CMakeFiles\performance_tests_core.dir/objects.a
-D:\Dev\Compilers\MinGW\12.2.0\bin\ar.exe qc CMakeFiles\performance_tests_core.dir/objects.a @CMakeFiles\performance_tests_core.dir\objects1.rsp
-D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe -Wl,--whole-archive CMakeFiles\performance_tests_core.dir/objects.a -Wl,--no-whole-archive -o performance_tests_core.exe -Wl,--out-implib,libperformance_tests_core.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\performance_tests_core.dir\linkLibs.rsp

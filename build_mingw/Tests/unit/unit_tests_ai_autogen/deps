@@ -1,0 +1,5 @@
+unit_tests_ai_autogen/timestamp: \
+	D:/Project/Reversi/ReversiAI_Platform/Tests/unit/CMakeLists.txt \
+	D:/Project/Reversi/ReversiAI_Platform/Tests/unit/ai/TranspositionTableTest.cpp \
+	D:/Project/Reversi/ReversiAI_Platform/Tests/unit/ai/ZobristTest.cpp \
+	D:/Dev/Scoop/apps/cmake/current/bin/cmake.exe

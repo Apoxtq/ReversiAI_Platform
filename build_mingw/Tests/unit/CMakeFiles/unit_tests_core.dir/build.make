@@ -68,14 +68,36 @@ include Tests/unit/CMakeFiles/unit_tests_core.dir/progress.make
 # Include the compile flags for this target's objects.
 include Tests/unit/CMakeFiles/unit_tests_core.dir/flags.make
 
+Tests/unit/unit_tests_core_autogen/timestamp: D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/moc.exe
+Tests/unit/unit_tests_core_autogen/timestamp: D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/uic.exe
+Tests/unit/unit_tests_core_autogen/timestamp: Tests/unit/CMakeFiles/unit_tests_core.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target unit_tests_core"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -E cmake_autogen D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/unit/CMakeFiles/unit_tests_core_autogen.dir/AutogenInfo.json ""
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -E touch D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/unit/unit_tests_core_autogen/timestamp
+
 Tests/unit/CMakeFiles/unit_tests_core.dir/codegen:
 .PHONY : Tests/unit/CMakeFiles/unit_tests_core.dir/codegen
+
+Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.obj: Tests/unit/CMakeFiles/unit_tests_core.dir/flags.make
+Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.obj: Tests/unit/CMakeFiles/unit_tests_core.dir/includes_CXX.rsp
+Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.obj: Tests/unit/unit_tests_core_autogen/mocs_compilation.cpp
+Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.obj: Tests/unit/CMakeFiles/unit_tests_core.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.obj"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.obj -MF CMakeFiles\unit_tests_core.dir\unit_tests_core_autogen\mocs_compilation.cpp.obj.d -o CMakeFiles\unit_tests_core.dir\unit_tests_core_autogen\mocs_compilation.cpp.obj -c D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit\unit_tests_core_autogen\mocs_compilation.cpp
+
+Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.i"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit\unit_tests_core_autogen\mocs_compilation.cpp > CMakeFiles\unit_tests_core.dir\unit_tests_core_autogen\mocs_compilation.cpp.i
+
+Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.s"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit\unit_tests_core_autogen\mocs_compilation.cpp -o CMakeFiles\unit_tests_core.dir\unit_tests_core_autogen\mocs_compilation.cpp.s
 
 Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj: Tests/unit/CMakeFiles/unit_tests_core.dir/flags.make
 Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj: Tests/unit/CMakeFiles/unit_tests_core.dir/includes_CXX.rsp
 Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj: D:/Project/Reversi/ReversiAI_Platform/Tests/unit/core/BitBoardTest.cpp
 Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj: Tests/unit/CMakeFiles/unit_tests_core.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj"
 	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj -MF CMakeFiles\unit_tests_core.dir\core\BitBoardTest.cpp.obj.d -o CMakeFiles\unit_tests_core.dir\core\BitBoardTest.cpp.obj -c D:\Project\Reversi\ReversiAI_Platform\Tests\unit\core\BitBoardTest.cpp
 
 Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.i: cmake_force
@@ -86,27 +108,45 @@ Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.s"
 	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Project\Reversi\ReversiAI_Platform\Tests\unit\core\BitBoardTest.cpp -o CMakeFiles\unit_tests_core.dir\core\BitBoardTest.cpp.s
 
+Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.obj: Tests/unit/CMakeFiles/unit_tests_core.dir/flags.make
+Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.obj: Tests/unit/CMakeFiles/unit_tests_core.dir/includes_CXX.rsp
+Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.obj: D:/Project/Reversi/ReversiAI_Platform/Tests/unit/core/BoardTest.cpp
+Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.obj: Tests/unit/CMakeFiles/unit_tests_core.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.obj"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.obj -MF CMakeFiles\unit_tests_core.dir\core\BoardTest.cpp.obj.d -o CMakeFiles\unit_tests_core.dir\core\BoardTest.cpp.obj -c D:\Project\Reversi\ReversiAI_Platform\Tests\unit\core\BoardTest.cpp
+
+Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.i"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E D:\Project\Reversi\ReversiAI_Platform\Tests\unit\core\BoardTest.cpp > CMakeFiles\unit_tests_core.dir\core\BoardTest.cpp.i
+
+Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.s"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Project\Reversi\ReversiAI_Platform\Tests\unit\core\BoardTest.cpp -o CMakeFiles\unit_tests_core.dir\core\BoardTest.cpp.s
+
 # Object files for target unit_tests_core
 unit_tests_core_OBJECTS = \
-"CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj"
+"CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.obj" \
+"CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj" \
+"CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.obj"
 
 # External object files for target unit_tests_core
 unit_tests_core_EXTERNAL_OBJECTS =
 
+Tests/unit/unit_tests_core.exe: Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.obj
 Tests/unit/unit_tests_core.exe: Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj
+Tests/unit/unit_tests_core.exe: Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.obj
 Tests/unit/unit_tests_core.exe: Tests/unit/CMakeFiles/unit_tests_core.dir/build.make
 Tests/unit/unit_tests_core.exe: lib/libtest_framework.a
-Tests/unit/unit_tests_core.exe: D:/Project/Reversi/vcpkg/installed/x64-windows/debug/lib/manual-link/gtest_main.lib
-Tests/unit/unit_tests_core.exe: D:/Project/Reversi/vcpkg/installed/x64-windows/debug/lib/gtest.lib
-Tests/unit/unit_tests_core.exe: D:/Project/Reversi/vcpkg/installed/x64-windows/debug/lib/gmock.lib
-Tests/unit/unit_tests_core.exe: D:/Project/Reversi/vcpkg/installed/x64-windows/debug/lib/manual-link/gmock_main.lib
-Tests/unit/unit_tests_core.exe: D:/Project/Reversi/vcpkg/installed/x64-windows/debug/lib/benchmark.lib
+Tests/unit/unit_tests_core.exe: libcore_lib.a
+Tests/unit/unit_tests_core.exe: lib/libgtest_main.a
+Tests/unit/unit_tests_core.exe: lib/libgmock_main.a
+Tests/unit/unit_tests_core.exe: lib/libgmock.a
+Tests/unit/unit_tests_core.exe: lib/libgtest.a
 Tests/unit/unit_tests_core.exe: Tests/unit/CMakeFiles/unit_tests_core.dir/linkLibs.rsp
 Tests/unit/unit_tests_core.exe: Tests/unit/CMakeFiles/unit_tests_core.dir/objects1.rsp
 Tests/unit/unit_tests_core.exe: Tests/unit/CMakeFiles/unit_tests_core.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable unit_tests_core.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable unit_tests_core.exe"
 	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\unit_tests_core.dir\link.txt --verbose=$(VERBOSE)
-	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file D:/Project/Reversi/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/unit/unit_tests_core.exe -installedDir D:/Project/Reversi/vcpkg/installed/x64-mingw-dynamic/bin -OutVariable out
 
 # Rule to build all files generated by this target.
 Tests/unit/CMakeFiles/unit_tests_core.dir/build: Tests/unit/unit_tests_core.exe
@@ -116,7 +156,7 @@ Tests/unit/CMakeFiles/unit_tests_core.dir/clean:
 	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit && $(CMAKE_COMMAND) -P CMakeFiles\unit_tests_core.dir\cmake_clean.cmake
 .PHONY : Tests/unit/CMakeFiles/unit_tests_core.dir/clean
 
-Tests/unit/CMakeFiles/unit_tests_core.dir/depend:
+Tests/unit/CMakeFiles/unit_tests_core.dir/depend: Tests/unit/unit_tests_core_autogen/timestamp
 	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" D:\Project\Reversi\ReversiAI_Platform D:\Project\Reversi\ReversiAI_Platform\Tests\unit D:\Project\Reversi\ReversiAI_Platform\build_mingw D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\unit\CMakeFiles\unit_tests_core.dir\DependInfo.cmake "--color=$(COLOR)" unit_tests_core
 .PHONY : Tests/unit/CMakeFiles/unit_tests_core.dir/depend
 

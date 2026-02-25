@@ -68,14 +68,36 @@ include Tests/framework/CMakeFiles/test_framework.dir/progress.make
 # Include the compile flags for this target's objects.
 include Tests/framework/CMakeFiles/test_framework.dir/flags.make
 
+Tests/framework/test_framework_autogen/timestamp: D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/moc.exe
+Tests/framework/test_framework_autogen/timestamp: D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/uic.exe
+Tests/framework/test_framework_autogen/timestamp: Tests/framework/CMakeFiles/test_framework.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target test_framework"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework && D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -E cmake_autogen D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/CMakeFiles/test_framework_autogen.dir/AutogenInfo.json ""
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework && D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -E touch D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/test_framework_autogen/timestamp
+
 Tests/framework/CMakeFiles/test_framework.dir/codegen:
 .PHONY : Tests/framework/CMakeFiles/test_framework.dir/codegen
+
+Tests/framework/CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.obj: Tests/framework/CMakeFiles/test_framework.dir/flags.make
+Tests/framework/CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.obj: Tests/framework/CMakeFiles/test_framework.dir/includes_CXX.rsp
+Tests/framework/CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.obj: Tests/framework/test_framework_autogen/mocs_compilation.cpp
+Tests/framework/CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.obj: Tests/framework/CMakeFiles/test_framework.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object Tests/framework/CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.obj"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT Tests/framework/CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.obj -MF CMakeFiles\test_framework.dir\test_framework_autogen\mocs_compilation.cpp.obj.d -o CMakeFiles\test_framework.dir\test_framework_autogen\mocs_compilation.cpp.obj -c D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework\test_framework_autogen\mocs_compilation.cpp
+
+Tests/framework/CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.i"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework\test_framework_autogen\mocs_compilation.cpp > CMakeFiles\test_framework.dir\test_framework_autogen\mocs_compilation.cpp.i
+
+Tests/framework/CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.s"
+	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework\test_framework_autogen\mocs_compilation.cpp -o CMakeFiles\test_framework.dir\test_framework_autogen\mocs_compilation.cpp.s
 
 Tests/framework/CMakeFiles/test_framework.dir/TestMain.cpp.obj: Tests/framework/CMakeFiles/test_framework.dir/flags.make
 Tests/framework/CMakeFiles/test_framework.dir/TestMain.cpp.obj: Tests/framework/CMakeFiles/test_framework.dir/includes_CXX.rsp
 Tests/framework/CMakeFiles/test_framework.dir/TestMain.cpp.obj: D:/Project/Reversi/ReversiAI_Platform/Tests/framework/TestMain.cpp
 Tests/framework/CMakeFiles/test_framework.dir/TestMain.cpp.obj: Tests/framework/CMakeFiles/test_framework.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object Tests/framework/CMakeFiles/test_framework.dir/TestMain.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object Tests/framework/CMakeFiles/test_framework.dir/TestMain.cpp.obj"
 	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework && D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT Tests/framework/CMakeFiles/test_framework.dir/TestMain.cpp.obj -MF CMakeFiles\test_framework.dir\TestMain.cpp.obj.d -o CMakeFiles\test_framework.dir\TestMain.cpp.obj -c D:\Project\Reversi\ReversiAI_Platform\Tests\framework\TestMain.cpp
 
 Tests/framework/CMakeFiles/test_framework.dir/TestMain.cpp.i: cmake_force
@@ -88,15 +110,17 @@ Tests/framework/CMakeFiles/test_framework.dir/TestMain.cpp.s: cmake_force
 
 # Object files for target test_framework
 test_framework_OBJECTS = \
+"CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.obj" \
 "CMakeFiles/test_framework.dir/TestMain.cpp.obj"
 
 # External object files for target test_framework
 test_framework_EXTERNAL_OBJECTS =
 
+lib/libtest_framework.a: Tests/framework/CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.obj
 lib/libtest_framework.a: Tests/framework/CMakeFiles/test_framework.dir/TestMain.cpp.obj
 lib/libtest_framework.a: Tests/framework/CMakeFiles/test_framework.dir/build.make
 lib/libtest_framework.a: Tests/framework/CMakeFiles/test_framework.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library ..\..\lib\libtest_framework.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library ..\..\lib\libtest_framework.a"
 	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework && $(CMAKE_COMMAND) -P CMakeFiles\test_framework.dir\cmake_clean_target.cmake
 	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\test_framework.dir\link.txt --verbose=$(VERBOSE)
 
@@ -108,7 +132,7 @@ Tests/framework/CMakeFiles/test_framework.dir/clean:
 	cd /d D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework && $(CMAKE_COMMAND) -P CMakeFiles\test_framework.dir\cmake_clean.cmake
 .PHONY : Tests/framework/CMakeFiles/test_framework.dir/clean
 
-Tests/framework/CMakeFiles/test_framework.dir/depend:
+Tests/framework/CMakeFiles/test_framework.dir/depend: Tests/framework/test_framework_autogen/timestamp
 	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" D:\Project\Reversi\ReversiAI_Platform D:\Project\Reversi\ReversiAI_Platform\Tests\framework D:\Project\Reversi\ReversiAI_Platform\build_mingw D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework D:\Project\Reversi\ReversiAI_Platform\build_mingw\Tests\framework\CMakeFiles\test_framework.dir\DependInfo.cmake "--color=$(COLOR)" test_framework
 .PHONY : Tests/framework/CMakeFiles/test_framework.dir/depend
 

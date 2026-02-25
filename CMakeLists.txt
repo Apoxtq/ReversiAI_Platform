@@ -60,6 +60,10 @@ add_library(ai_lib STATIC
     src/ai/AIBattle.cpp
     src/ai/ZobristHash.cpp              # v0.6.0: Zobrist哈希
     src/ai/TranspositionTable.cpp       # v0.6.0: 转置表
+    # v0.7.0: Killer/History优化
+    src/ai/KillerTable.cpp
+    src/ai/HistoryTable.cpp
+    src/ai/MoveOrderer.cpp
 )
 target_include_directories(ai_lib PUBLIC include include/ai)
 target_compile_features(ai_lib PUBLIC cxx_std_17)

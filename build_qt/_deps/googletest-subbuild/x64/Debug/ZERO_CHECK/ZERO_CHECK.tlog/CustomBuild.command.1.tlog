@@ -1,0 +1,10 @@
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\4EE6DBABF7AAABFE4B3EAC4D91B2CE34\GENERATE.STAMP.RULE
+setlocal
+D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -SD:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild -BD:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/googletest-populate.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

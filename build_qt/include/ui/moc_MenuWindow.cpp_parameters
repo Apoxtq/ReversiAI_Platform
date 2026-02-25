@@ -1,0 +1,7 @@
+-DWIN32
+--compiler-flavor=msvc
+-o
+D:/Project/Reversi/ReversiAI_Platform/build_qt/include/ui/moc_MenuWindow.cpp
+D:/Project/Reversi/ReversiAI_Platform/include/ui/MenuWindow.h
+-DWIN32
+--compiler-flavor=msvc

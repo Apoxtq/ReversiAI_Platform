@@ -1,0 +1,4 @@
+unit_tests_network_autogen/timestamp: \
+	D:/Project/Reversi/ReversiAI_Platform/Tests/unit/CMakeLists.txt \
+	D:/Project/Reversi/ReversiAI_Platform/build_mingw/unit_tests_network_stub.cpp \
+	D:/Dev/Scoop/apps/cmake/current/bin/cmake.exe

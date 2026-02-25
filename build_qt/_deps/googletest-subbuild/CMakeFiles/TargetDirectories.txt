@@ -1,0 +1,3 @@
+D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/googletest-populate.dir
+D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/ALL_BUILD.dir
+D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/ZERO_CHECK.dir

@@ -1,0 +1,5 @@
+-DWIN32
+-o
+D:/Project/Reversi/ReversiAI_Platform/build_mingw/include/ui/moc_NetworkLobbyWindow.cpp
+D:/Project/Reversi/ReversiAI_Platform/include/ui/NetworkLobbyWindow.h
+-DWIN32

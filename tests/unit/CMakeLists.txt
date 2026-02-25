@@ -38,6 +38,13 @@ endif()
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ai/TranspositionTableTest.cpp")
     list(APPEND AI_TEST_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/ai/TranspositionTableTest.cpp")
 endif()
+# v0.7.0 Killer/History tests
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ai/KillerTableTest.cpp")
+    list(APPEND AI_TEST_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/ai/KillerTableTest.cpp")
+endif()
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ai/HistoryTableTest.cpp")
+    list(APPEND AI_TEST_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/ai/HistoryTableTest.cpp")
+endif()
 
 if(AI_TEST_SRCS)
     add_executable(unit_tests_ai ${AI_TEST_SRCS})

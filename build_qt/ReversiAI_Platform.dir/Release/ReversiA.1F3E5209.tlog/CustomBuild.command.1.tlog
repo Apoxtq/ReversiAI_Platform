@@ -1,0 +1,146 @@
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\CMAKEFILES\AD9F803C6622BEA4EE394700D31AA2FA\MOC_MAINWINDOW.CPP.RULE
+setlocal
+cd D:\Project\Reversi\ReversiAI_Platform\build_qt\include
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Dev\SDKs\Qt\6.10.1\mingw_64\bin\moc.exe @D:/Project/Reversi/ReversiAI_Platform/build_qt/include/moc_mainwindow.cpp_parameters
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\CMAKEFILES\C820D9C90BCCA32A4E39C97BB2BDC9CB\MOC_GAMECONTROLLER.CPP.RULE
+setlocal
+cd D:\Project\Reversi\ReversiAI_Platform\build_qt\include\ui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Dev\SDKs\Qt\6.10.1\mingw_64\bin\moc.exe @D:/Project/Reversi/ReversiAI_Platform/build_qt/include/ui/moc_GameController.cpp_parameters
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\CMAKEFILES\C820D9C90BCCA32A4E39C97BB2BDC9CB\MOC_MENUWINDOW.CPP.RULE
+setlocal
+cd D:\Project\Reversi\ReversiAI_Platform\build_qt\include\ui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Dev\SDKs\Qt\6.10.1\mingw_64\bin\moc.exe @D:/Project/Reversi/ReversiAI_Platform/build_qt/include/ui/moc_MenuWindow.cpp_parameters
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\CMAKEFILES\C820D9C90BCCA32A4E39C97BB2BDC9CB\MOC_PVEWINDOW.CPP.RULE
+setlocal
+cd D:\Project\Reversi\ReversiAI_Platform\build_qt\include\ui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Dev\SDKs\Qt\6.10.1\mingw_64\bin\moc.exe @D:/Project/Reversi/ReversiAI_Platform/build_qt/include/ui/moc_PvEWindow.cpp_parameters
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\CMAKEFILES\C820D9C90BCCA32A4E39C97BB2BDC9CB\MOC_PVPWINDOW.CPP.RULE
+setlocal
+cd D:\Project\Reversi\ReversiAI_Platform\build_qt\include\ui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Dev\SDKs\Qt\6.10.1\mingw_64\bin\moc.exe @D:/Project/Reversi/ReversiAI_Platform/build_qt/include/ui/moc_PvPWindow.cpp_parameters
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\CMAKEFILES\C820D9C90BCCA32A4E39C97BB2BDC9CB\MOC_NETWORKLOBBYWINDOW.CPP.RULE
+setlocal
+cd D:\Project\Reversi\ReversiAI_Platform\build_qt\include\ui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Dev\SDKs\Qt\6.10.1\mingw_64\bin\moc.exe @D:/Project/Reversi/ReversiAI_Platform/build_qt/include/ui/moc_NetworkLobbyWindow.cpp_parameters
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\CMAKEFILES\C820D9C90BCCA32A4E39C97BB2BDC9CB\MOC_NETWORKGAMEWINDOW.CPP.RULE
+setlocal
+cd D:\Project\Reversi\ReversiAI_Platform\build_qt\include\ui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Dev\SDKs\Qt\6.10.1\mingw_64\bin\moc.exe @D:/Project/Reversi/ReversiAI_Platform/build_qt/include/ui/moc_NetworkGameWindow.cpp_parameters
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\CMAKEFILES\C820D9C90BCCA32A4E39C97BB2BDC9CB\MOC_STATISTICSMANAGER.CPP.RULE
+setlocal
+cd D:\Project\Reversi\ReversiAI_Platform\build_qt\include\ui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Dev\SDKs\Qt\6.10.1\mingw_64\bin\moc.exe @D:/Project/Reversi/ReversiAI_Platform/build_qt/include/ui/moc_StatisticsManager.cpp_parameters
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\CMAKEFILES\C820D9C90BCCA32A4E39C97BB2BDC9CB\MOC_AIVSAIWINDOW.CPP.RULE
+setlocal
+cd D:\Project\Reversi\ReversiAI_Platform\build_qt\include\ui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Dev\SDKs\Qt\6.10.1\mingw_64\bin\moc.exe @D:/Project/Reversi/ReversiAI_Platform/build_qt/include/ui/moc_AIvsAIWindow.cpp_parameters
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\SRC\RSC.QRC
+setlocal
+D:\Dev\SDKs\Qt\6.10.1\mingw_64\bin\rcc.exe --no-zstd --name rsc --output D:/Project/Reversi/ReversiAI_Platform/build_qt/qrc_rsc.cpp D:/Project/Reversi/ReversiAI_Platform/src/rsc.qrc
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\CMAKELISTS.TXT
+setlocal
+D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -SD:/Project/Reversi/ReversiAI_Platform -BD:/Project/Reversi/ReversiAI_Platform/build_qt --check-stamp-file D:/Project/Reversi/ReversiAI_Platform/build_qt/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

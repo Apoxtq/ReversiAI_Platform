@@ -1,0 +1,10 @@
+^D:\PROJECT\REVERSI\REVERSIAI_PLATFORM\BUILD_QT\_DEPS\GOOGLETEST-SRC\GOOGLEMOCK\CMAKELISTS.TXT
+setlocal
+D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -SD:/Project/Reversi/ReversiAI_Platform -BD:/Project/Reversi/ReversiAI_Platform/build_qt --check-stamp-file D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-build/googlemock/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

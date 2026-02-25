@@ -1,0 +1,103 @@
+{
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/unit_tests_board_autogen",
+	"CMAKE_BINARY_DIR" : "D:/Project/Reversi/ReversiAI_Platform/build_mingw",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/Project/Reversi/ReversiAI_Platform/Tests/framework",
+	"CMAKE_EXECUTABLE" : "D:/Dev/Scoop/apps/cmake/current/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/Tests/framework/CMakeLists.txt",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FindGTest.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/GoogleTest.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FindPackageHandleStandardArgs.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FindPackageMessage.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FetchContent.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/ExternalProject/shared_internal_commands.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FetchContent/CMakeLists.cmake.in"
+	],
+	"CMAKE_SOURCE_DIR" : "D:/Project/Reversi/ReversiAI_Platform",
+	"CROSS_CONFIG" : false,
+	"DEP_FILE" : "D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/unit_tests_board_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "unit_tests_board_autogen/timestamp",
+	"HEADERS" : [],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/unit_tests_board_autogen/include",
+	"MOC_COMPILATION_FILE" : "D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/unit_tests_board_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : [],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/include",
+		"D:/Project/Reversi/ReversiAI_Platform/src",
+		"D:/Project/Reversi/ReversiAI_Platform/Tests/framework",
+		"D:/Project/Reversi/ReversiAI_Platform/include/core",
+		"D:/Project/Reversi/ReversiAI_Platform/build_mingw/_deps/googletest-src/googletest/include",
+		"D:/Project/Reversi/ReversiAI_Platform/build_mingw/_deps/googletest-src/googletest",
+		"D:/Project/Reversi/ReversiAI_Platform/build_mingw/_deps/googletest-src/googlemock/include",
+		"D:/Project/Reversi/ReversiAI_Platform/build_mingw/_deps/googletest-src/googlemock",
+		"D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++",
+		"D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/x86_64-w64-mingw32",
+		"D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++/backward",
+		"D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include",
+		"D:/Dev/Compilers/MinGW/12.2.0/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed",
+		"D:/Dev/Compilers/MinGW/12.2.0/x86_64-w64-mingw32/include"
+	],
+	"MOC_MACRO_NAMES" : 
+	[
+		"Q_OBJECT",
+		"Q_GADGET",
+		"Q_NAMESPACE",
+		"Q_NAMESPACE_EXPORT",
+		"Q_GADGET_EXPORT",
+		"Q_ENUM_NS"
+	],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"D:/Dev/Compilers/MinGW/12.2.0/bin/c++.exe",
+		"-std=gnu++17",
+		"-w",
+		"-dM",
+		"-E",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/unit_tests_board_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/test_framework_autogen/mocs_compilation.cpp"
+	],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 6,
+	"QT_VERSION_MINOR" : 10,
+	"SETTINGS_FILE" : "D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"D:/Project/Reversi/ReversiAI_Platform/Tests/unit/core/BoardTest.cpp",
+			"MU",
+			null
+		]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/framework/test_framework_autogen/mocs_compilation.cpp"
+	],
+	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : true,
+	"VERBOSITY" : 0
+}

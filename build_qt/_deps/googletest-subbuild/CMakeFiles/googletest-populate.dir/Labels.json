@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/googletest-populate"
+		},
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/4ee6dbabf7aaabfe4b3eac4d91b2ce34/googletest-populate.rule"
+		},
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/af3f200a597805e36fa758749c6fc818/googletest-populate-complete.rule"
+		},
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/7283eb3a12bf15a940a8755dc6bcbc70/googletest-populate-build.rule"
+		},
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/7283eb3a12bf15a940a8755dc6bcbc70/googletest-populate-configure.rule"
+		},
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/7283eb3a12bf15a940a8755dc6bcbc70/googletest-populate-download.rule"
+		},
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/7283eb3a12bf15a940a8755dc6bcbc70/googletest-populate-install.rule"
+		},
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/7283eb3a12bf15a940a8755dc6bcbc70/googletest-populate-mkdir.rule"
+		},
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/7283eb3a12bf15a940a8755dc6bcbc70/googletest-populate-patch.rule"
+		},
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/7283eb3a12bf15a940a8755dc6bcbc70/googletest-populate-test.rule"
+		},
+		{
+			"file" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-subbuild/CMakeFiles/7283eb3a12bf15a940a8755dc6bcbc70/googletest-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"googletest-populate"
+		],
+		"name" : "googletest-populate"
+	}
+}

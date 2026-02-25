@@ -29,13 +29,41 @@ SOURCES += \
     main.cpp \
     ui/mainwindow.cpp \
     ai/MCTS.cpp \
-    src/core/BitBoard.cpp
+    src/core/BitBoard.cpp \
+    src/Board.cpp \
+    src/ai/Evaluator.cpp \
+    src/ai/AIStrategy.cpp \
+    src/ai/MinimaxAI.cpp \
+    src/ai/RandomAI.cpp \
+    src/ai/AIBattle.cpp \
+    src/ai/ZobristHash.cpp \
+    src/ai/TranspositionTable.cpp \
+    src/ai/KillerTable.cpp \
+    src/ai/HistoryTable.cpp \
+    src/ai/MoveOrderer.cpp \
+    src/research/PositionSuite.cpp \
+    src/research/BattleEngine.cpp \
+    src/research/Statistics.cpp
 
 # Header files
 HEADERS += \
     include/mainwindow.h \
     include/MCTS.h \
-    include/core/BitBoard.h
+    include/core/BitBoard.h \
+    include/Board.h \
+    include/ai/AIStrategy.h \
+    include/ai/Evaluator.h \
+    include/ai/MinimaxAI.h \
+    include/ai/RandomAI.h \
+    include/ai/AIBattle.h \
+    include/ai/ZobristHash.h \
+    include/ai/TranspositionTable.h \
+    include/ai/KillerTable.h \
+    include/ai/HistoryTable.h \
+    include/ai/MoveOrderer.h \
+    include/research/PositionSuite.h \
+    include/research/BattleEngine.h \
+    include/research/Statistics.h
 
 # UI forms
 FORMS += \

@@ -1,0 +1,5 @@
+-DWIN32
+-o
+D:/Project/Reversi/ReversiAI_Platform/build_mingw/include/ui/moc_StatisticsManager.cpp
+D:/Project/Reversi/ReversiAI_Platform/include/ui/StatisticsManager.h
+-DWIN32

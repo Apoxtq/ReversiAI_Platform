@@ -1,0 +1,17 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/cmake_install.cmake",
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/network/cmake_install.cmake",
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/Tests/framework/cmake_install.cmake",
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/_deps/googletest-build/cmake_install.cmake",
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/_deps/googletest-build/googlemock/cmake_install.cmake",
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/_deps/googletest-build/googletest/cmake_install.cmake",
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/Tests/unit/cmake_install.cmake",
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/Tests/integration/cmake_install.cmake",
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/Tests/performance/cmake_install.cmake",
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/Tests/system/cmake_install.cmake",
+		"D:/Project/Reversi/ReversiAI_Platform/build_test/Tests/regression/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

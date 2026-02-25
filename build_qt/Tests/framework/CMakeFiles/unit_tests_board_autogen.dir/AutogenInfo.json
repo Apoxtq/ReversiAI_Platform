@@ -1,0 +1,157 @@
+{
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen",
+	"CMAKE_BINARY_DIR" : "D:/Project/Reversi/ReversiAI_Platform/build_qt",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/Project/Reversi/ReversiAI_Platform/Tests/framework",
+	"CMAKE_EXECUTABLE" : "D:/Dev/Scoop/apps/cmake/current/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/Tests/framework/CMakeLists.txt",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FindGTest.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/GoogleTest.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FindPackageHandleStandardArgs.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FindPackageMessage.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FetchContent.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/ExternalProject/shared_internal_commands.cmake",
+		"D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FetchContent/CMakeLists.cmake.in"
+	],
+	"CMAKE_SOURCE_DIR" : "D:/Project/Reversi/ReversiAI_Platform",
+	"CROSS_CONFIG" : false,
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : [],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen/include",
+	"INCLUDE_DIR_Debug" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen/include_Debug",
+	"INCLUDE_DIR_MinSizeRel" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen/include_MinSizeRel",
+	"INCLUDE_DIR_RelWithDebInfo" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen/include_RelWithDebInfo",
+	"INCLUDE_DIR_Release" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen/include_Release",
+	"MOC_COMPILATION_FILE" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen/mocs_compilation.cpp",
+	"MOC_COMPILATION_FILE_Debug" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen/mocs_compilation_Debug.cpp",
+	"MOC_COMPILATION_FILE_MinSizeRel" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen/mocs_compilation_MinSizeRel.cpp",
+	"MOC_COMPILATION_FILE_RelWithDebInfo" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen/mocs_compilation_RelWithDebInfo.cpp",
+	"MOC_COMPILATION_FILE_Release" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/unit_tests_board_autogen/mocs_compilation_Release.cpp",
+	"MOC_DEFINITIONS" : [],
+	"MOC_DEFINITIONS_Debug" : [ "WIN32" ],
+	"MOC_DEFINITIONS_MinSizeRel" : [ "WIN32" ],
+	"MOC_DEFINITIONS_RelWithDebInfo" : [ "WIN32" ],
+	"MOC_DEFINITIONS_Release" : [ "WIN32" ],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : [],
+	"MOC_INCLUDES_Debug" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/include",
+		"D:/Project/Reversi/ReversiAI_Platform/src",
+		"D:/Project/Reversi/ReversiAI_Platform/Tests/framework",
+		"D:/Project/Reversi/ReversiAI_Platform/include/core",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googletest/include",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googletest",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googlemock/include",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googlemock"
+	],
+	"MOC_INCLUDES_MinSizeRel" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/include",
+		"D:/Project/Reversi/ReversiAI_Platform/src",
+		"D:/Project/Reversi/ReversiAI_Platform/Tests/framework",
+		"D:/Project/Reversi/ReversiAI_Platform/include/core",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googletest/include",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googletest",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googlemock/include",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googlemock"
+	],
+	"MOC_INCLUDES_RelWithDebInfo" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/include",
+		"D:/Project/Reversi/ReversiAI_Platform/src",
+		"D:/Project/Reversi/ReversiAI_Platform/Tests/framework",
+		"D:/Project/Reversi/ReversiAI_Platform/include/core",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googletest/include",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googletest",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googlemock/include",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googlemock"
+	],
+	"MOC_INCLUDES_Release" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/include",
+		"D:/Project/Reversi/ReversiAI_Platform/src",
+		"D:/Project/Reversi/ReversiAI_Platform/Tests/framework",
+		"D:/Project/Reversi/ReversiAI_Platform/include/core",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googletest/include",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googletest",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googlemock/include",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/_deps/googletest-src/googlemock"
+	],
+	"MOC_MACRO_NAMES" : 
+	[
+		"Q_OBJECT",
+		"Q_GADGET",
+		"Q_NAMESPACE",
+		"Q_NAMESPACE_EXPORT",
+		"Q_GADGET_EXPORT",
+		"Q_ENUM_NS"
+	],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/test_framework_autogen/mocs_compilation_Debug.cpp",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/test_framework_autogen/mocs_compilation_MinSizeRel.cpp",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/test_framework_autogen/mocs_compilation_RelWithDebInfo.cpp",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/test_framework_autogen/mocs_compilation_Release.cpp"
+	],
+	"MULTI_CONFIG" : true,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/ParseCache.txt",
+	"PARSE_CACHE_FILE_Debug" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/ParseCache_Debug.txt",
+	"PARSE_CACHE_FILE_MinSizeRel" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/ParseCache_MinSizeRel.txt",
+	"PARSE_CACHE_FILE_RelWithDebInfo" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/ParseCache_RelWithDebInfo.txt",
+	"PARSE_CACHE_FILE_Release" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/ParseCache_Release.txt",
+	"QT_MOC_EXECUTABLE" : "",
+	"QT_MOC_EXECUTABLE_Debug" : "D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/moc.exe",
+	"QT_MOC_EXECUTABLE_MinSizeRel" : "D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/moc.exe",
+	"QT_MOC_EXECUTABLE_RelWithDebInfo" : "D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/moc.exe",
+	"QT_MOC_EXECUTABLE_Release" : "D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "",
+	"QT_UIC_EXECUTABLE_Debug" : "D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/uic.exe",
+	"QT_UIC_EXECUTABLE_MinSizeRel" : "D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/uic.exe",
+	"QT_UIC_EXECUTABLE_RelWithDebInfo" : "D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/uic.exe",
+	"QT_UIC_EXECUTABLE_Release" : "D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 6,
+	"QT_VERSION_MINOR" : 10,
+	"SETTINGS_FILE" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE_Debug" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/AutogenUsed_Debug.txt",
+	"SETTINGS_FILE_MinSizeRel" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/AutogenUsed_MinSizeRel.txt",
+	"SETTINGS_FILE_RelWithDebInfo" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/AutogenUsed_RelWithDebInfo.txt",
+	"SETTINGS_FILE_Release" : "D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/CMakeFiles/unit_tests_board_autogen.dir/AutogenUsed_Release.txt",
+	"SOURCES" : 
+	[
+		[
+			"D:/Project/Reversi/ReversiAI_Platform/Tests/unit/core/BoardTest.cpp",
+			"MU",
+			null
+		]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/test_framework_autogen/mocs_compilation_Debug.cpp",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/test_framework_autogen/mocs_compilation_MinSizeRel.cpp",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/test_framework_autogen/mocs_compilation_RelWithDebInfo.cpp",
+		"D:/Project/Reversi/ReversiAI_Platform/build_qt/Tests/framework/test_framework_autogen/mocs_compilation_Release.cpp"
+	],
+	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : true,
+	"VERBOSITY" : 0
+}

@@ -1,0 +1,7 @@
+-DWIN32
+--compiler-flavor=msvc
+-o
+D:/Project/Reversi/ReversiAI_Platform/build_test/network/include/network/moc_reconnectionmanager.cpp
+D:/Project/Reversi/ReversiAI_Platform/network/include/network/reconnectionmanager.hpp
+-DWIN32
+--compiler-flavor=msvc

@@ -8,7 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "" "Tests/unit/unit_tests_core_autogen/timestamp" "custom" "Tests/unit/unit_tests_core_autogen/deps"
   "D:/Project/Reversi/ReversiAI_Platform/Tests/unit/core/BitBoardTest.cpp" "Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj" "gcc" "Tests/unit/CMakeFiles/unit_tests_core.dir/core/BitBoardTest.cpp.obj.d"
+  "D:/Project/Reversi/ReversiAI_Platform/Tests/unit/core/BoardTest.cpp" "Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.obj" "gcc" "Tests/unit/CMakeFiles/unit_tests_core.dir/core/BoardTest.cpp.obj.d"
+  "D:/Project/Reversi/ReversiAI_Platform/build_mingw/Tests/unit/unit_tests_core_autogen/mocs_compilation.cpp" "Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.obj" "gcc" "Tests/unit/CMakeFiles/unit_tests_core.dir/unit_tests_core_autogen/mocs_compilation.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

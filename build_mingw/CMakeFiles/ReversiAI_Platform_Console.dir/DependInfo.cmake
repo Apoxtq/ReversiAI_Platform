@@ -8,9 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "D:/Project/Reversi/ReversiAI_Platform/ai/MCTS.cpp" "CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.obj" "gcc" "CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.obj.d"
+  "" "ReversiAI_Platform_Console_autogen/timestamp" "custom" "ReversiAI_Platform_Console_autogen/deps"
+  "D:/Project/Reversi/ReversiAI_Platform/build_mingw/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp" "CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.obj" "gcc" "CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.obj.d"
   "D:/Project/Reversi/ReversiAI_Platform/main_console.cpp" "CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj" "gcc" "CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj.d"
-  "D:/Project/Reversi/ReversiAI_Platform/src/core/BitBoard.cpp" "CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.obj" "gcc" "CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

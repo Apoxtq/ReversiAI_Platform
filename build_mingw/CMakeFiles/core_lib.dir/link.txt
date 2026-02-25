@@ -1,0 +1,2 @@
+D:\Dev\Compilers\MinGW\12.2.0\bin\ar.exe qc libcore_lib.a CMakeFiles/core_lib.dir/core_lib_autogen/mocs_compilation.cpp.obj CMakeFiles/core_lib.dir/src/core/BitBoard.cpp.obj CMakeFiles/core_lib.dir/src/Board.cpp.obj
+D:\Dev\Compilers\MinGW\12.2.0\bin\ranlib.exe libcore_lib.a

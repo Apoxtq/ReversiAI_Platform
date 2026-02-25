@@ -68,14 +68,36 @@ include CMakeFiles/ReversiAI_Platform_Console.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/ReversiAI_Platform_Console.dir/flags.make
 
+ReversiAI_Platform_Console_autogen/timestamp: D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/moc.exe
+ReversiAI_Platform_Console_autogen/timestamp: D:/Dev/SDKs/Qt/6.10.1/mingw_64/bin/uic.exe
+ReversiAI_Platform_Console_autogen/timestamp: CMakeFiles/ReversiAI_Platform_Console.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target ReversiAI_Platform_Console"
+	D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -E cmake_autogen D:/Project/Reversi/ReversiAI_Platform/build_mingw/CMakeFiles/ReversiAI_Platform_Console_autogen.dir/AutogenInfo.json ""
+	D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -E touch D:/Project/Reversi/ReversiAI_Platform/build_mingw/ReversiAI_Platform_Console_autogen/timestamp
+
 CMakeFiles/ReversiAI_Platform_Console.dir/codegen:
 .PHONY : CMakeFiles/ReversiAI_Platform_Console.dir/codegen
+
+CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/flags.make
+CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/includes_CXX.rsp
+CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.obj: ReversiAI_Platform_Console_autogen/mocs_compilation.cpp
+CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.obj"
+	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.obj -MF CMakeFiles\ReversiAI_Platform_Console.dir\ReversiAI_Platform_Console_autogen\mocs_compilation.cpp.obj.d -o CMakeFiles\ReversiAI_Platform_Console.dir\ReversiAI_Platform_Console_autogen\mocs_compilation.cpp.obj -c D:\Project\Reversi\ReversiAI_Platform\build_mingw\ReversiAI_Platform_Console_autogen\mocs_compilation.cpp
+
+CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.i"
+	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E D:\Project\Reversi\ReversiAI_Platform\build_mingw\ReversiAI_Platform_Console_autogen\mocs_compilation.cpp > CMakeFiles\ReversiAI_Platform_Console.dir\ReversiAI_Platform_Console_autogen\mocs_compilation.cpp.i
+
+CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.s"
+	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Project\Reversi\ReversiAI_Platform\build_mingw\ReversiAI_Platform_Console_autogen\mocs_compilation.cpp -o CMakeFiles\ReversiAI_Platform_Console.dir\ReversiAI_Platform_Console_autogen\mocs_compilation.cpp.s
 
 CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/flags.make
 CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/includes_CXX.rsp
 CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj: D:/Project/Reversi/ReversiAI_Platform/main_console.cpp
 CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj"
 	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj -MF CMakeFiles\ReversiAI_Platform_Console.dir\main_console.cpp.obj.d -o CMakeFiles\ReversiAI_Platform_Console.dir\main_console.cpp.obj -c D:\Project\Reversi\ReversiAI_Platform\main_console.cpp
 
 CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.i: cmake_force
@@ -86,55 +108,31 @@ CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.s"
 	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Project\Reversi\ReversiAI_Platform\main_console.cpp -o CMakeFiles\ReversiAI_Platform_Console.dir\main_console.cpp.s
 
-CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/flags.make
-CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/includes_CXX.rsp
-CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.obj: D:/Project/Reversi/ReversiAI_Platform/ai/MCTS.cpp
-CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.obj"
-	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.obj -MF CMakeFiles\ReversiAI_Platform_Console.dir\ai\MCTS.cpp.obj.d -o CMakeFiles\ReversiAI_Platform_Console.dir\ai\MCTS.cpp.obj -c D:\Project\Reversi\ReversiAI_Platform\ai\MCTS.cpp
-
-CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.i"
-	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E D:\Project\Reversi\ReversiAI_Platform\ai\MCTS.cpp > CMakeFiles\ReversiAI_Platform_Console.dir\ai\MCTS.cpp.i
-
-CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.s"
-	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Project\Reversi\ReversiAI_Platform\ai\MCTS.cpp -o CMakeFiles\ReversiAI_Platform_Console.dir\ai\MCTS.cpp.s
-
-CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/flags.make
-CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/includes_CXX.rsp
-CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.obj: D:/Project/Reversi/ReversiAI_Platform/src/core/BitBoard.cpp
-CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.obj: CMakeFiles/ReversiAI_Platform_Console.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.obj"
-	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.obj -MF CMakeFiles\ReversiAI_Platform_Console.dir\src\core\BitBoard.cpp.obj.d -o CMakeFiles\ReversiAI_Platform_Console.dir\src\core\BitBoard.cpp.obj -c D:\Project\Reversi\ReversiAI_Platform\src\core\BitBoard.cpp
-
-CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.i"
-	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E D:\Project\Reversi\ReversiAI_Platform\src\core\BitBoard.cpp > CMakeFiles\ReversiAI_Platform_Console.dir\src\core\BitBoard.cpp.i
-
-CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.s"
-	D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\Project\Reversi\ReversiAI_Platform\src\core\BitBoard.cpp -o CMakeFiles\ReversiAI_Platform_Console.dir\src\core\BitBoard.cpp.s
-
 # Object files for target ReversiAI_Platform_Console
 ReversiAI_Platform_Console_OBJECTS = \
-"CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj" \
-"CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.obj" \
-"CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.obj"
+"CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.obj" \
+"CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj"
 
 # External object files for target ReversiAI_Platform_Console
 ReversiAI_Platform_Console_EXTERNAL_OBJECTS =
 
+ReversiAI_Platform_Console.exe: CMakeFiles/ReversiAI_Platform_Console.dir/ReversiAI_Platform_Console_autogen/mocs_compilation.cpp.obj
 ReversiAI_Platform_Console.exe: CMakeFiles/ReversiAI_Platform_Console.dir/main_console.cpp.obj
-ReversiAI_Platform_Console.exe: CMakeFiles/ReversiAI_Platform_Console.dir/ai/MCTS.cpp.obj
-ReversiAI_Platform_Console.exe: CMakeFiles/ReversiAI_Platform_Console.dir/src/core/BitBoard.cpp.obj
 ReversiAI_Platform_Console.exe: CMakeFiles/ReversiAI_Platform_Console.dir/build.make
+ReversiAI_Platform_Console.exe: network/libnetwork_lib.a
+ReversiAI_Platform_Console.exe: libcore_lib.a
+ReversiAI_Platform_Console.exe: libai_lib.a
+ReversiAI_Platform_Console.exe: libresearch_lib.a
+ReversiAI_Platform_Console.exe: libai_lib.a
+ReversiAI_Platform_Console.exe: network/libnetwork_lib.a
+ReversiAI_Platform_Console.exe: D:/Dev/SDKs/Qt/6.10.1/mingw_64/lib/libQt6Network.a
+ReversiAI_Platform_Console.exe: D:/Dev/SDKs/Qt/6.10.1/mingw_64/lib/libQt6Core.a
+ReversiAI_Platform_Console.exe: libcore_lib.a
 ReversiAI_Platform_Console.exe: CMakeFiles/ReversiAI_Platform_Console.dir/linkLibs.rsp
 ReversiAI_Platform_Console.exe: CMakeFiles/ReversiAI_Platform_Console.dir/objects1.rsp
 ReversiAI_Platform_Console.exe: CMakeFiles/ReversiAI_Platform_Console.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable ReversiAI_Platform_Console.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\ReversiAI_Platform_Console.dir\link.txt --verbose=$(VERBOSE)
-	C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file D:/Project/Reversi/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary D:/Project/Reversi/ReversiAI_Platform/build_mingw/ReversiAI_Platform_Console.exe -installedDir D:/Project/Reversi/vcpkg/installed/x64-mingw-dynamic/bin -OutVariable out
 
 # Rule to build all files generated by this target.
 CMakeFiles/ReversiAI_Platform_Console.dir/build: ReversiAI_Platform_Console.exe
@@ -144,7 +142,7 @@ CMakeFiles/ReversiAI_Platform_Console.dir/clean:
 	$(CMAKE_COMMAND) -P CMakeFiles\ReversiAI_Platform_Console.dir\cmake_clean.cmake
 .PHONY : CMakeFiles/ReversiAI_Platform_Console.dir/clean
 
-CMakeFiles/ReversiAI_Platform_Console.dir/depend:
+CMakeFiles/ReversiAI_Platform_Console.dir/depend: ReversiAI_Platform_Console_autogen/timestamp
 	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" D:\Project\Reversi\ReversiAI_Platform D:\Project\Reversi\ReversiAI_Platform D:\Project\Reversi\ReversiAI_Platform\build_mingw D:\Project\Reversi\ReversiAI_Platform\build_mingw D:\Project\Reversi\ReversiAI_Platform\build_mingw\CMakeFiles\ReversiAI_Platform_Console.dir\DependInfo.cmake "--color=$(COLOR)" ReversiAI_Platform_Console
 .PHONY : CMakeFiles/ReversiAI_Platform_Console.dir/depend
 
