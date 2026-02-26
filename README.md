@@ -1,7 +1,7 @@
 # ReversiAI_Platform 🎓
 
-|**Version**: v0.7.0
-|**Status**: ✅ AI Optimization Completed
+|**Version**: v0.8.0
+|**Status**: ✅ Performance Benchmarking Completed
 |**Project**: University of Liverpool COMP390 Honours Year Project
 
 A comprehensive Othello/Reversi AI research and benchmarking platform implemented in modern C++, demonstrating academic excellence in open-source learning and software engineering.
@@ -61,6 +61,14 @@ A comprehensive Othello/Reversi AI research and benchmarking platform implemente
 - **Move Orderer**: Unified sorting: PV > Killer > History > Static
 - **Search Parameters**: Configurable weights for midgame/endgame
 - **Performance Target**: ≥10% search efficiency improvement
+
+### 📊 Performance Benchmarking (v0.8.0 ✅ Completed)
+- **Bitboard Benchmark**: Flip/Move/Legal/Copy performance testing
+- **AI Search Benchmark**: Minimax/MCTS throughput measurement
+- **Head-to-Head Engine**: Win rate verification with statistical analysis
+- **Data Exporter**: JSON/CSV/Markdown multi-format export
+- **Position Suite**: 64 standard test positions
+- **Statistics**: Wilcoxon test, confidence intervals
 
 ---
 
@@ -126,6 +134,8 @@ All documentation is available in the `项目计划（文档放置）/` director
 - **[ReversiAI_Platform_项目计划.md](项目计划（文档放置）/ReversiAI_Platform_项目计划.md)** - Complete project roadmap
 
 ### Version Documentation
+- **[v0.8.0-完成报告.md](项目计划（文档放置）/v0.8.0-完成报告.md)** - v0.8.0 completion report (Performance Benchmarking)
+- **[v0.8.0-设计规划.md](项目计划（文档放置）/v0.8.0-设计规划.md)** - v0.8.0 performance benchmarking design
 - **[v0.7.0-完成报告.md](项目计划（文档放置）/v0.7.0-完成报告.md)** - v0.7.0 completion report (AI Optimization)
 - **[v0.7.0-设计规划.md](项目计划（文档放置）/v0.7.0-设计规划.md)** - v0.7.0 AI optimization design
 - **[v0.6.0-完成报告.md](项目计划（文档放置）/v0.6.0-完成报告.md)** - v0.6.0 completion report
@@ -196,6 +206,19 @@ ReversiAI_Platform/
 
 ### ✅ Completed Versions
 
+#### v0.8.0 (February 2026) - Performance Benchmarking
+- **Features**: Bitboard benchmark, AI search benchmark, Head-to-Head engine, Data export
+- **Status**: 100% Complete
+- **Code Lines**: ~1,400 new lines
+- **Key Features**:
+  - ✅ Bitboard Benchmark (Flip/Move/Legal/Copy/Hash performance)
+  - ✅ AI Search Benchmark (Minimax/MCTS throughput)
+  - ✅ Head-to-Head Engine (Win rate verification with statistics)
+  - ✅ Data Exporter (JSON/CSV/Markdown multi-format)
+  - ✅ Position Suite (64 standard test positions)
+  - ✅ Statistics Tools (Wilcoxon test, confidence intervals)
+  - ✅ Compilation: MinGW + MSVC verified
+
 #### v0.7.0 (February 2026) - AI Optimization
 - **Features**: Killer Moves, History Heuristic, Move Orderer, Search Parameters
 - **Status**: 100% Complete
@@ -256,19 +279,13 @@ ReversiAI_Platform/
 
 ### 📅 Planned Versions
 
-#### v0.8.0 (March 2026) - Performance Verification
-- Benchmark testing suite
-- Killer/History efficiency validation
-- Search node count comparison
-- Win rate verification (Minimax-6 vs Random ≥92%)
+#### v0.9.0 (March 2026) - Visualization Enhancement (Optional)
+- Search tree visualization
+- Real-time statistics panel
+- Board heatmap
+- Game replay functionality
 
-#### v0.9.0 (March 2026) - Ablation Study
-- Feature ablation experiments
-- Performance comparison analysis
-- Research data collection
-- Statistical significance validation
-
-#### v1.0.0 (March 2026) - Final Release
+#### v1.0.0 (March-April 2026) - Final Release
 - Complete feature set
 - Performance optimization
 - Final documentation
@@ -328,7 +345,8 @@ This project learns from and builds upon excellent open-source implementations:
 | v0.4.0 | UI system | ~5,500 | 45 |
 | v0.5.0 | Network features | ~10,500 | 69 |
 | v0.6.0 | Research framework | ~12,500 | 80 |
-|| v0.7.0 | AI optimization | ~13,100 | 86 |
+| v0.7.0 | AI optimization | ~13,100 | 86 |
+| v0.8.0 | Performance benchmark | ~14,500 | 92 |
 
 ---
 
@@ -404,4 +422,4 @@ This project serves as an excellent example for:
 
 |**⭐ Star this repository to support academic open-source development!**  
 |**🎓 University of Liverpool COMP390 Honours Year Project**  
-|**Current Version**: v0.7.0 | **Next Version**: v0.8.0 (Performance Verification)**
+|**Current Version**: v0.8.0 | **Next Version**: v0.9.0 (Visualization - Optional)**

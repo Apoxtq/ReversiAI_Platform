@@ -135,6 +135,23 @@ void AIvsAIWindow::setupUI() {
 
     mainLayout_->addLayout(buttonLayout);
 
+    // 基准测试按钮区域
+    QLabel* benchmarkLabel = new QLabel(tr("Benchmarks:"), this);
+    benchmarkLabel->setStyleSheet("font-size: 14px; font-weight: bold; color: #2c3e50;");
+    mainLayout_->addWidget(benchmarkLabel);
+
+    QHBoxLayout* benchmarkLayout = new QHBoxLayout();
+
+    bitboardBenchmarkButton_ = new QPushButton(tr("Bitboard Benchmark"), this);
+    bitboardBenchmarkButton_->setStyleSheet("background-color: #9b59b6; color: white; padding: 8px 20px; font-size: 14px; border-radius: 5px;");
+    benchmarkLayout->addWidget(bitboardBenchmarkButton_);
+
+    aiBenchmarkButton_ = new QPushButton(tr("AI Benchmark"), this);
+    aiBenchmarkButton_->setStyleSheet("background-color: #e67e22; color: white; padding: 8px 20px; font-size: 14px; border-radius: 5px;");
+    benchmarkLayout->addWidget(aiBenchmarkButton_);
+
+    mainLayout_->addLayout(benchmarkLayout);
+
     // 统计结果区域
     statsGroup_ = new QGroupBox(tr("Results"), this);
     statsLayout_ = new QVBoxLayout(statsGroup_);
@@ -173,6 +190,8 @@ void AIvsAIWindow::setupConnections() {
     connect(stopButton_, &QPushButton::clicked, this, &AIvsAIWindow::onStopBattleClicked);
     connect(exportButton_, &QPushButton::clicked, this, &AIvsAIWindow::onExportReportClicked);
     connect(backButton_, &QPushButton::clicked, this, &AIvsAIWindow::onBackClicked);
+    connect(bitboardBenchmarkButton_, &QPushButton::clicked, this, &AIvsAIWindow::onRunBitboardBenchmarkClicked);
+    connect(aiBenchmarkButton_, &QPushButton::clicked, this, &AIvsAIWindow::onRunAIBenchmarkClicked);
 }
 
 void AIvsAIWindow::onStartBattleClicked() {
@@ -437,6 +456,96 @@ void AIvsAIWindow::setControlsEnabled(bool enabled) {
     gamesSpinBox_->setEnabled(enabled);
     depth1Combo_->setEnabled(enabled);
     depth2Combo_->setEnabled(enabled);
+}
+
+void AIvsAIWindow::onRunBitboardBenchmarkClicked() {
+    // 禁用按钮
+    bitboardBenchmarkButton_->setEnabled(false);
+    aiBenchmarkButton_->setEnabled(false);
+    startButton_->setEnabled(false);
+
+    progressLabel_->setText(tr("Running Bitboard Benchmark..."));
+    currentMoveLabel_->setText(tr("Please wait..."));
+
+    // 在后台运行基准测试
+    QThread* thread = QThread::create([this]() {
+        BitboardBenchmark benchmark;
+        BitboardBenchmark::Config config;
+        config.verbose = true;
+        config.warmup = true;
+        config.flip_iterations = 1000000;  // 减少迭代次数加快测试
+        config.move_iterations = 100000;
+        config.legal_iterations = 100000;
+        config.copy_iterations = 100000;
+        benchmark.setConfig(config);
+
+        auto results = benchmark.runAllBenchmarks();
+
+        QMetaObject::invokeMethod(this, "onBitboardBenchmarkComplete",
+            Qt::QueuedConnection, Q_ARG(QVariant, QVariant::fromValue(results)));
+    });
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+    thread->start();
+}
+
+void AIvsAIWindow::onRunAIBenchmarkClicked() {
+    // 禁用按钮
+    bitboardBenchmarkButton_->setEnabled(false);
+    aiBenchmarkButton_->setEnabled(false);
+    startButton_->setEnabled(false);
+
+    progressLabel_->setText(tr("Running AI Benchmark..."));
+    currentMoveLabel_->setText(tr("Please wait (this may take a while)..."));
+
+    // 在后台运行基准测试
+    QThread* thread = QThread::create([this]() {
+        AISearchBenchmark benchmark;
+        AISearchBenchmark::Config config;
+        config.verbose = true;
+        config.warmup = true;
+        config.time_limit_ms = 2000;  // 减少时间加快测试
+        benchmark.setConfig(config);
+
+        auto results = benchmark.runFullBenchmark();
+
+        QMetaObject::invokeMethod(this, "onAIBenchmarkComplete",
+            Qt::QueuedConnection, Q_ARG(QVariant, QVariant::fromValue(results)));
+    });
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+    thread->start();
+}
+
+// Qt元对象调用处理基准测试完成
+void AIvsAIWindow::onBitboardBenchmarkComplete(const QVariant& results) {
+    Q_UNUSED(results);
+
+    // 重新启用按钮
+    bitboardBenchmarkButton_->setEnabled(true);
+    aiBenchmarkButton_->setEnabled(true);
+    startButton_->setEnabled(true);
+
+    progressLabel_->setText(tr("Bitboard Benchmark Complete"));
+    currentMoveLabel_->setText(tr("Check console for detailed results"));
+
+    // 显示完成消息
+    QMessageBox::information(this, tr("Benchmark Complete"),
+        tr("Bitboard benchmark completed!\n\nCheck the console output for detailed results."));
+}
+
+void AIvsAIWindow::onAIBenchmarkComplete(const QVariant& results) {
+    Q_UNUSED(results);
+
+    // 重新启用按钮
+    bitboardBenchmarkButton_->setEnabled(true);
+    aiBenchmarkButton_->setEnabled(true);
+    startButton_->setEnabled(true);
+
+    progressLabel_->setText(tr("AI Benchmark Complete"));
+    currentMoveLabel_->setText(tr("Check console for detailed results"));
+
+    // 显示完成消息
+    QMessageBox::information(this, tr("Benchmark Complete"),
+        tr("AI benchmark completed!\n\nCheck the console output for detailed results."));
 }
 
 } // namespace Reversi

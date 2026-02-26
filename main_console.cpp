@@ -14,6 +14,9 @@
 #include "research/PositionSuite.h"
 #include "research/BattleEngine.h"
 #include "research/Statistics.h"
+#include "research/BitboardBenchmark.h"
+#include "research/AIBenchmark.h"
+#include "research/DataExporter.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -273,8 +276,54 @@ int main(int argc, char *argv[])
 
         std::cout << "\n[SUCCESS] All tests completed - v0.6.0 full functionality verified" << std::endl;
         std::cout << "[INFO] v0.6.0 Research Framework: Benchmarking infrastructure complete" << std::endl;
-        std::cout << "[NEXT] v0.7.0: Algorithm optimization (iterative deepening, heuristics)" << std::endl;
-
+        
+        // ========================================================================
+        // v0.8.0: Performance Benchmarking
+        // ========================================================================
+        std::cout << "\n" << std::string(60, '=') << std::endl;
+        std::cout << "[TEST] Performance Benchmarking (v0.8.0)" << std::endl;
+        std::cout << std::string(30, '-') << std::endl;
+        
+        // 1. Bitboard Benchmark
+        std::cout << "\n1. Running Bitboard Benchmark..." << std::endl;
+        Reversi::BitboardBenchmark bb;
+        Reversi::BitboardBenchmark::Config bbConfig;
+        bbConfig.verbose = true;
+        bbConfig.warmup = true;
+        bbConfig.flip_iterations = 1000000;
+        bbConfig.move_iterations = 100000;
+        bbConfig.legal_iterations = 100000;
+        bbConfig.copy_iterations = 100000;
+        bb.setConfig(bbConfig);
+        
+        auto bbResults = bb.runAllBenchmarks();
+        
+        std::cout << "\n2. Running AI Benchmark..." << std::endl;
+        Reversi::AISearchBenchmark aiBench;
+        Reversi::AISearchBenchmark::Config aiConfig;
+        aiConfig.verbose = true;
+        aiConfig.warmup = true;
+        aiConfig.time_limit_ms = 3000;
+        aiBench.setConfig(aiConfig);
+        
+        auto aiResults = aiBench.runFullBenchmark();
+        
+        // 3. Export results
+        std::cout << "\n3. Exporting results..." << std::endl;
+        Reversi::DataExporter exporter;
+        Reversi::DataExporter::ExportConfig expConfig;
+        expConfig.output_dir = "benchmark_results";
+        expConfig.experiment_name = "v0.8.0_benchmark";
+        exporter.setConfig(expConfig);
+        
+        exporter.exportBitboardResults(bbResults, "bitboard_results");
+        exporter.exportAIResults(aiResults, "ai_results");
+        
+        std::cout << "\n[OK] v0.8.0 Performance Benchmarking completed" << std::endl;
+        std::cout << "[INFO] Results exported to benchmark_results/" << std::endl;
+        
+        std::cout << "\n[SUCCESS] v0.8.0 benchmark completed successfully!" << std::endl;
+        
         return 0;
 
     } catch (const std::exception& e) {

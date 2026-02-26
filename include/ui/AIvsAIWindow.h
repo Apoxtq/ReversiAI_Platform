@@ -34,6 +34,8 @@
 #include "ai/AIBattle.h"
 #include "research/BattleEngine.h"
 #include "research/PositionSuite.h"
+#include "research/BitboardBenchmark.h"
+#include "research/AIBenchmark.h"
 
 namespace Ui {
 class AIvsAIWindow;
@@ -87,6 +89,26 @@ private slots:
      * @brief 导出报告按钮点击
      */
     void onExportReportClicked();
+
+    /**
+     * @brief 运行Bitboard基准测试
+     */
+    void onRunBitboardBenchmarkClicked();
+
+    /**
+     * @brief 运行AI基准测试
+     */
+    void onRunAIBenchmarkClicked();
+
+    /**
+     * @brief Bitboard基准测试完成
+     */
+    void onBitboardBenchmarkComplete(const QVariant& results);
+
+    /**
+     * @brief AI基准测试完成
+     */
+    void onAIBenchmarkComplete(const QVariant& results);
 
     /**
      * @brief 返回主菜单
@@ -153,6 +175,9 @@ private:
     QPushButton* stopButton_;
     QPushButton* exportButton_;
     QPushButton* backButton_;
+    QPushButton* benchmarkButton_;
+    QPushButton* bitboardBenchmarkButton_;
+    QPushButton* aiBenchmarkButton_;
 
     // 进度显示
     QProgressBar* progressBar_;
