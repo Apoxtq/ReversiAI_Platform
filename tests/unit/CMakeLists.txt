@@ -45,6 +45,10 @@ endif()
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ai/HistoryTableTest.cpp")
     list(APPEND AI_TEST_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/ai/HistoryTableTest.cpp")
 endif()
+# v1.0.0 MoveOrderer test
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ai/MoveOrdererTest.cpp")
+    list(APPEND AI_TEST_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/ai/MoveOrdererTest.cpp")
+endif()
 
 if(AI_TEST_SRCS)
     add_executable(unit_tests_ai ${AI_TEST_SRCS})

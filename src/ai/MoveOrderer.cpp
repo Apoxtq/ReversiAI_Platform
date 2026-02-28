@@ -213,10 +213,38 @@ int MoveOrderer::calculateMoveScore(const Move& move, int depth, const Move& pvM
 }
 
 int MoveOrderer::calculateMobilityScore(const Board& board, const Move& move) const {
-    // 简单实现：返回该走法产生的新合法走法数量
-    // 这是一个简化的灵活度计算
-    // 完整实现应该考虑边的位置权重
-    return 0;  // 暂时返回0，在完整版本中实现
+    // 灵活度评估：评估执行该走法后，对手的可选走法数量
+    // 对手可选走法越少，我们的走法越好
+    
+    // 创建一个临时棋盘来模拟走法
+    Board tempBoard = board;
+    
+    // 执行走法
+    if (!tempBoard.makeMove(move)) {
+        return 0;  // 无效走法
+    }
+    
+    // 检查游戏是否结束
+    if (tempBoard.isGameOver()) {
+        // 游戏结束，奖励高分数
+        return 10000;
+    }
+    
+    // 获取对手的合法走法数量
+    uint64_t opponentMoves = tempBoard.getBitBoard().getValidMoves(tempBoard.getCurrentTurn());
+    
+    // 计算对手合法走法数量（使用popcount）
+    int mobility;
+    #if defined(_MSC_VER)
+        mobility = __popcnt64(opponentMoves);
+    #else
+        mobility = __builtin_popcountll(opponentMoves);
+    #endif
+    
+    // 灵活度得分 = 对手可选走法越少越好
+    // 范围：0-60 (最多60个合法位置)
+    // 使用负值，因为走法越少越好
+    return -mobility * config_.mobilityWeight;
 }
 
 } // namespace Reversi

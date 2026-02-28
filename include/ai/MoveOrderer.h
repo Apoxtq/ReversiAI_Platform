@@ -36,6 +36,7 @@ struct MoveOrdererConfig {
     bool useMobilityOrdering = true;      ///< 是否使用灵活度排序
     int killerWeight = 8;                  ///< Killer权重 (基于Egaroucid)
     int historyWeight = 6;                 ///< History权重 (基于Egaroucid)
+    int mobilityWeight = 35;               ///< 灵活度权重 (基于Egaroucid)
     double decayFactor = 0.99;             ///< 衰减因子
 };
 
