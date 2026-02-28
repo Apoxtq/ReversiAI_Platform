@@ -90,10 +90,40 @@ MenuWindow::MenuWindow(QWidget* parent)
         }
     }
 
+    // v0.9.0: 添加复盘分析按钮
+    QPushButton* replayButton = new QPushButton(tr("Game Replay Analysis (v0.9.0)"), this);
+    replayButton->setObjectName("replayButton");
+    replayButton->setStyleSheet(
+        "QPushButton {"
+        "    background-color: #e67e22;"
+        "    color: white;"
+        "    border-radius: 8px;"
+        "    padding: 10px;"
+        "    font-weight: bold;"
+        "}"
+        "QPushButton:hover {"
+        "    background-color: #d35400;"
+        "}"
+        "QPushButton:pressed {"
+        "    background-color: #ba4a00;"
+        "}"
+    );
+
+    // 将复盘按钮添加到布局中（位于分隔线之后）
+    if (mainLayout) {
+        int sepIndex = mainLayout->indexOf(separator);
+        if (sepIndex >= 0) {
+            mainLayout->insertWidget(sepIndex + 1, replayButton);
+        }
+    }
+
     setupConnections();
 
-    // 连接新按钮
+    // 连接AI研究按钮
     connect(aiResearchButton, &QPushButton::clicked, this, &MenuWindow::onAIResearchButtonClicked);
+
+    // v0.9.0: 连接复盘分析按钮
+    connect(replayButton, &QPushButton::clicked, this, &MenuWindow::onReplayAnalysisButtonClicked);
 }
 
 MenuWindow::~MenuWindow() {

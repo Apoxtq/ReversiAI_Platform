@@ -1,7 +1,7 @@
 # ReversiAI_Platform 🎓
 
-|**Version**: v0.8.0
-|**Status**: ✅ Performance Benchmarking Completed
+|**Version**: v0.9.0
+|**Status**: ✅ Visualization Enhancement Completed
 |**Project**: University of Liverpool COMP390 Honours Year Project
 
 A comprehensive Othello/Reversi AI research and benchmarking platform implemented in modern C++, demonstrating academic excellence in open-source learning and software engineering.
@@ -70,6 +70,14 @@ A comprehensive Othello/Reversi AI research and benchmarking platform implemente
 - **Position Suite**: 64 standard test positions
 - **Statistics**: Wilcoxon test, confidence intervals
 
+### 📈 Visualization Enhancement (v0.9.0 ✅ Completed)
+- **Search Tree Visualization**: Textual display of search tree and PV line
+- **Real-time Statistics Panel**: Live AI search statistics during gameplay
+- **Board Heatmap**: Visual representation of position evaluation
+- **Game Replay System**: Load/Save game records with playback controls
+- **PGN/SGF Support**: Standard game notation import/export
+- **Replay Analysis Window**: Dedicated interface for game analysis
+
 ---
 
 ## 🚀 Quick Start
@@ -115,12 +123,17 @@ Main Menu (目录界面)
 │   ├── Two-player local gameplay
 │   ├── Undo functionality
 │   └── Back to menu option
-└── Network Button (线上对战) → Network Lobby
-    ├── Create new room
-    ├── Browse and join existing rooms
-    ├── Online multiplayer gameplay
-    ├── Real-time chat
-    └── Latency display
+├── Network Button (线上对战) → Network Lobby
+│   ├── Create new room
+│   ├── Browse and join existing rooms
+│   ├── Online multiplayer gameplay
+│   ├── Real-time chat
+│   └── Latency display
+└── Replay Analysis (棋谱回放分析) → Replay Analysis Window
+    ├── Load/Save game records (PGN/SGF)
+    ├── Playback controls (play/pause/step)
+    ├── Board heatmap visualization
+    └── Search tree analysis
 ```
 
 ---
@@ -134,6 +147,8 @@ All documentation is available in the `项目计划（文档放置）/` director
 - **[ReversiAI_Platform_项目计划.md](项目计划（文档放置）/ReversiAI_Platform_项目计划.md)** - Complete project roadmap
 
 ### Version Documentation
+- **[v0.9.0-完成报告.md](项目计划（文档放置）/v0.9.0-完成报告.md)** - v0.9.0 completion report (Visualization Enhancement)
+- **[v0.9.0-设计规划.md](项目计划（文档放置）/v0.9.0-设计规划.md)** - v0.9.0 visualization design
 - **[v0.8.0-完成报告.md](项目计划（文档放置）/v0.8.0-完成报告.md)** - v0.8.0 completion report (Performance Benchmarking)
 - **[v0.8.0-设计规划.md](项目计划（文档放置）/v0.8.0-设计规划.md)** - v0.8.0 performance benchmarking design
 - **[v0.7.0-完成报告.md](项目计划（文档放置）/v0.7.0-完成报告.md)** - v0.7.0 completion report (AI Optimization)
@@ -205,6 +220,19 @@ ReversiAI_Platform/
 ## 📈 Development Roadmap
 
 ### ✅ Completed Versions
+
+#### v0.9.0 (February 2026) - Visualization Enhancement
+- **Features**: Search tree visualization, Real-time statistics panel, Board heatmap, Game replay
+- **Status**: 100% Complete
+- **Code Lines**: ~1,800 new lines
+- **Key Features**:
+  - ✅ Search Tree Visualization (Textual display of PV line and search tree)
+  - ✅ Real-time Statistics Panel (Nodes, depth, time, NPS, TT hit rate)
+  - ✅ Board Heatmap (Evaluation visualization with multiple modes)
+  - ✅ Game Replay System (Load/Save game records)
+  - ✅ PGN/SGF Support (Standard game notation import/export)
+  - ✅ Replay Analysis Window (Dedicated analysis interface)
+  - ✅ Compilation: MinGW verified
 
 #### v0.8.0 (February 2026) - Performance Benchmarking
 - **Features**: Bitboard benchmark, AI search benchmark, Head-to-Head engine, Data export
@@ -279,12 +307,6 @@ ReversiAI_Platform/
 
 ### 📅 Planned Versions
 
-#### v0.9.0 (March 2026) - Visualization Enhancement (Optional)
-- Search tree visualization
-- Real-time statistics panel
-- Board heatmap
-- Game replay functionality
-
 #### v1.0.0 (March-April 2026) - Final Release
 - Complete feature set
 - Performance optimization
@@ -347,6 +369,7 @@ This project learns from and builds upon excellent open-source implementations:
 | v0.6.0 | Research framework | ~12,500 | 80 |
 | v0.7.0 | AI optimization | ~13,100 | 86 |
 | v0.8.0 | Performance benchmark | ~14,500 | 92 |
+| v0.9.0 | Visualization enhancement | ~16,300 | 100 |
 
 ---
 
@@ -422,4 +445,4 @@ This project serves as an excellent example for:
 
 |**⭐ Star this repository to support academic open-source development!**  
 |**🎓 University of Liverpool COMP390 Honours Year Project**  
-|**Current Version**: v0.8.0 | **Next Version**: v0.9.0 (Visualization - Optional)**
+|**Current Version**: v0.9.0 | **Next Version**: v1.0.0 (Final Release)**

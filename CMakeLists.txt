@@ -70,14 +70,34 @@ target_compile_features(ai_lib PUBLIC cxx_std_17)
 target_link_libraries(ai_lib PUBLIC core_lib)
 
 # Research library: benchmark and statistics tools (v0.6.0)
-add_library(research_lib STATIC
-    src/research/PositionSuite.cpp
-    src/research/BattleEngine.cpp
-    src/research/Statistics.cpp
-)
-target_include_directories(research_lib PUBLIC include include/research)
-target_compile_features(research_lib PUBLIC cxx_std_17)
-target_link_libraries(research_lib PUBLIC ai_lib)
+# v0.9.0: GameRecord uses Qt, so we need to find Qt first
+find_package(Qt6 QUIET COMPONENTS Core)
+if(Qt6_FOUND)
+    add_library(research_lib STATIC
+        src/research/PositionSuite.cpp
+        src/research/BattleEngine.cpp
+        src/research/Statistics.cpp
+        src/research/GameRecord.cpp         # v0.9.0: 对局记录系统
+        src/research/BitboardBenchmark.cpp  # v0.8.0: Bitboard性能测试
+        src/research/AIBenchmark.cpp       # v0.8.0: AI性能测试
+        src/research/DataExporter.cpp      # v0.8.0: 数据导出
+    )
+    target_include_directories(research_lib PUBLIC include include/research)
+    target_compile_features(research_lib PUBLIC cxx_std_17)
+    target_link_libraries(research_lib PUBLIC ai_lib Qt6::Core)
+else()
+    add_library(research_lib STATIC
+        src/research/PositionSuite.cpp
+        src/research/BattleEngine.cpp
+        src/research/Statistics.cpp
+        src/research/BitboardBenchmark.cpp
+        src/research/AIBenchmark.cpp
+        src/research/DataExporter.cpp
+    )
+    target_include_directories(research_lib PUBLIC include include/research)
+    target_compile_features(research_lib PUBLIC cxx_std_17)
+    target_link_libraries(research_lib PUBLIC ai_lib)
+endif()
 
 # Network library: compile network components for LAN multiplayer (v0.5.0)
 # Reference: Egaroucid ggs.hpp protocol implementation
@@ -124,6 +144,11 @@ if(Qt6_FOUND)
         src/ui/NetworkLobbyWindow.cpp
         src/ui/NetworkGameWindow.cpp
         src/ui/AIvsAIWindow.cpp            # v0.6.0: AI对战窗口
+        # v0.9.0: 可视化增强
+        src/ui/SearchTreeWidget.cpp
+        src/ui/SearchStatisticsPanel.cpp
+        src/ui/BoardHeatmap.cpp
+        src/ui/ReplayAnalysisWindow.cpp
     )
     target_include_directories(ui_lib PUBLIC include include/ui network/include)
     target_compile_features(ui_lib PUBLIC cxx_std_17)
@@ -160,6 +185,11 @@ if(BUILD_QT_GUI)
             include/ui/NetworkGameWindow.h
             include/ui/StatisticsManager.h
             include/ui/AIvsAIWindow.h         # v0.6.0: AI对战窗口
+            # v0.9.0: 可视化增强
+            include/ui/SearchTreeWidget.h
+            include/ui/SearchStatisticsPanel.h
+            include/ui/BoardHeatmap.h
+            include/ui/ReplayAnalysisWindow.h
         )
         qt6_add_resources(QRC_SOURCES src/rsc.qrc)
     else()
@@ -180,12 +210,18 @@ if(BUILD_QT_GUI)
         main.cpp
         ui/mainwindow.cpp
         ui/menuwindow.cpp
-        ui/MenuWindowAIResearch.cpp    # v0.6.0: AI研究模式按钮实现
+        ui/MenuWindowAIResearch.cpp
+        ui/MenuWindowReplayAnalysis.cpp   # v0.9.0: 复盘分析按钮
         ui/pvewindow.cpp
         ui/pvpwindow.cpp
         src/ui/networklobbywindow.cpp
         src/ui/networkgamewindow.cpp
         src/ui/AIvsAIWindow.cpp          # v0.6.0: AI对战窗口
+        # v0.9.0: 可视化增强
+        src/ui/SearchTreeWidget.cpp
+        src/ui/SearchStatisticsPanel.cpp
+        src/ui/BoardHeatmap.cpp
+        src/ui/ReplayAnalysisWindow.cpp
         ${MOC_SOURCES}
         ${QRC_SOURCES}
     )
