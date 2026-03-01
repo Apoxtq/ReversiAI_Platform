@@ -52,26 +52,36 @@ std::vector<TestPosition> PositionSuite::getStandard64() {
         positions.push_back(pos);
     }
 
+    // 预设的合法落子序列（每步是 row, col）
+    static const std::vector<std::pair<int,int>> MOVE_SEQ = {
+        {2,3},{2,4},{2,5},{3,5},{4,5},{5,5},{5,4},{5,3},
+        {5,2},{4,2},{3,2},{2,2},{1,3},{1,4},{1,5},{1,6},
+        {2,6},{3,6},{4,6},{5,6},{6,5},{6,4},{6,3},{6,2},
+        {6,1},{5,1},{4,1},{3,1},{2,1},{1,2}
+    };
+
     // 中局位置 (21-40步)
     for (int i = 0; i < 20; ++i) {
         TestPosition pos;
         pos.name = "Midgame_" + std::to_string(i + 1);
         pos.difficulty = 5 + (i / 4);
         pos.source = "Standard";
-        pos.player = PlayerColor::Black;
 
-        // 生成中局位置
-        int total = 30 + i;
-        std::string board_str(64, '.');
-        for (int j = 0; j < total; ++j) {
-            if (j < total / 2) board_str[j] = 'B';
-            else board_str[j] = 'W';
+        BitBoard board;
+        board.resetToStandardOpening();
+        int steps = 10 + i;
+        PlayerColor current = PlayerColor::Black;
+        for (int s = 0; s < steps && s < (int)MOVE_SEQ.size(); ++s) {
+            auto [r, c] = MOVE_SEQ[s];
+            uint64_t valid = board.getValidMoves(current);
+            if (valid & (1ULL << (r * 8 + c))) {
+                board.makeMove(r, c, current);
+            }
+            current = (current == PlayerColor::Black) ?
+                      PlayerColor::White : PlayerColor::Black;
         }
-        // 交换中心四个位置
-        std::swap(board_str[27], board_str[28]);
-        std::swap(board_str[35], board_str[36]);
-
-        pos.board = BitBoard(board_str);
+        pos.board = board;
+        pos.player = current;
         positions.push_back(pos);
     }
 
@@ -81,16 +91,22 @@ std::vector<TestPosition> PositionSuite::getStandard64() {
         pos.name = "Endgame_" + std::to_string(i + 1);
         pos.difficulty = 8 + (i / 5);
         pos.source = "Standard";
-        pos.player = PlayerColor::Black;
 
-        int total = 50 + i;
-        std::string board_str(64, '.');
-        for (int j = 0; j < total; ++j) {
-            if (j < total / 2) board_str[j] = 'B';
-            else board_str[j] = 'W';
+        BitBoard board;
+        board.resetToStandardOpening();
+        int steps = std::min(20 + i, (int)MOVE_SEQ.size());
+        PlayerColor current = PlayerColor::Black;
+        for (int s = 0; s < steps; ++s) {
+            auto [r, c] = MOVE_SEQ[s];
+            uint64_t valid = board.getValidMoves(current);
+            if (valid & (1ULL << (r * 8 + c))) {
+                board.makeMove(r, c, current);
+            }
+            current = (current == PlayerColor::Black) ?
+                      PlayerColor::White : PlayerColor::Black;
         }
-
-        pos.board = BitBoard(board_str);
+        pos.board = board;
+        pos.player = current;
         positions.push_back(pos);
     }
 

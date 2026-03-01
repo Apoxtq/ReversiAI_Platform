@@ -66,7 +66,6 @@ std::unique_ptr<AIStrategy> AIStrategyFactory::createMinimaxAI(Difficulty diffic
 }
 
 std::unique_ptr<AIStrategy> AIStrategyFactory::createMCTSAI(Difficulty difficulty) {
-    // 暂时返回nullptr，MCTS AI正在开发中
     return nullptr;
 }
 

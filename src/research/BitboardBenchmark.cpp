@@ -86,9 +86,9 @@ BenchmarkResult BitboardBenchmark::measureFlipPerformance(int iterations) {
     result.iterations = iterations;
 
     // 标准开局: 黑棋在 D4(27), E5(36); 白棋在 E4(35), D5(28)
-    // 初始局面 (黑先)
-    uint64_t player_bits = (1ULL << 27) | (1ULL << 36);  // 黑棋
-    uint64_t opponent_bits = (1ULL << 35) | (1ULL << 28); // 白棋
+    // 初始局面 (黑先) - 注意：player=黑棋, opponent=白棋
+    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // 黑棋位置
+    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // 白棋位置
     BitBoard board(player_bits, opponent_bits);
 
     // 测试移动: D3 = (2, 3) = row 2, col 3
@@ -161,8 +161,8 @@ BenchmarkResult BitboardBenchmark::measureLegalMovePerformance(int iterations) {
     result.iterations = iterations;
 
     // 标准开局
-    uint64_t player_bits = (1ULL << 27) | (1ULL << 36);
-    uint64_t opponent_bits = (1ULL << 35) | (1ULL << 28);
+    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // 黑棋位置
+    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // 白棋位置
     BitBoard board(player_bits, opponent_bits);
 
     // 先获取有效移动位图
@@ -207,8 +207,8 @@ BenchmarkResult BitboardBenchmark::measureBoardCopyPerformance(int iterations) {
     result.name = "Board Copy";
     result.iterations = iterations;
 
-    uint64_t player_bits = (1ULL << 27) | (1ULL << 36);
-    uint64_t opponent_bits = (1ULL << 35) | (1ULL << 28);
+    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // 黑棋位置
+    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // 白棋位置
     BitBoard board(player_bits, opponent_bits);
 
     // 预热
@@ -242,8 +242,8 @@ BenchmarkResult BitboardBenchmark::measureEvaluationPerformance(int iterations) 
     result.name = "Evaluation";
     result.iterations = iterations;
 
-    uint64_t player_bits = (1ULL << 27) | (1ULL << 36);
-    uint64_t opponent_bits = (1ULL << 35) | (1ULL << 28);
+    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // 黑棋位置
+    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // 白棋位置
     BitBoard board(player_bits, opponent_bits);
 
     // 创建评估器
@@ -278,8 +278,8 @@ BenchmarkResult BitboardBenchmark::measureZobristHashPerformance(int iterations)
     result.name = "Zobrist Hash";
     result.iterations = iterations;
 
-    uint64_t player_bits = (1ULL << 27) | (1ULL << 36);
-    uint64_t opponent_bits = (1ULL << 35) | (1ULL << 28);
+    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // 黑棋位置
+    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // 白棋位置
 
     // 初始化Zobrist哈希
     ZobristHash::init();
@@ -379,9 +379,9 @@ void BitboardBenchmark::setProgressCallback(ProgressCallback callback) {
 std::vector<BitBoard> BitboardBenchmark::getTestPositions() {
     std::vector<BitBoard> positions;
 
-    // 1. 标准开局
-    uint64_t p1 = (1ULL << 27) | (1ULL << 36);  // 黑棋 D4, E5
-    uint64_t o1 = (1ULL << 35) | (1ULL << 28);   // 白棋 E4, D5
+    // 1. 标准开局 - 注意：player=黑棋, opponent=白棋
+    uint64_t p1 = (1ULL << 28) | (1ULL << 35);   // 黑棋位置 (3,4),(4,3)
+    uint64_t o1 = (1ULL << 27) | (1ULL << 36);   // 白棋位置 (3,3),(4,4)
     positions.push_back(BitBoard(p1, o1));
 
     // 2. 早期阶段 - 模拟几个走法后的局面
@@ -394,9 +394,9 @@ std::vector<BitBoard> BitboardBenchmark::getTestPositions() {
     uint64_t o3 = o2 | (1ULL << 17) | (1ULL << 11);
     positions.push_back(BitBoard(p3, o3));
 
-    // 4. 更多中局位置
-    uint64_t p4 = 0x000000FF8C180000ULL;  // 示例中局
-    uint64_t o4 = 0x0000000062340000ULL;
+    // 4. 更多中局位置 - 使用已知不重叠的位图
+    uint64_t p4 = 0x000000FF8C180000ULL;  // 黑棋
+    uint64_t o4 = 0x0000000012340000ULL;  // 白棋 (修改低32位避免重叠)
     positions.push_back(BitBoard(p4, o4));
 
     // 5. 随机位置
@@ -483,10 +483,9 @@ void BitboardBenchmark::warmUp() {
     }
     (void)sum;
 
-    // 内存预热
-    uint64_t player_bits = (1ULL << 27) | (1ULL << 36);
-    uint64_t opponent_bits = (1ULL << 35) | (1ULL << 28);
-    BitBoard board(player_bits, opponent_bits);
+    // 内存预热 - 使用 resetToStandardOpening() 创建合法棋盘
+    BitBoard board;
+    board.resetToStandardOpening();
     
     auto evaluator = EvaluatorFactory::createStaticEvaluator();
 
