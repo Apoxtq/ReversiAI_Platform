@@ -13,6 +13,8 @@ if(Qt6_FOUND)
         include/network/gamesynchronizer.hpp
         include/network/roommanager.hpp
         include/network/reconnectionmanager.hpp
+        include/network/ggsprotocol.hpp
+        include/network/ggsgameclient.hpp
     )
 
     # Network library: compile network components
@@ -23,6 +25,8 @@ if(Qt6_FOUND)
         src/gamesynchronizer.cpp
         src/roommanager.cpp
         src/reconnectionmanager.cpp
+        src/ggsprotocol.cpp
+        src/ggsgameclient.cpp
         ${MOC_SOURCES}
     )
 

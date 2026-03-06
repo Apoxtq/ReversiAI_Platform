@@ -149,6 +149,10 @@ if(Qt6_FOUND)
         src/ui/SearchStatisticsPanel.cpp
         src/ui/BoardHeatmap.cpp
         src/ui/ReplayAnalysisWindow.cpp
+        # v0.5.1: GGS在线对战
+        src/ui/ggslogindialog.cpp
+        src/ui/ggsonlinelobby.cpp
+        src/ui/ggsgamewindow.cpp
     )
     target_include_directories(ui_lib PUBLIC include include/ui network/include)
     target_compile_features(ui_lib PUBLIC cxx_std_17)
@@ -190,6 +194,10 @@ if(BUILD_QT_GUI)
             include/ui/SearchStatisticsPanel.h
             include/ui/BoardHeatmap.h
             include/ui/ReplayAnalysisWindow.h
+            # v0.5.1: GGS在线对战
+            include/ui/ggslogindialog.h
+            include/ui/ggsonlinelobby.h
+            include/ui/ggsgamewindow.h
         )
         qt6_add_resources(QRC_SOURCES src/rsc.qrc)
     else()
@@ -222,6 +230,10 @@ if(BUILD_QT_GUI)
         src/ui/SearchStatisticsPanel.cpp
         src/ui/BoardHeatmap.cpp
         src/ui/ReplayAnalysisWindow.cpp
+        # v0.5.1: GGS在线对战
+        src/ui/ggslogindialog.cpp
+        src/ui/ggsonlinelobby.cpp
+        src/ui/ggsgamewindow.cpp
         ${MOC_SOURCES}
         ${QRC_SOURCES}
     )

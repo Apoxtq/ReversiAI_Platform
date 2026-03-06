@@ -27,6 +27,22 @@ NetworkLobbyWindow::NetworkLobbyWindow(QWidget* parent)
     , localPlayerName_("Player")
     , localRoomName_("")
     , isHosting_(false)
+    , modeTabWidget_(nullptr)
+    , onlineModeWidget_(nullptr)
+    , ggsStatusLabel_(nullptr)
+    , ggsConnectButton_(nullptr)
+    , ggsDisconnectButton_(nullptr)
+    , opponentEdit_(nullptr)
+    , timeLimitCombo_(nullptr)
+    , ratedCheck_(nullptr)
+    , sendChallengeButton_(nullptr)
+    , challengeList_(nullptr)
+    , ggsChatDisplay_(nullptr)
+    , ggsChatInput_(nullptr)
+    , ggsSendChatButton_(nullptr)
+    , ggsClient_(nullptr)
+    , ggsUsername_("")
+    , isGGSSConnected_(false)
 {
     setupUI();
     setupConnections();
@@ -61,11 +77,18 @@ void NetworkLobbyWindow::setupUI()
     titleLabel->setAlignment(Qt::AlignCenter);
     mainLayout_->addWidget(titleLabel);
     
+    // Create Tab Widget for LAN / Online mode selection
+    modeTabWidget_ = new QTabWidget(this);
+    
+    // ==================== LAN Mode Tab ====================
+    QWidget* lanModeWidget = new QWidget(this);
+    QVBoxLayout* lanLayout = new QVBoxLayout(lanModeWidget);
+    
     // Status label
     statusLabel_ = new QLabel(tr("Ready"), this);
     statusLabel_->setStyleSheet("color: gray;");
     statusLabel_->setAlignment(Qt::AlignCenter);
-    mainLayout_->addWidget(statusLabel_);
+    lanLayout->addWidget(statusLabel_);
     
     // Room table
     roomTable_ = new QTableWidget(this);
@@ -77,7 +100,7 @@ void NetworkLobbyWindow::setupUI()
     roomTable_->setSelectionMode(QAbstractItemView::SingleSelection);
     roomTable_->setEditTriggers(QAbstractItemView::NoEditTriggers);
     roomTable_->setMinimumHeight(200);
-    mainLayout_->addWidget(roomTable_);
+    lanLayout->addWidget(roomTable_);
     
     // Button layout
     QHBoxLayout* buttonLayout = new QHBoxLayout();
@@ -90,7 +113,7 @@ void NetworkLobbyWindow::setupUI()
     joinRoomButton_->setEnabled(false);
     buttonLayout->addWidget(joinRoomButton_);
     
-    mainLayout_->addLayout(buttonLayout);
+    lanLayout->addLayout(buttonLayout);
     
     // Create room group
     createGroup_ = new QGroupBox(tr("Create New Room"), this);
@@ -118,7 +141,15 @@ void NetworkLobbyWindow::setupUI()
     formLayout->addRow("", createButton_);
     
     createGroup_->setLayout(formLayout);
-    mainLayout_->addWidget(createGroup_);
+    lanLayout->addWidget(createGroup_);
+    
+    modeTabWidget_->addTab(lanModeWidget, tr("LAN Mode"));
+    
+    // ==================== Online Mode Tab ====================
+    setupOnlineModeUI();
+    modeTabWidget_->addTab(onlineModeWidget_, tr("Online Mode (GGS)"));
+    
+    mainLayout_->addWidget(modeTabWidget_);
     
     // Bottom buttons
     QHBoxLayout* bottomLayout = new QHBoxLayout();
@@ -459,4 +490,310 @@ void NetworkLobbyWindow::updateDiscoveryStatus()
         statusLabel_->setStyleSheet("color: gray;");
     }
 }
+
+// ==================== GGS Online Mode Implementation ====================
+
+void NetworkLobbyWindow::setupOnlineModeUI()
+{
+    onlineModeWidget_ = new QWidget(this);
+    QVBoxLayout* onlineLayout = new QVBoxLayout(onlineModeWidget_);
+    onlineLayout->setSpacing(10);
+    
+    // Connection status
+    QHBoxLayout* statusLayout = new QHBoxLayout();
+    statusLayout->addWidget(new QLabel(tr("Status:"), this));
+    ggsStatusLabel_ = new QLabel(tr("Disconnected"), this);
+    ggsStatusLabel_->setStyleSheet("font-weight: bold; color: gray;");
+    statusLayout->addWidget(ggsStatusLabel_);
+    statusLayout->addStretch();
+    
+    ggsConnectButton_ = new QPushButton(tr("Connect to GGS"), this);
+    ggsDisconnectButton_ = new QPushButton(tr("Disconnect"), this);
+    ggsDisconnectButton_->setEnabled(false);
+    statusLayout->addWidget(ggsConnectButton_);
+    statusLayout->addWidget(ggsDisconnectButton_);
+    onlineLayout->addLayout(statusLayout);
+    
+    // Challenge section
+    QGroupBox* challengeGroup = new QGroupBox(tr("Challenge Opponent"), this);
+    QFormLayout* challengeLayout = new QFormLayout();
+    
+    opponentEdit_ = new QLineEdit(this);
+    opponentEdit_->setPlaceholderText(tr("Enter opponent's username"));
+    challengeLayout->addRow(tr("Opponent:"), opponentEdit_);
+    
+    timeLimitCombo_ = new QComboBox(this);
+    timeLimitCombo_->addItems(QStringList() << "1 min" << "3 min" << "5 min" << "10 min" << "15 min" << "30 min");
+    timeLimitCombo_->setCurrentIndex(2); // Default 5 min
+    challengeLayout->addRow(tr("Time:"), timeLimitCombo_);
+    
+    ratedCheck_ = new QCheckBox(tr("Rated Match"), this);
+    challengeLayout->addRow(tr("Type:"), ratedCheck_);
+    
+    sendChallengeButton_ = new QPushButton(tr("Send Challenge"), this);
+    sendChallengeButton_->setEnabled(false);
+    challengeLayout->addRow("", sendChallengeButton_);
+    
+    challengeGroup->setLayout(challengeLayout);
+    onlineLayout->addWidget(challengeGroup);
+    
+    // Incoming challenge section
+    QGroupBox* incomingGroup = new QGroupBox(tr("Incoming Challenges"), this);
+    QVBoxLayout* incomingLayout = new QVBoxLayout();
+    
+    challengeList_ = new QListWidget(this);
+    challengeList_->setMaximumHeight(100);
+    incomingLayout->addWidget(challengeList_);
+    
+    // We'll add Accept/Decline buttons when challenge arrives
+    incomingGroup->setLayout(incomingLayout);
+    onlineLayout->addWidget(incomingGroup);
+    
+    // Chat section
+    QGroupBox* chatGroup = new QGroupBox(tr("Chat"), this);
+    QVBoxLayout* chatLayout = new QVBoxLayout();
+    
+    ggsChatDisplay_ = new QTextEdit(this);
+    ggsChatDisplay_->setReadOnly(true);
+    ggsChatDisplay_->setMaximumHeight(150);
+    chatLayout->addWidget(ggsChatDisplay_);
+    
+    QHBoxLayout* chatInputLayout = new QHBoxLayout();
+    ggsChatInput_ = new QLineEdit(this);
+    ggsChatInput_->setPlaceholderText(tr("Type a message..."));
+    ggsChatInput_->setEnabled(false);
+    chatInputLayout->addWidget(ggsChatInput_);
+    
+    ggsSendChatButton_ = new QPushButton(tr("Send"), this);
+    ggsSendChatButton_->setEnabled(false);
+    chatInputLayout->addWidget(ggsSendChatButton_);
+    
+    chatLayout->addLayout(chatInputLayout);
+    chatGroup->setLayout(chatLayout);
+    onlineLayout->addWidget(chatGroup);
+    
+    onlineLayout->addStretch();
+}
+
+void NetworkLobbyWindow::updateGGSStatus()
+{
+    if (isGGSSConnected_) {
+        ggsStatusLabel_->setText(tr("Connected as %1").arg(ggsUsername_));
+        ggsStatusLabel_->setStyleSheet("font-weight: bold; color: green;");
+        ggsConnectButton_->setEnabled(false);
+        ggsDisconnectButton_->setEnabled(true);
+        sendChallengeButton_->setEnabled(true);
+        ggsChatInput_->setEnabled(true);
+        ggsSendChatButton_->setEnabled(true);
+    } else {
+        ggsStatusLabel_->setText(tr("Disconnected"));
+        ggsStatusLabel_->setStyleSheet("font-weight: bold; color: gray;");
+        ggsConnectButton_->setEnabled(true);
+        ggsDisconnectButton_->setEnabled(false);
+        sendChallengeButton_->setEnabled(false);
+        ggsChatInput_->setEnabled(false);
+        ggsSendChatButton_->setEnabled(false);
+    }
+}
+
+void NetworkLobbyWindow::addChallengeToList(const Network::GGSMatchRequest& request)
+{
+    QString itemText = QString("%1 wants to play! (Time: %2 min)")
+                      .arg(request.player[0].name)
+                      .arg(request.clock[0].ini_time / 60000);
+    QListWidgetItem* item = new QListWidgetItem(itemText, challengeList_);
+    item->setData(Qt::UserRole, request.requestId);
+    
+    // Add accept/decline buttons
+    QWidget* buttonWidget = new QWidget();
+    QHBoxLayout* buttonLayout = new QHBoxLayout(buttonWidget);
+    buttonLayout->setContentsMargins(0, 0, 0, 0);
+    
+    QPushButton* acceptBtn = new QPushButton(tr("Accept"), buttonWidget);
+    QPushButton* declineBtn = new QPushButton(tr("Decline"), buttonWidget);
+    
+    connect(acceptBtn, &QPushButton::clicked, this, [this, request]() {
+        onGGSAcceptChallengeClicked(request.requestId);
+    });
+    connect(declineBtn, &QPushButton::clicked, this, [this, request]() {
+        onGGSDeclineChallengeClicked(request.requestId);
+    });
+    
+    buttonLayout->addWidget(acceptBtn);
+    buttonLayout->addWidget(declineBtn);
+    
+    challengeList_->setItemWidget(item, buttonWidget);
+}
+
+// ==================== GGS Slot Implementations ====================
+
+void NetworkLobbyWindow::onGGSConnectClicked()
+{
+    // Show login dialog or use default credentials
+    // For now, use guest login with a generated username
+    QString username = "Player" + QString::number(QRandomGenerator::global()->bounded(1000, 9999));
+    
+    // Create GGS client if not exists
+    if (!ggsClient_) {
+        ggsClient_ = new Network::GGSGameClient(this);
+        setupGGSConnections();
+    }
+    
+    // Connect to GGS server
+    ggsClient_->connectToServer(Network::GGSProtocol::GGS_URL, Network::GGSProtocol::GGS_PORT);
+}
+
+void NetworkLobbyWindow::onGGSDisconnectClicked()
+{
+    if (ggsClient_) {
+        ggsClient_->disconnectFromServer();
+    }
+    isGGSSConnected_ = false;
+    ggsUsername_ = "";
+    updateGGSStatus();
+}
+
+void NetworkLobbyWindow::onGGSSendChallengeClicked()
+{
+    QString opponent = opponentEdit_->text().trimmed();
+    if (opponent.isEmpty()) {
+        QMessageBox::warning(this, tr("Error"), tr("Please enter an opponent's username"));
+        return;
+    }
+    
+    if (!ggsClient_) return;
+    
+    // Get time limit from combo
+    int timeMinutes[] = {1, 3, 5, 10, 15, 30};
+    int timeLimitMs = timeMinutes[timeLimitCombo_->currentIndex()] * 60 * 1000;
+    
+    // Send challenge
+    bool isRated = ratedCheck_->isChecked();
+    if (ggsClient_->sendMatchRequest(opponent, isRated, timeLimitMs)) {
+        ggsChatDisplay_->append(QString("[System] Challenge sent to %1").arg(opponent));
+    } else {
+        QMessageBox::warning(this, tr("Error"), tr("Failed to send challenge"));
+    }
+}
+
+void NetworkLobbyWindow::onGGSAcceptChallengeClicked(const QString& requestId)
+{
+    if (ggsClient_) {
+        ggsClient_->acceptMatch(requestId);
+    }
+}
+
+void NetworkLobbyWindow::onGGSDeclineChallengeClicked(const QString& requestId)
+{
+    if (ggsClient_) {
+        ggsClient_->declineMatch(requestId);
+    }
+    
+    // Remove from list
+    for (int i = 0; i < challengeList_->count(); ++i) {
+        QListWidgetItem* item = challengeList_->item(i);
+        if (item->data(Qt::UserRole).toString() == requestId) {
+            delete challengeList_->takeItem(i);
+            break;
+        }
+    }
+}
+
+void NetworkLobbyWindow::onGGSConnected()
+{
+    // Login as guest
+    QString username = "Player" + QString::number(QRandomGenerator::global()->bounded(1000, 9999));
+    ggsClient_->login(username, "");
+}
+
+void NetworkLobbyWindow::onGGSDisconnected()
+{
+    isGGSSConnected_ = false;
+    ggsUsername_ = "";
+    updateGGSStatus();
+    ggsChatDisplay_->append("[System] Disconnected from server");
+}
+
+void NetworkLobbyWindow::onGGSConnectionError(const QString& error)
+{
+    QMessageBox::critical(this, tr("Connection Error"), error);
+    isGGSSConnected_ = false;
+    updateGGSStatus();
+}
+
+void NetworkLobbyWindow::onGGSLoginSuccessful(const QString& username)
+{
+    isGGSSConnected_ = true;
+    ggsUsername_ = username;
+    updateGGSStatus();
+    ggsChatDisplay_->append(QString("[System] Logged in as %1").arg(username));
+}
+
+void NetworkLobbyWindow::onGGSLoginFailed(const QString& error)
+{
+    QMessageBox::warning(this, tr("Login Failed"), error);
+    isGGSSConnected_ = false;
+    updateGGSStatus();
+}
+
+void NetworkLobbyWindow::onGGSMatchRequestReceived(const Network::GGSMatchRequest& request)
+{
+    addChallengeToList(request);
+    ggsChatDisplay_->append(QString("[System] %1 wants to play!").arg(request.player[0].name));
+}
+
+void NetworkLobbyWindow::onGGSGameStarted(const QString& gameId, const QString& playerBlack,
+                                          const QString& playerWhite, bool isPlayerBlack)
+{
+    // Emit signal to start GGS game window
+    emit ggsGameStarted(ggsClient_, gameId, playerBlack, playerWhite, isPlayerBlack);
+}
+
+void NetworkLobbyWindow::onGGSChatReceived(const QString& sender, const QString& message)
+{
+    ggsChatDisplay_->append(QString("<%1>: %2").arg(sender, message));
+}
+
+void NetworkLobbyWindow::onGGSSendChatClicked()
+{
+    QString message = ggsChatInput_->text().trimmed();
+    if (message.isEmpty() || !ggsClient_) return;
+    
+    // Send to global channel (0)
+    if (ggsClient_->sendChat("0", message)) {
+        ggsChatInput_->clear();
+    }
+}
+
+void NetworkLobbyWindow::onTabChanged(int index)
+{
+    // Stop LAN discovery when switching to Online tab
+    if (index == 1) { // Online Mode
+        stopDiscovery();
+    }
+}
+
+void NetworkLobbyWindow::setupGGSConnections()
+{
+    if (!ggsClient_) return;
+    
+    // Connect GGS client signals to slots
+    connect(ggsClient_, &Network::GGSGameClient::connected,
+            this, &NetworkLobbyWindow::onGGSConnected);
+    connect(ggsClient_, &Network::GGSGameClient::disconnected,
+            this, &NetworkLobbyWindow::onGGSDisconnected);
+    connect(ggsClient_, &Network::GGSGameClient::connectionError,
+            this, &NetworkLobbyWindow::onGGSConnectionError);
+    connect(ggsClient_, &Network::GGSGameClient::loginSuccessful,
+            this, &NetworkLobbyWindow::onGGSLoginSuccessful);
+    connect(ggsClient_, &Network::GGSGameClient::loginFailed,
+            this, &NetworkLobbyWindow::onGGSLoginFailed);
+    connect(ggsClient_, &Network::GGSGameClient::matchRequestReceived,
+            this, &NetworkLobbyWindow::onGGSMatchRequestReceived);
+    connect(ggsClient_, &Network::GGSGameClient::gameStarted,
+            this, &NetworkLobbyWindow::onGGSGameStarted);
+    connect(ggsClient_, &Network::GGSGameClient::chatMessageReceived,
+            this, &NetworkLobbyWindow::onGGSChatReceived);
+}
+
 

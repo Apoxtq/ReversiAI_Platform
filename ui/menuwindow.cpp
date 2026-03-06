@@ -3,6 +3,7 @@
 #include "ui/PvPWindow.h"
 #include "ui/NetworkLobbyWindow.h"
 #include "ui/NetworkGameWindow.h"
+#include "ui/ggsgamewindow.hpp"
 #include "ui_menuwindow.h"
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -227,6 +228,40 @@ void MenuWindow::onNetworkButtonClicked() {
         connect(gameWindow, &NetworkGameWindow::backToMenu, this, [this, gameWindow, lobbyWindow]() {
             gameWindow->close();
             lobbyWindow->show();  // 重新显示大厅
+        });
+
+        gameWindow->show();
+    });
+
+    // v0.5.1: GGS在线对战 - 游戏开始时
+    connect(lobbyWindow, &NetworkLobbyWindow::ggsGameStarted,
+            this, [this, lobbyWindow](Network::GGSGameClient* ggsClient, const QString& gameId, 
+                                      const QString& playerBlack, const QString& playerWhite, bool isBlack) {
+        qDebug() << "MenuWindow: GGS game started, Black:" << playerBlack << "White:" << playerWhite << "isBlack:" << isBlack;
+
+        // 隐藏大厅，显示GGS游戏窗口
+        lobbyWindow->hide();
+
+        // 创建GGS对战窗口
+        GGSGameWindow* gameWindow = new GGSGameWindow(
+            std::shared_ptr<Network::GGSGameClient>(ggsClient), this);
+        gameWindow->setAttribute(Qt::WA_DeleteOnClose);
+
+        // 初始化游戏（传入玩家信息）
+        gameWindow->initGame(gameId, playerBlack, playerWhite, isBlack);
+
+        // 连接返回大厅信号
+        connect(gameWindow, &GGSGameWindow::backToLobby, this, [this, gameWindow, lobbyWindow]() {
+            gameWindow->close();
+            lobbyWindow->show();  // 重新显示大厅
+        });
+
+        // 连接游戏结束信号
+        connect(gameWindow, &GGSGameWindow::gameFinished, this, [this, gameWindow, lobbyWindow](const QString& winner, int score) {
+            Q_UNUSED(winner)
+            Q_UNUSED(score)
+            gameWindow->close();
+            lobbyWindow->show();
         });
 
         gameWindow->show();

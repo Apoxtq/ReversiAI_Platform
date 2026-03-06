@@ -8,6 +8,10 @@ class MenuWindow;
 }
 QT_END_NAMESPACE
 
+// Forward declarations
+class NetworkLobbyWindow;
+class GGSGameWindow;
+
 /**
  * @class MenuWindow
  * @brief 目录界面 - 游戏模式选择

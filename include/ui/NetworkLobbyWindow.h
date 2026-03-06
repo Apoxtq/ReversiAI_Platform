@@ -25,10 +25,14 @@
 #include <QGroupBox>
 #include <QSpinBox>
 #include <QCheckBox>
+#include <QTabWidget>
+#include <QComboBox>
+#include <QTextEdit>
 
 #include "network/networkdiscovery.hpp"
 #include "network/roommanager.hpp"
 #include "network/networkclient.hpp"
+#include "network/ggsgameclient.hpp"
 
 // Remove Ui::NetworkLobbyWindow - we build UI programmatically
 // namespace Ui {
@@ -90,6 +94,17 @@ signals:
      */
     void createGame(const QString& roomName, const QString& playerName, const QJsonObject& settings);
 
+    /**
+     * @brief Emitted when GGS game starts
+     * @param ggsClient The GGS game client
+     * @param gameId Game ID
+     * @param playerBlack Black player name
+     * @param playerWhite White player name
+     * @param isBlack Whether player is black
+     */
+    void ggsGameStarted(Network::GGSGameClient* ggsClient, const QString& gameId, 
+                       const QString& playerBlack, const QString& playerWhite, bool isBlack);
+
 private slots:
     // Discovery slots
     void onHostFound(const Network::DiscoveredHost& host);
@@ -111,6 +126,84 @@ private slots:
     // Selection slots
     void onRoomTableItemClicked(QTableWidgetItem* item);
     void onRoomTableItemDoubleClicked(QTableWidgetItem* item);
+
+    // ==================== GGS Online Mode Slots ====================
+
+    /**
+     * @brief Handle GGS connect button clicked
+     */
+    void onGGSConnectClicked();
+
+    /**
+     * @brief Handle GGS disconnect button clicked
+     */
+    void onGGSDisconnectClicked();
+
+    /**
+     * @brief Handle GGS send challenge clicked
+     */
+    void onGGSSendChallengeClicked();
+
+    /**
+     * @brief Handle GGS accept challenge clicked
+     */
+    void onGGSAcceptChallengeClicked(const QString& requestId);
+
+    /**
+     * @brief Handle GGS decline challenge clicked
+     */
+    void onGGSDeclineChallengeClicked(const QString& requestId);
+
+    /**
+     * @brief Handle GGS connected
+     */
+    void onGGSConnected();
+
+    /**
+     * @brief Handle GGS disconnected
+     */
+    void onGGSDisconnected();
+
+    /**
+     * @brief Handle GGS connection error
+     */
+    void onGGSConnectionError(const QString& error);
+
+    /**
+     * @brief Handle GGS login successful
+     */
+    void onGGSLoginSuccessful(const QString& username);
+
+    /**
+     * @brief Handle GGS login failed
+     */
+    void onGGSLoginFailed(const QString& error);
+
+    /**
+     * @brief Handle GGS match request received
+     */
+    void onGGSMatchRequestReceived(const Network::GGSMatchRequest& request);
+
+    /**
+     * @brief Handle GGS game started
+     */
+    void onGGSGameStarted(const QString& gameId, const QString& playerBlack,
+                         const QString& playerWhite, bool isPlayerBlack);
+
+    /**
+     * @brief Handle GGS chat message received
+     */
+    void onGGSChatReceived(const QString& sender, const QString& message);
+
+    /**
+     * @brief Handle GGS send chat clicked
+     */
+    void onGGSSendChatClicked();
+
+    /**
+     * @brief Handle tab change
+     */
+    void onTabChanged(int index);
 
 private:
     // ==================== UI ====================
@@ -138,6 +231,32 @@ private:
     Network::NetworkDiscovery* discovery_;
     Network::RoomManager* roomManager_;
     Network::NetworkClient* networkClient_;
+
+    // ==================== GGS Online Mode ====================
+    QTabWidget* modeTabWidget_;
+
+    // LAN Mode widgets (existing)
+    // - roomTable_, createGroup_, etc. (already exist)
+
+    // Online Mode widgets
+    QWidget* onlineModeWidget_;
+    QLabel* ggsStatusLabel_;
+    QPushButton* ggsConnectButton_;
+    QPushButton* ggsDisconnectButton_;
+    QLineEdit* opponentEdit_;
+    QComboBox* timeLimitCombo_;
+    QCheckBox* ratedCheck_;
+    QPushButton* sendChallengeButton_;
+    QListWidget* challengeList_;
+    QTextEdit* ggsChatDisplay_;
+    QLineEdit* ggsChatInput_;
+    QPushButton* ggsSendChatButton_;
+
+    // GGS Client
+    Network::GGSGameClient* ggsClient_;
+    QString ggsUsername_;
+    QString ggsPassword_;  // Store password for login
+    bool isGGSSConnected_;
 
     // ==================== State ====================
     QString localPlayerName_;
@@ -184,6 +303,27 @@ private:
      * @brief Update UI state based on discovery status
      */
     void updateDiscoveryStatus();
+
+    /**
+     * @brief Setup Online Mode UI (GGS)
+     */
+    void setupOnlineModeUI();
+
+    /**
+     * @brief Update GGS connection status display
+     */
+    void updateGGSStatus();
+
+    /**
+     * @brief Add challenge to list
+     * @param request Challenge request
+     */
+    void addChallengeToList(const Network::GGSMatchRequest& request);
+
+    /**
+     * @brief Setup GGS client signal connections
+     */
+    void setupGGSConnections();
 };
 
 #endif // NETWORK_LOBBY_WINDOW_HPP
