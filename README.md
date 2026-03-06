@@ -16,6 +16,12 @@ A comprehensive Othello/Reversi AI research and benchmarking platform implemente
 
 ## ✨ Core Features
 
+### 🛠️ Dual Compiler Support (v1.0.1 ✅ Completed)
+- **MinGW Support**: GCC 12.2.0 with Qt 6.10.1/mingw_64
+- **MSVC Support**: Visual Studio 2022 with Qt 6.10.2/msvc2022_64
+- **Auto-Detection**: CMake automatically detects compiler and selects appropriate Qt6
+- **Verified Builds**: Both MinGW and MSVC builds tested and working
+
 ### 🔢 BitBoard System (v0.2.0 ✅ Completed)
 - **Efficient Implementation**: uint64_t bitboard with 10M+ ops/sec performance
 - **Complete Game Logic**: Precise Othello flip rules and move generation
@@ -89,19 +95,36 @@ A comprehensive Othello/Reversi AI research and benchmarking platform implemente
 
 ### Build Instructions
 
+#### Prerequisites
+- **C++ Compiler**: GCC 9+ (MinGW) or MSVC 2019+
+- **CMake**: Version 3.16 or higher
+- **Qt6**: Version 6.10 or higher (for GUI)
+
+#### Qt6 Installation
+
+**MinGW users**: Install Qt6 with MinGW compiler
+- Download from https://www.qt.io/download
+- Select: Qt 6.10.x → MSVC 2022 x64
+
+**MSVC users**: Install Qt6 with MSVC compiler
+- Download from https://www.qt.io/download
+- Select: Qt 6.10.x → MSVC 2022 x64
+
+#### Build with MinGW
+
 ```bash
 # Clone the repository
 git clone https://github.com/Apoxtq/ReversiAI_Platform.git
 cd ReversiAI_Platform
 
 # Create build directory
-mkdir build && cd build
+mkdir build_mingw && cd build_mingw
 
-# Configure with CMake (GUI mode)
-cmake .. -DBUILD_QT_GUI=ON -DCMAKE_BUILD_TYPE=Release
+# Configure with CMake (MinGW)
+cmake -G "MinGW Makefiles" -DBUILD_QT_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
 
 # Build the project
-cmake --build . --config Release
+cmake --build . --parallel 8
 
 # Deploy Qt dependencies (Windows)
 windeployqt ReversiAI_Platform.exe
@@ -109,6 +132,35 @@ windeployqt ReversiAI_Platform.exe
 # Run the GUI application
 ./ReversiAI_Platform
 ```
+
+#### Build with MSVC
+
+```bash
+# Clone the repository
+git clone https://github.com/Apoxtq/ReversiAI_Platform.git
+cd ReversiAI_Platform
+
+# Create build directory
+mkdir build_msvc && cd build_msvc
+
+# Configure with CMake (Visual Studio)
+cmake -G "Visual Studio 17 2022" -A x64 -DBUILD_QT_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
+
+# Build the project
+cmake --build . --parallel 8
+
+# Deploy Qt dependencies (Windows)
+windeployqt ReversiAI_Platform.exe
+
+# Run the GUI application
+./ReversiAI_Platform.exe
+```
+
+#### CMake Auto-Detection
+
+The CMake build system automatically detects your compiler and selects the appropriate Qt6 version:
+- **MinGW** → Uses `Qt 6.10.x/mingw_64`
+- **MSVC** → Uses `Qt 6.10.x/msvc2022_64`
 
 ### GUI Features
 
@@ -306,6 +358,17 @@ ReversiAI_Platform/
 - **Status**: 100% Complete
 
 ### 📅 Planned Versions
+
+#### v1.0.1 (March 2026) - Dual Compiler Support
+- **Features**: MinGW + MSVC dual compiler support, CMake auto-detection
+- **Status**: ✅ Completed
+- **Key Features**:
+  - ✅ MinGW compilation support (GCC 12.2.0)
+  - ✅ MSVC compilation support (Visual Studio 2022)
+  - ✅ CMake auto-detection of compiler type
+  - ✅ Automatic Qt6 version selection based on compiler
+  - ✅ Updated CMakeLists.txt with MSVC Qt6 path configuration
+  - ✅ Verified both MinGW and MSVC builds work correctly
 
 #### v1.0.0 (March 2026) - Final Release
 - Complete feature set

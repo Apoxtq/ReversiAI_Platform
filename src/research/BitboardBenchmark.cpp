@@ -407,15 +407,27 @@ std::vector<BitBoard> BitboardBenchmark::getTestPositions() {
     for (int i = 0; i < 30; ++i) {
         uint64_t moves = board.getValidMoves(PlayerColor::Black);
         if (moves != 0) {
-            // 获取最低位的移动
+            // 获取最低位的移动 (跨平台兼容)
+#ifdef _MSC_VER
+            unsigned long move_index;
+            _BitScanForward64(&move_index, moves);
+            int move = static_cast<int>(move_index);
+#else
             int move = __builtin_ctzll(moves);
+#endif
             int row = move / 8;
             int col = move % 8;
             board.makeMove(row, col, PlayerColor::Black);
         }
         moves = board.getValidMoves(PlayerColor::White);
         if (moves != 0) {
+#ifdef _MSC_VER
+            unsigned long move_index;
+            _BitScanForward64(&move_index, moves);
+            int move = static_cast<int>(move_index);
+#else
             int move = __builtin_ctzll(moves);
+#endif
             int row = move / 8;
             int col = move % 8;
             board.makeMove(row, col, PlayerColor::White);

@@ -1,6 +1,18 @@
 cmake_minimum_required(VERSION 3.16)
 project(ReversiAI_Platform VERSION 1.0.0 LANGUAGES CXX)
 
+# Detect compiler
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(COMPILER_TYPE "MSVC")
+    message(STATUS "Detected compiler: MSVC")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(COMPILER_TYPE "MinGW")
+    message(STATUS "Detected compiler: MinGW (GCC)")
+else()
+    set(COMPILER_TYPE "Unknown")
+    message(WARNING "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
+endif()
+
 # Use default generator on Windows
 
 # C++ Standard
@@ -24,9 +36,49 @@ set(CMAKE_AUTOUIC ON)
 # Option to build with Qt GUI (default OFF until Qt is configured)
 option(BUILD_QT_GUI "Build Qt GUI application" OFF)
 
-# Set Qt installation path (modify this to your Qt installation directory)
-# Example: set(QT_DIR "C:/Qt/6.5.0/msvc2019_64")
-# set(QT_DIR "")
+# Set Qt installation path based on compiler
+# MSVC: Try system Qt6 first (user installed), then vcpkg
+# MinGW: Use system installed Qt6
+if(COMPILER_TYPE STREQUAL "MSVC")
+    # Check for system MSVC Qt6 (user installed) - highest priority
+    if(EXISTS "D:/Dev/SDKs/Qt/6.10.2/msvc2022_64")
+        set(DEFAULT_QT_PATH "D:/Dev/SDKs/Qt/6.10.2/msvc2022_64")
+        message(STATUS "MSVC detected, using system Qt6 at ${DEFAULT_QT_PATH}")
+    elseif(EXISTS "D:/Dev/SDKs/Qt/6.10.1/msvc2022_64")
+        set(DEFAULT_QT_PATH "D:/Dev/SDKs/Qt/6.10.1/msvc2022_64")
+        message(STATUS "MSVC detected, using system Qt6 at ${DEFAULT_QT_PATH}")
+    elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg/installed/x64-windows/lib/cmake/Qt6")
+        set(DEFAULT_QT_PATH "C:/vcpkg/installed/x64-windows")
+        set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake")
+        message(STATUS "MSVC detected, using vcpkg Qt6")
+    else()
+        message(WARNING "MSVC Qt6 not found. Please install Qt MSVC version via Qt MaintenanceTool")
+        set(DEFAULT_QT_PATH "")
+    endif()
+else()
+    # MinGW uses system Qt
+    set(DEFAULT_QT_PATH "D:/Dev/SDKs/Qt/6.10.1/mingw_64")
+    if(NOT EXISTS "${DEFAULT_QT_PATH}")
+        set(DEFAULT_QT_PATH "C:/Qt/6.10.1/mingw_64")
+    endif()
+    if(EXISTS "${DEFAULT_QT_PATH}")
+        message(STATUS "MinGW detected, using system Qt6 at ${DEFAULT_QT_PATH}")
+    else()
+        message(WARNING "MinGW Qt6 not found at ${DEFAULT_QT_PATH}")
+        set(DEFAULT_QT_PATH "")
+    endif()
+endif()
+
+# Allow user to override Qt path
+set(QT_PATH "" CACHE PATH "Path to Qt6 installation")
+if(QT_PATH)
+    set(DEFAULT_QT_PATH ${QT_PATH})
+endif()
+
+# Set Qt6_ROOT for CMake
+if(EXISTS "${DEFAULT_QT_PATH}")
+    set(Qt6_ROOT "${DEFAULT_QT_PATH}" CACHE PATH "Qt6 Root Directory")
+endif()
 
 # Testing options
 option(BUILD_TESTS "Build test executables" ON)
