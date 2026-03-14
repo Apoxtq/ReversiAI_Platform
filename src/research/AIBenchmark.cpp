@@ -119,10 +119,14 @@ AISearchBenchmarkResult AISearchBenchmark::benchmarkMinimax(
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
         total_time += duration.count() / 1000.0;
+
+        // 从AI获取实际搜索的节点数
+        auto stats = ai.getStats();
+        total_nodes += stats.nodesExplored;
     }
 
     result.time_ms = total_time;
-    result.nodes_searched = static_cast<int64_t>(total_time * 1000000);  // 估算
+    result.nodes_searched = total_nodes;
 
     // 计算吞吐量
     if (total_time > 0) {

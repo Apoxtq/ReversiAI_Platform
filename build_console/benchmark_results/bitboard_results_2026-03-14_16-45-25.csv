@@ -1,0 +1,8 @@
+Test Name,Value,Unit,Iterations,Time (ms),Passed,Message
+"Flip Performance",62578222.78,"M flips/sec",100000,1.60,true,"Meets target"
+"Move Generation",1914608.46,"M moves/sec",10000,5.22,true,"Meets target"
+"Legal Move Check",inf,"M checks/sec",10000,0.00,true,"Meets target"
+"Board Copy",inf,"M copies/sec",10000,0.00,true,"Meets target"
+"Evaluation",732815.48,"M evals/sec",10000,13.65,true,"Evaluation test completed"
+"Zobrist Hash",434782608.70,"M hashes/sec",10000,0.02,true,"Hash test completed"
+"Search Performance",122722.58,"M searches/sec",100000,814.85,true,"Search test completed"

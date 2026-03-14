@@ -1,0 +1,5 @@
+-DWIN32
+-o
+D:/Project/Reversi/ReversiAI_Platform/build_console/network/include/network/moc_roommanager.cpp
+D:/Project/Reversi/ReversiAI_Platform/network/include/network/roommanager.hpp
+-DWIN32

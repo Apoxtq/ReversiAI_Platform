@@ -1,0 +1,2 @@
+Tests/performance/CMakeFiles/mcts_comprehensive_test.dir/mcts_comprehensive_test_autogen/mocs_compilation.cpp.obj: \
+ D:\Project\Reversi\ReversiAI_Platform\build_console\Tests\performance\mcts_comprehensive_test_autogen\mocs_compilation.cpp

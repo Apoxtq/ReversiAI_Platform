@@ -1,0 +1,2 @@
+D:\Dev\Compilers\MinGW\12.2.0\bin\ar.exe qc ..\..\lib\libtest_framework.a CMakeFiles/test_framework.dir/test_framework_autogen/mocs_compilation.cpp.obj CMakeFiles/test_framework.dir/TestMain.cpp.obj
+D:\Dev\Compilers\MinGW\12.2.0\bin\ranlib.exe ..\..\lib\libtest_framework.a

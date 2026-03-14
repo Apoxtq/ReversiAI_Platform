@@ -1,0 +1,61 @@
+{
+  "benchmark": "Bitboard",
+  "results": [
+    {
+      "name": "Flip Performance",
+      "value": 63653723.74,
+      "unit": "M flips/sec",
+      "iterations": 100000,
+      "time_ms": 1.57,
+      "passed": true
+    },
+    {
+      "name": "Move Generation",
+      "value": 1847745.75,
+      "unit": "M moves/sec",
+      "iterations": 10000,
+      "time_ms": 5.41,
+      "passed": true
+    },
+    {
+      "name": "Legal Move Check",
+      "value": inf,
+      "unit": "M checks/sec",
+      "iterations": 10000,
+      "time_ms": 0.00,
+      "passed": true
+    },
+    {
+      "name": "Board Copy",
+      "value": inf,
+      "unit": "M copies/sec",
+      "iterations": 10000,
+      "time_ms": 0.00,
+      "passed": true
+    },
+    {
+      "name": "Evaluation",
+      "value": 728703.64,
+      "unit": "M evals/sec",
+      "iterations": 10000,
+      "time_ms": 13.72,
+      "passed": true
+    },
+    {
+      "name": "Zobrist Hash",
+      "value": 400000000.00,
+      "unit": "M hashes/sec",
+      "iterations": 10000,
+      "time_ms": 0.03,
+      "passed": true
+    },
+    {
+      "name": "Search Performance",
+      "value": 126274.90,
+      "unit": "M searches/sec",
+      "iterations": 100000,
+      "time_ms": 791.92,
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+﻿========================================
+RESEARCH UNIT TESTS
+========================================
+Timestamp: 2026-03-07 11:54:51
+Exit Code: 1
+----------------------------------------
+[==========] Running 7 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 7 tests from BattleEngineTest
+[ RUN      ] BattleEngineTest.PlaySingleGame
+[       OK ] BattleEngineTest.PlaySingleGame (0 ms)
+[ RUN      ] BattleEngineTest.PlayMultipleGames
+[       OK ] BattleEngineTest.PlayMultipleGames (0 ms)
+[ RUN      ] BattleEngineTest.RunBattle
+[       OK ] BattleEngineTest.RunBattle (1 ms)
+[ RUN      ] BattleEngineTest.BattleStatsCalculation
+D:\Project\Reversi\ReversiAI_Platform\Tests\unit\research\BattleEngineTest.cpp:131: Failure
+Expected equality of these values:
+  stats.avg_margin
+    Which is: 9.5999999999999979
+  16.0
+    Which is: 16
+
+[  FAILED  ] BattleEngineTest.BattleStatsCalculation (0 ms)
+[ RUN      ] BattleEngineTest.ValidateConfig
+[       OK ] BattleEngineTest.ValidateConfig (0 ms)
+[ RUN      ] BattleEngineTest.RandomAIvsRandomAI
+unit_tests_research.exe : [BattleEngine] Both players must be valid
+所在位置 D:\Project\Reversi\ReversiAI_Platform\scripts\validation\extended_validate.ps1:133 字符: 23
++ ... rchOutput = & "$BuildDir\Tests\unit\unit_tests_research.exe" 2>&1 | O ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([BattleEngine] ...s must be valid:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[BattleEngine] Number of games must be positive
+[       OK ] BattleEngineTest.RandomAIvsRandomAI (4 ms)
+[ RUN      ] BattleEngineTest.StatisticalSignificance
+[       OK ] BattleEngineTest.StatisticalSignificance (8 ms)
+[----------] 7 tests from BattleEngineTest (16 ms total)
+
+[----------] Global test environment tear-down
+[==========] 7 tests from 1 test suite ran. (16 ms total)
+[  PASSED  ] 6 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] BattleEngineTest.BattleStatsCalculation
+
+ 1 FAILED TEST
+
+========================================

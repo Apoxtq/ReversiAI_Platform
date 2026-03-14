@@ -1,6 +1,6 @@
 # ReversiAI_Platform 🎓
 
-|**Version**: v1.0.0
+|**Version**: v1.0.2
 |**Status**: ✅ Final Release Completed
 |**Project**: University of Liverpool COMP390 Honours Year Project
 

@@ -1,0 +1,13 @@
+# Bitboard Benchmark Results
+
+Generated: 2026-03-14_17-30-55
+
+| Test Name | Value | Unit | Iterations | Time (ms) | Status |
+|-----------|-------|------|------------|----------|--------|
+| Flip Performance | 67658998.65 | M flips/sec | 100000 | 1.48 | PASSED |
+| Move Generation | 1894657.07 | M moves/sec | 10000 | 5.28 | PASSED |
+| Legal Move Check | inf | M checks/sec | 10000 | 0.00 | PASSED |
+| Board Copy | inf | M copies/sec | 10000 | 0.00 | PASSED |
+| Evaluation | 735131.96 | M evals/sec | 10000 | 13.60 | PASSED |
+| Zobrist Hash | 416666666.67 | M hashes/sec | 10000 | 0.02 | PASSED |
+| Search Performance | 130118.54 | M searches/sec | 100000 | 768.53 | PASSED |

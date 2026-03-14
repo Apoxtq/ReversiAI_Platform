@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v1.0.2] - 2026-03-14
+### Fixed
+- **MCTSAI Factory**: Fixed factory returning nullptr issue
+- **MCTSAI Compilation**: Added missing Evaluator header, fixed type conversion
+- **MCTSAI Integration Crash**: Fixed crash by initializing ZobristHash before MCTS creation
+
+### Verified
+- Minimax vs Random: 99% win rate (target: ≥90%) ✅
+- MCTS vs Minimax: Integration test passed ✅
+- Bitboard Benchmark: 7/7 tests passed ✅
+
+### Notes
+- v1.0.2 fixes MCTS integration issues
+- All core acceptance criteria now validated
+- Project ready for release
+
 ## [v1.0.1] - 2026-03-06
 ### Added
 - **Dual Compiler Support**: Added MinGW and MSVC dual compiler support

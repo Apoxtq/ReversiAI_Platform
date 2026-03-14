@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iomanip>
 #include <random>
+#include <cassert>
 #include "../ai/ZobristHash.h"
 #include "../ai/Evaluator.h"
 
@@ -39,7 +40,11 @@ std::vector<BenchmarkResult> BitboardBenchmark::runAllBenchmarks() {
 
     // 预热
     if (config_.warmup) {
+        std::cout << "Running warmup..." << std::endl;
         warmUp();
+        std::cout << "Warmup complete." << std::endl;
+    } else {
+        std::cout << "Warmup disabled, skipping." << std::endl;
     }
 
     int total_tests = 7;
@@ -47,10 +52,18 @@ std::vector<BenchmarkResult> BitboardBenchmark::runAllBenchmarks() {
 
     // 1. 翻转性能测试
     if (progress_callback_) progress_callback_(++current, total_tests, "Flip Performance");
-    results.push_back(measureFlipPerformance(config_.flip_iterations));
+    std::cout << "Running test 1: Flip Performance..." << std::endl;
+    try {
+        results.push_back(measureFlipPerformance(config_.flip_iterations));
+        std::cout << "Test 1 complete." << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "[ERROR in test 1] " << e.what() << std::endl;
+        throw;
+    }
 
     // 2. 移动生成性能测试
     if (progress_callback_) progress_callback_(++current, total_tests, "Move Generation");
+    std::cout << "Running test 2: Move Generation..." << std::endl;
     results.push_back(measureMoveGenerationPerformance(config_.move_iterations));
 
     // 3. 合法性检查性能测试
@@ -127,14 +140,19 @@ BenchmarkResult BitboardBenchmark::measureMoveGenerationPerformance(int iteratio
     result.iterations = iterations;
 
     // 使用多个测试位置
+    std::cout << "  Getting test positions..." << std::endl;
     auto test_positions = getTestPositions();
+    std::cout << "  Got " << test_positions.size() << " test positions" << std::endl;
 
     // 预热
-    for (const auto& board : test_positions) {
+    std::cout << "  Warming up move generation..." << std::endl;
+    for (size_t idx = 0; idx < test_positions.size(); ++idx) {
+        const auto& board = test_positions[idx];
         for (int i = 0; i < 100; ++i) {
             board.getValidMoves(PlayerColor::Black);
         }
     }
+    std::cout << "  Warmup complete." << std::endl;
 
     // 正式测试
     auto start = std::chrono::high_resolution_clock::now();
@@ -382,21 +400,28 @@ std::vector<BitBoard> BitboardBenchmark::getTestPositions() {
     // 1. 标准开局 - 注意：player=黑棋, opponent=白棋
     uint64_t p1 = (1ULL << 28) | (1ULL << 35);   // 黑棋位置 (3,4),(4,3)
     uint64_t o1 = (1ULL << 27) | (1ULL << 36);   // 白棋位置 (3,3),(4,4)
+    std::cout << "  Position 1: p1=0x" << std::hex << p1 << ", o1=0x" << o1 << std::dec << std::endl;
     positions.push_back(BitBoard(p1, o1));
 
     // 2. 早期阶段 - 模拟几个走法后的局面
     uint64_t p2 = p1 | (1ULL << 19);  // 黑棋 D6
     uint64_t o2 = o1 | (1ULL << 26);  // 白棋 C5
+    std::cout << "  Position 2: p2=0x" << std::hex << p2 << ", o2=0x" << o2 << std::dec << std::endl;
     positions.push_back(BitBoard(p2, o2));
 
     // 3. 中局 - 更多棋子
     uint64_t p3 = p2 | (1ULL << 18) | (1ULL << 10);
     uint64_t o3 = o2 | (1ULL << 17) | (1ULL << 11);
+    std::cout << "  Position 3: p3=0x" << std::hex << p3 << ", o3=0x" << o3 << ", overlap=" << ((p3 & o3) ? "YES" : "no") << std::dec << std::endl;
     positions.push_back(BitBoard(p3, o3));
 
-    // 4. 更多中局位置 - 使用已知不重叠的位图
-    uint64_t p4 = 0x000000FF8C180000ULL;  // 黑棋
-    uint64_t o4 = 0x0000000012340000ULL;  // 白棋 (修改低32位避免重叠)
+    // 4. 更多中局位置 - 使用已知不重叠的位图 (确保在64格范围内)
+    // p4: 位 40-47 (0x00FF000000), o4: 位 48-55 (0xFF00000000)
+    uint64_t p4 = 0x00FF000000ULL;  // 黑棋 (位40-47)
+    uint64_t o4 = 0xFF00000000ULL;  // 白棋 (位48-55)
+    // 验证没有重叠
+    std::cout << "  Position 4: p4=0x" << std::hex << p4 << ", o4=0x" << o4 << ", overlap=" << ((p4 & o4) ? "YES" : "no") << std::dec << std::endl;
+    assert((p4 & o4) == 0 && "Player and opponent bits must not overlap");
     positions.push_back(BitBoard(p4, o4));
 
     // 5. 随机位置
@@ -433,8 +458,10 @@ std::vector<BitBoard> BitboardBenchmark::getTestPositions() {
             board.makeMove(row, col, PlayerColor::White);
         }
     }
+    std::cout << "  Position 5: p5=0x" << std::hex << board.getPlayerBits() << ", o5=0x" << board.getOpponentBits() << std::dec << std::endl;
     positions.push_back(board);
 
+    std::cout << "  Total positions created: " << positions.size() << std::endl;
     return positions;
 }
 

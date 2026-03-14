@@ -1,0 +1,1 @@
+ libnetwork_lib.a D:/Dev/SDKs/Qt/6.10.1/mingw_64/lib/libQt6Network.a D:/Dev/SDKs/Qt/6.10.1/mingw_64/lib/libQt6Test.a -lws2_32 ../libcore_lib.a D:/Dev/SDKs/Qt/6.10.1/mingw_64/lib/libQt6Core.a -lmpr -luserenv -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

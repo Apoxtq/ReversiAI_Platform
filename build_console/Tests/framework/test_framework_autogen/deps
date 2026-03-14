@@ -1,0 +1,11 @@
+test_framework_autogen/timestamp: \
+	D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/ExternalProject/shared_internal_commands.cmake \
+	D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FetchContent.cmake \
+	D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FetchContent/CMakeLists.cmake.in \
+	D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FindGTest.cmake \
+	D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FindPackageHandleStandardArgs.cmake \
+	D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/FindPackageMessage.cmake \
+	D:/Dev/Scoop/apps/cmake/current/share/cmake-4.2/Modules/GoogleTest.cmake \
+	D:/Project/Reversi/ReversiAI_Platform/Tests/framework/CMakeLists.txt \
+	D:/Project/Reversi/ReversiAI_Platform/Tests/framework/TestMain.cpp \
+	D:/Dev/Scoop/apps/cmake/current/bin/cmake.exe

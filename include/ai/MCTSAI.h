@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ai/AIStrategy.h"
+#include "ai/Evaluator.h"
 #include <memory>
 #include <unordered_map>
 #include <vector>

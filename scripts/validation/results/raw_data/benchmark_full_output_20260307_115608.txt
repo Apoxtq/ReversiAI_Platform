@@ -1,0 +1,149 @@
+﻿========================================
+FULL BENCHMARK OUTPUT
+========================================
+Start Time: 2026-03-07 11:56:08
+End Time: 2026-03-07 12:01:20
+Duration: 5.2 minutes
+Exit Code: 1
+----------------------------------------
+=== ReversiAI_Platform Console Version ===
+Testing BitBoard and AI algorithms
+==================================================
+
+[TEST] BitBoard Core Functionality
+------------------------------
+1. Creating standard opening board...
+Standard opening:
+........
+........
+........
+...BW...
+...WB...
+........
+........
+........
+Black pieces: 2
+White pieces: 2
+Empty squares: 60
+
+2. Testing valid moves generation...
+Black valid moves count: 4
+White valid moves count: 4
+Black valid move positions: (2,4) (3,5) (4,2) (5,3) 
+
+3. Testing move execution...
+Trying to move to position: (2,4)
+Move result: Success
+Board after move:
+........
+........
+....B...
+...BB...
+...WB...
+........
+........
+........
+Black pieces: 4
+White pieces: 1
+
+4. Testing game state...
+Game over: No
+Current leader: Black
+
+[OK] BitBoard functionality test completed
+
+[TEST] AI Algorithm System (v0.3.0)
+------------------------------
+1. Testing evaluator...
+Standard opening black evaluation score: 60
+
+2. Testing Minimax AI...
+[TranspositionTable] Initialized with 4194304 entries (112 MB)
+[MinimaxAI] Transposition table initialized: 64 MB
+[MinimaxAI] Move orderer initialized (Killer: ON, History: ON)
+[ZobristHash] Initializing with level 25 (size: 33554432 entries)
+[ZobristHash] Initialization complete
+AI Algorithm: MinimaxAI
+Best move: (2,4)
+Thinking time: 5ms
+Nodes explored: 16
+Evaluation calls: 16
+Average branching factor: 4
+
+[OK] AI algorithm system test completed
+
+[TEST] AI Battle System (v0.3.0)
+------------------------------
+1. Testing AI vs AI battle...
+[TranspositionTable] Initialized with 4194304 entries (112 MB)
+[MinimaxAI] Transposition table initialized: 64 MB
+[MinimaxAI] Move orderer initialized (Killer: ON, History: ON)
+Battle result: MinimaxAI vs RandomAI
+Total games: 100
+MinimaxAI win rate: 99%
+RandomAI win rate: 0%
+Draw rate: 1%
+Total time: 312220ms
+[TranspositionTable] Initialized with 4194304 entries (112 MB)
+[MinimaxAI] Transposition table initialized: 64 MB
+[MinimaxAI] Move orderer initialized (Killer: ON, History: ON)
+
+[OK] AI battle system test completed
+
+============================================================
+[TEST] Research Framework and Benchmarking (v0.6.0)
+------------------------------
+
+1. Testing Zobrist hash...
+[ZobristHash] Shutdown complete
+[ZobristHash] Initializing with level 25 (size: 33554432 entries)
+[ZobristHash] Initialization complete
+   ZobristHash initialization complete
+   Hash level: 25
+   Memory usage: 2 MB
+   Standard opening hash: 0x5dd208
+
+2. Testing transposition table...
+[TranspositionTable] Initialized with 4194304 entries (112 MB)
+   Transposition table size: 112 MB
+   Entry count: 4194304
+   Store/probe test: Success
+   Lookup count: 1
+   Hit count: 1
+   Hit rate: 100%
+
+3. Testing position suite...
+   Standard64 position suite loaded successfully
+   Position count: 64
+   Opening positions: 64
+   Midgame positions: 0
+   Endgame positions: 0
+[ZobristHash] Shutdown complete
+
+[OK] v0.6.0 Research framework test completed
+[INFO] v0.6.0 Function verification:
+   [OK] Zobrist hash (position encoding)
+   [OK] Transposition table (search optimization)
+   [OK] Standard position suite (reproducible experiments)
+   [OK] Head-to-Head battle engine (win rate statistics)
+   [OK] Statistical significance analysis (Wilcoxon test)
+
+[SUCCESS] All tests completed - v0.6.0 full functionality verified
+[INFO] v0.6.0 Research Framework: Benchmarking infrastructure complete
+
+============================================================
+[TEST] Performance Benchmarking (v0.8.0)
+------------------------------
+
+1. Running Bitboard Benchmark...
+=== Bitboard Benchmark Starting ===
+Warming up...
+ReversiAI_Platform_Console.exe : [ERROR] Player and opponent bitmaps must not overlap
+所在位置 D:\Project\Reversi\ReversiAI_Platform\scripts\validation\run_benchmark.ps1:89 字符: 20
++ ... arkOutput = & "$BuildDir\ReversiAI_Platform_Console.exe" 2>&1 | Out-S ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([ERROR] Player ...ust not overlap:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+========================================

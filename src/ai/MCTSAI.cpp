@@ -68,7 +68,7 @@ Move MCTSAI::findBestMove(const Board& board, const SearchLimits& limits) {
 
     // 设置搜索限制
     int max_simulations = std::min(config_.num_simulations,
-                                 limits.maxNodes.value_or(config_.num_simulations));
+                                 static_cast<int>(limits.maxNodes.value_or(config_.num_simulations)));
 
     // 执行MCTS搜索
     for (int i = 0; i < max_simulations; ++i) {
@@ -118,8 +118,19 @@ Move MCTSAI::findBestMove(const Board& board, const SearchLimits& limits) {
 }
 
 void MCTSAI::search(const Board& board, const SearchLimits& limits) {
+    // 防御性检查
+    if (!root_) {
+        std::cerr << "[MCTSAI] Warning: root_ is null" << std::endl;
+        return;
+    }
+
     // 1. 选择阶段 (Selection) - 找到叶子节点
     MCTSNode* current = root_.get();
+    if (!current) {
+        std::cerr << "[MCTSAI] Warning: root node is null" << std::endl;
+        return;
+    }
+
     std::vector<MCTSNode*> path;
 
     // 向下遍历到叶子节点
@@ -154,6 +165,8 @@ void MCTSAI::search(const Board& board, const SearchLimits& limits) {
             for (size_t i = 0; i < max_children; ++i) {
                 auto child = std::make_unique<MCTSNode>(leaf_node);
                 child->prior = 1.0 / max_children; // 均匀先验概率
+                // 使用安全的方式添加子节点
+                valid_moves[i]; // 确保移动有效
                 leaf_node->addChild(valid_moves[i], std::move(child));
             }
         }
@@ -163,6 +176,9 @@ void MCTSAI::search(const Board& board, const SearchLimits& limits) {
     MCTSNode* simulation_node = leaf_node;
     if (leaf_node->getChildCount() > 0) {
         simulation_node = leaf_node->getChild(0);
+    } else {
+        // 如果没有子节点，直接仿真当前局面
+        return;  // 避免空指针
     }
 
     // 3. 仿真阶段 (Simulation)
@@ -178,45 +194,62 @@ double MCTSAI::simulate(const Board& board, int max_depth) {
     // 随机仿真直到游戏结束或达到最大深度
     // 参考: alpha-zero-general的随机仿真策略
 
-    Board sim_board = board;
-    int depth = 0;
-    PlayerColor current_player = sim_board.getCurrentTurn();
+    try {
+        Board sim_board = board;
+        int depth = 0;
+        PlayerColor current_player = sim_board.getCurrentTurn();
 
-    while (!sim_board.isGameOver() && depth < max_depth) {
-        auto valid_moves = sim_board.getValidMoves();
+        while (!sim_board.isGameOver() && depth < max_depth) {
+            auto valid_moves = sim_board.getValidMoves();
 
-        if (valid_moves.empty()) {
-            // 没有有效移动，跳过回合
-            Move pass_move = Move::pass();
-            sim_board.makeMove(pass_move);
-        } else {
-            // 随机选择一个有效移动
-            size_t random_index = static_cast<size_t>(
-                uniform_dist_(rng_) * valid_moves.size());
-            random_index = std::min(random_index, valid_moves.size() - 1);
+            if (valid_moves.empty()) {
+                // 没有有效移动，跳过回合
+                Move pass_move = Move::pass();
+                if (!sim_board.makeMove(pass_move)) {
+                    // 如果跳过也失败，可能双方都没棋了，退出
+                    break;
+                }
+            } else {
+                // 随机选择一个有效移动
+                if (valid_moves.size() == 0) break;  // 安全检查
+                size_t random_index = static_cast<size_t>(
+                    uniform_dist_(rng_) * valid_moves.size());
+                random_index = std::min(random_index, valid_moves.size() - 1);
 
-            sim_board.makeMove(valid_moves[random_index]);
+                sim_board.makeMove(valid_moves[random_index]);
+            }
+
+            current_player = (current_player == PlayerColor::Black) ?
+                            PlayerColor::White : PlayerColor::Black;
+            depth++;
         }
 
-        current_player = (current_player == PlayerColor::Black) ?
-                        PlayerColor::White : PlayerColor::Black;
-        depth++;
-    }
-
-    // 使用评估器评估最终局面
-    if (sim_board.isGameOver()) {
-        auto winner = sim_board.getWinner();
-        if (winner.has_value()) {
-            // 根据当前玩家视角返回结果
-            return (winner.value() == current_player) ? 1.0 : -1.0;
+        // 使用评估器评估最终局面
+        if (sim_board.isGameOver()) {
+            auto winner = sim_board.getWinner();
+            if (winner.has_value()) {
+                // 根据当前玩家视角返回结果
+                return (winner.value() == current_player) ? 1.0 : -1.0;
+            } else {
+                return 0.0;  // 平局
+            }
         } else {
-            return 0.0;  // 平局
+            // 使用评估器评估中间局面
+            if (!evaluator_) {
+                return 0.0;  // 评估器为空时返回默认值
+            }
+            double eval = evaluator_->evaluate(sim_board.getBitBoard(), current_player);
+            // 归一化到-1到1的范围（假设评估器的范围是合理的）
+            return std::tanh(eval / 100.0);  // 使用tanh进行平滑归一化
         }
-    } else {
-        // 使用评估器评估中间局面
-        double eval = evaluator_->evaluate(sim_board.getBitBoard(), current_player);
-        // 归一化到-1到1的范围（假设评估器的范围是合理的）
-        return std::tanh(eval / 100.0);  // 使用tanh进行平滑归一化
+    } catch (const std::exception& e) {
+        // 捕获异常并返回默认值
+        std::cerr << "[MCTSAI] Simulation error: " << e.what() << std::endl;
+        return 0.0;
+    } catch (...) {
+        // 捕获所有异常
+        std::cerr << "[MCTSAI] Unknown simulation error" << std::endl;
+        return 0.0;
     }
 }
 

@@ -1,0 +1,8 @@
+﻿========================================
+BENCHMARK RESULTS CHECK
+========================================
+Results Directory: d:\Project\Reversi\ReversiAI_Platform\benchmark_results
+Status: NOT FOUND
+The console app may have encountered an error or results were not exported.
+Exit Code: 1
+========================================

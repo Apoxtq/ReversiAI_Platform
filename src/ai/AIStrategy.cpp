@@ -66,7 +66,27 @@ std::unique_ptr<AIStrategy> AIStrategyFactory::createMinimaxAI(Difficulty diffic
 }
 
 std::unique_ptr<AIStrategy> AIStrategyFactory::createMCTSAI(Difficulty difficulty) {
-    return nullptr;
+    MCTSConfig config;
+
+    switch (difficulty) {
+        case Difficulty::EASY:
+            config.num_simulations = 100;
+            config.time_limit = std::chrono::milliseconds(1000);
+            break;
+        case Difficulty::MEDIUM:
+            config.num_simulations = 500;
+            config.time_limit = std::chrono::milliseconds(3000);
+            break;
+        case Difficulty::HARD:
+            config.num_simulations = 1000;
+            config.time_limit = std::chrono::milliseconds(8000);
+            break;
+        case Difficulty::CUSTOM:
+            // 使用默认配置
+            break;
+    }
+
+    return std::make_unique<MCTSAI>(config);
 }
 
 std::unique_ptr<AIStrategy> AIStrategyFactory::createRandomAI() {

@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/Project/Reversi/ReversiAI_Platform/build_console/_deps/googletest-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

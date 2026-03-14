@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(ReversiAI_Platform VERSION 1.0.0 LANGUAGES CXX)
+project(ReversiAI_Platform VERSION 1.0.2 LANGUAGES CXX)
 
 # Detect compiler
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -14,6 +14,20 @@ else()
 endif()
 
 # Use default generator on Windows
+
+# Performance optimization flags
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    if(MSVC)
+        # MSVC Release optimizations
+        add_compile_options(/O2 /Oi /Ot /GL /fp:fast)
+        add_link_options(/LTCG)
+        message(STATUS "Using MSVC Release optimizations: /O2 /Oi /Ot /GL /fp:fast /LTCG")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        # GCC/MinGW Release optimizations
+        add_compile_options(-O3 -march=native -funroll-loops -ffast-math)
+        message(STATUS "Using GCC Release optimizations: -O3 -march=native -funroll-loops -ffast-math")
+    endif()
+endif()
 
 # C++ Standard
 set(CMAKE_CXX_STANDARD 17)
@@ -107,7 +121,7 @@ add_library(ai_lib STATIC
     src/ai/Evaluator.cpp
     src/ai/AIStrategy.cpp
     src/ai/MinimaxAI.cpp
-    # src/ai/MCTSAI.cpp  # 暂时注释掉，等待完善
+    src/ai/MCTSAI.cpp
     src/ai/RandomAI.cpp
     src/ai/AIBattle.cpp
     src/ai/ZobristHash.cpp              # v0.6.0: Zobrist哈希
