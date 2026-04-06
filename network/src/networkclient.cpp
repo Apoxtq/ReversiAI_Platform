@@ -140,17 +140,21 @@ quint16 NetworkClient::getPeerPort() const
 bool NetworkClient::sendMessage(const Message& message)
 {
     // Reference: Egaroucid ggs.hpp ggs_send_message() (line 197-203)
+    qDebug() << "NetworkClient::sendMessage called, type:" << static_cast<int>(message.type);
     
     if (state_ != ConnectionState::Connected) {
-        qWarning() << "Cannot send: not connected";
+        qWarning() << "Cannot send: not connected, state:" << static_cast<int>(state_);
         return false;
     }
     
+    qDebug() << "NetworkClient::sendMessage: Connected, queuing message";
     // Queue message for batch sending
     sendQueue_.push(message);
+    qDebug() << "NetworkClient::sendMessage: Queue now has" << sendQueue_.size() << "messages";
     
     // Trigger send timer
     if (!sendTimer_->isActive()) {
+        qDebug() << "NetworkClient::sendMessage: Starting send timer";
         sendTimer_->start();
     }
     
@@ -256,7 +260,7 @@ void NetworkClient::handleReceivedData(const QByteArray& data)
     
     receiveBuffer_.append(data);
     
-    // Try to parse complete messages
+    // Try to parse complete messages (now handles newline-delimited format)
     while (parseMessage()) {
         // Continue until no more complete messages
     }
@@ -270,24 +274,25 @@ bool NetworkClient::parseMessage()
         return false;
     }
     
-    // Try to parse message
-    bool ok = false;
-    Message msg = Message::deserialize(receiveBuffer_, &ok);
-    
-    if (!ok) {
-        // Incomplete message or parse error
-        // Check if buffer is too large
-        if (receiveBuffer_.size() > MAX_MESSAGE_SIZE) {
-            qWarning() << "Message too large, clearing buffer";
-            receiveBuffer_.clear();
-            emit errorOccurred(NetworkError::ProtocolError, "Message too large");
-        }
+    // Find newline to separate messages
+    int newlineIdx = receiveBuffer_.indexOf('\n');
+    if (newlineIdx < 0) {
+        // No complete message yet
         return false;
     }
     
-    // Remove parsed message from buffer
-    QByteArray serialized = msg.serialize();
-    receiveBuffer_.remove(0, serialized.size());
+    // Extract line up to and including newline
+    QByteArray line = receiveBuffer_.left(newlineIdx);
+    receiveBuffer_.remove(0, newlineIdx + 1);
+    
+    // Try to parse message
+    bool ok = false;
+    Message msg = Message::deserialize(line, &ok);
+    
+    if (!ok) {
+        qWarning() << "Failed to deserialize message:" << QString::fromUtf8(line.left(100));
+        return true; // Continue trying to parse next message
+    }
     
     // Log and dispatch message
     messagesReceived_++;
@@ -301,42 +306,66 @@ void NetworkClient::dispatchMessage(const Message& message)
 {
     // Reference: Egaroucid ggs.hpp message dispatch (line 622-685)
     
+    qDebug() << "NetworkClient::dispatchMessage called, type:" << static_cast<int>(message.type);
     emit messageReceived(message);
     
     // Dispatch based on type
     switch (message.type) {
-        case MessageType::MOVE_MADE:
-            emit moveReceived(
-                message.payload["row"].toInt(),
-                message.payload["col"].toInt(),
-                message.payload["player"].toString()
-            );
+        case MessageType::MOVE_MADE: {
+            qDebug() << "NetworkClient: Dispatching MOVE_MADE";
+            int row = message.payload["row"].toInt(-1);
+            int col = message.payload["col"].toInt(-1);
+            QString player = message.payload["player"].toString();
+            qDebug() << "NetworkClient: MOVE_MADE row=" << row << "col=" << col << "player=" << player;
+            emit moveReceived(row, col, player);
             break;
+        }
             
         case MessageType::GAME_STATE_UPDATE: {
+            qDebug() << "NetworkClient: Dispatching GAME_STATE_UPDATE";
             GameStateMessage state = GameStateMessage::fromJson(message.payload);
             emit gameStateReceived(state);
             break;
         }
         
+        case MessageType::PLAYER_READY: {
+            QString playerName = message.payload["player"].toString();
+            QString sender = message.sender;
+            qint64 timestamp = message.timestamp;
+            qDebug() << "NetworkClient: Dispatching PLAYER_READY from" << playerName << "sender:" << sender << "timestamp:" << timestamp;
+            emit playerReadyReceived(playerName, sender, timestamp);
+            break;
+        }
+        
         case MessageType::PONG:
+            qDebug() << "NetworkClient: Dispatching PONG";
             emit pongReceived(QDateTime::currentMSecsSinceEpoch() - lastPingTime_);
             break;
             
         case MessageType::HEARTBEAT:
+            qDebug() << "NetworkClient: Dispatching HEARTBEAT";
             emit heartbeatReceived();
             missedHeartbeats_ = 0;
             heartbeatTimeout_->stop();
             break;
             
         case MessageType::ERROR:
+            qDebug() << "NetworkClient: Dispatching ERROR";
             emit errorOccurred(
                 static_cast<NetworkError>(message.payload["error"].toInt()),
                 message.payload["message"].toString()
             );
             break;
-            
+
+        case MessageType::CHAT_MESSAGE: {
+            qDebug() << "NetworkClient: Dispatching CHAT_MESSAGE";
+            ChatMessage chat = ChatMessage::fromJson(message.payload);
+            emit chatMessageReceived(chat.sender, chat.content);
+            break;
+        }
+
         default:
+            qDebug() << "NetworkClient: Unknown message type:" << static_cast<int>(message.type);
             break;
     }
 }
@@ -377,14 +406,18 @@ void NetworkClient::stopHeartbeat()
 bool NetworkClient::sendQueuedMessage()
 {
     // Reference: Egaroucid ggs.hpp ggs_send_message() (line 197-203)
+    qDebug() << "NetworkClient::sendQueuedMessage called, queue size:" << sendQueue_.size();
     
     if (sendQueue_.empty() || state_ != ConnectionState::Connected) {
+        qWarning() << "NetworkClient::sendQueuedMessage: Cannot send, queue empty or not connected";
         return false;
     }
     
     Message msg = sendQueue_.front();
     QByteArray data = msg.serialize();
+    data.append("\n");  // 添加换行符
     
+    qDebug() << "NetworkClient::sendQueuedMessage: Sending" << data.size() << "bytes";
     qint64 bytesWritten = socket_->write(data);
     
     if (bytesWritten < 0) {
@@ -393,6 +426,7 @@ bool NetworkClient::sendQueuedMessage()
         return false;
     }
     
+    qDebug() << "NetworkClient::sendQueuedMessage: Wrote" << bytesWritten << "bytes";
     sendQueue_.pop();
     messagesSent_++;
     logSend(msg);
@@ -479,10 +513,27 @@ void NetworkClient::onDisconnected()
 void NetworkClient::onError(QAbstractSocket::SocketError socketError)
 {
     // Reference: Egaroucid ggs.hpp error handling (line 183-188)
-    qWarning() << "Socket error:" << socketError << "-" << socket_->errorString();
+    qWarning() << "NetworkClient: Socket error:" << socketError 
+               << "-" << socket_->errorString()
+               << "Peer:" << socket_->peerAddress().toString() << ":" << socket_->peerPort();
+    
+    // Add more context to the error message
+    QString fullMessage = socket_->errorString();
+    if (socketError == QAbstractSocket::ConnectionRefusedError) {
+        fullMessage = QString("Connection refused. Ensure the host is running and port %1 is not blocked by firewall. (%2)")
+                        .arg(socket_->peerPort())
+                        .arg(socket_->errorString());
+    } else if (socketError == QAbstractSocket::HostNotFoundError) {
+        fullMessage = QString("Host not found at %1. Please check the IP address.")
+                        .arg(socket_->peerAddress().toString());
+    } else if (socketError == QAbstractSocket::SocketTimeoutError) {
+        fullMessage = QString("Connection timed out to %1:%2. Network may be slow or host is unreachable.")
+                        .arg(socket_->peerAddress().toString())
+                        .arg(socket_->peerPort());
+    }
     
     NetworkError error = socketErrorToNetworkError(socketError);
-    emit errorOccurred(error, socket_->errorString());
+    emit errorOccurred(error, fullMessage);
     
     setState(ConnectionState::Error);
 }
@@ -502,9 +553,10 @@ NetworkHost::NetworkHost(QObject* parent)
     : NetworkClient(parent)
     , server_(nullptr)
     , listeningPort_(0)
+    , clientSocket_(nullptr)
 {
     server_ = new QTcpServer(this);
-    
+
     connect(server_, &QTcpServer::newConnection, this, &NetworkHost::onNewConnection);
 }
 
@@ -531,28 +583,203 @@ bool NetworkHost::startHosting(quint16 port)
 
 void NetworkHost::stopHosting()
 {
-    server_->close();
+    if (server_) {
+        server_->close();
+    }
+    if (clientSocket_) {
+        clientSocket_->disconnect();
+        clientSocket_->close();
+        clientSocket_->deleteLater();
+        clientSocket_ = nullptr;
+    }
     listeningPort_ = 0;
+    state_ = ConnectionState::Disconnected;
     qInfo() << "Stopped hosting";
 }
 
 void NetworkHost::onNewConnection()
 {
-    // Reference: Accept one client for P2P game
+    qDebug() << "NetworkHost::onNewConnection called";
+    
+    if (!server_ || !server_->isListening()) {
+        qWarning() << "NetworkHost: Server not listening, ignoring new connection";
+        return;
+    }
+    
+    qDebug() << "NetworkHost: Server is listening, processing new connection";
+    
+    // 如果已有客户端连接，先断开旧连接并安全清理
+    if (clientSocket_) {
+        qWarning() << "NetworkHost: Already have a client, closing old connection";
+        
+        // 断开所有信号连接，防止旧的 disconnected 信号触发
+        clientSocket_->disconnect();
+        clientSocket_->abort();  // 立即中止连接
+        clientSocket_->deleteLater();
+        clientSocket_ = nullptr;
+    }
     
     if (server_->hasPendingConnections()) {
-        QTcpSocket* client = server_->nextPendingConnection();
+        clientSocket_ = server_->nextPendingConnection();
+
+        if (clientSocket_) {
+            qInfo() << "NetworkHost: Client connected from" << clientSocket_->peerAddress().toString()
+                     << ":" << clientSocket_->peerPort();
+
+            // 连接信号
+            qDebug() << "NetworkHost: Connecting readyRead signal...";
+            connect(clientSocket_, &QTcpSocket::readyRead,
+                    this, &NetworkHost::onClientReadyRead,
+                    Qt::AutoConnection);
+            qDebug() << "NetworkHost: Connecting disconnected signal...";
+            connect(clientSocket_, &QTcpSocket::disconnected,
+                    this, &NetworkHost::onClientDisconnected,
+                    Qt::AutoConnection);
+            qDebug() << "NetworkHost: Signals connected";
+
+            state_ = ConnectionState::Connected;
+
+            qDebug() << "NetworkHost: Emitting clientConnected signal";
+            emit clientConnected(clientSocket_->peerAddress(), clientSocket_->peerPort());
+            qDebug() << "NetworkHost: clientConnected signal emitted";
+        }
+    } else {
+        qWarning() << "NetworkHost: No pending connections found";
+    }
+}
+
+void NetworkHost::onClientReadyRead()
+{
+    if (!clientSocket_) {
+        qWarning() << "NetworkHost::onClientReadyRead: clientSocket_ is null";
+        return;
+    }
+    
+    qDebug() << "NetworkHost::onClientReadyRead called, bytesAvailable:" << clientSocket_->bytesAvailable();
+    
+    while (clientSocket_ && clientSocket_->bytesAvailable() > 0) {
+        QByteArray data = clientSocket_->readAll();
+        qDebug() << "NetworkHost: read" << data.size() << "bytes, appending to buffer";
+        receiveBuffer_.append(data);
+        qDebug() << "NetworkHost: receiveBuffer_ now has" << receiveBuffer_.size() << "bytes";
+    }
+
+    qDebug() << "NetworkHost: Processing buffer, looking for newlines...";
+    while (true) {
+        int newlineIdx = receiveBuffer_.indexOf('\n');
+        if (newlineIdx < 0) {
+            qDebug() << "NetworkHost: No newline found, breaking";
+            break;
+        }
+
+        QByteArray line = receiveBuffer_.left(newlineIdx);
+        receiveBuffer_.remove(0, newlineIdx + 1);
+
+        qDebug() << "NetworkHost: Found newline, parsing message:" << line;
         
-        if (client) {
-            qInfo() << "Client connected from" << client->peerAddress();
+        try {
+            Message message = Message::deserialize(line);
+            qDebug() << "NetworkHost: Message deserialized, type:" << static_cast<int>(message.type);
             
-            // Take ownership of the socket
-            // Note: We don't use the server's socket, we create our own NetworkClient connection
+            emit messageReceived(message);
             
-            // For P2P mode, the host acts as a client connecting to itself
-            // Actually, we need to accept the connection and use that socket
+            // 分发消息（调用父类的 dispatchMessage）
+            try {
+                dispatchMessage(message);
+            } catch (const std::exception& e) {
+                qCritical() << "NetworkHost: Exception in dispatchMessage:" << e.what();
+            } catch (...) {
+                qCritical() << "NetworkHost: Unknown exception in dispatchMessage";
+            }
+        } catch (const std::exception& e) {
+            qCritical() << "NetworkHost: Exception deserializing message:" << e.what();
+        } catch (...) {
+            qCritical() << "NetworkHost: Unknown exception deserializing message";
         }
     }
+}
+
+void NetworkHost::onClientDisconnected()
+{
+    qInfo() << "NetworkHost: Client disconnected";
+    if (clientSocket_) {
+        qDebug() << "NetworkHost: Cleaning up client socket";
+        // 不要再次调用 disconnect()，因为已经在 onNewConnection 中处理了
+        clientSocket_->deleteLater();
+        clientSocket_ = nullptr;
+    }
+    state_ = ConnectionState::Disconnected;
+    emit clientDisconnected();
+}
+
+bool NetworkHost::sendMessage(const Message& message)
+{
+    qDebug() << "NetworkHost::sendMessage called, type:" << static_cast<int>(message.type);
+    
+    if (!clientSocket_) {
+        qWarning() << "NetworkHost::sendMessage: clientSocket_ is null";
+        return false;
+    }
+    
+    qDebug() << "NetworkHost::sendMessage: clientSocket state:" << clientSocket_->state() << "ConnectedState:" << QAbstractSocket::ConnectedState;
+    
+    if (state_ != ConnectionState::Connected) {
+        qWarning() << "NetworkHost::sendMessage: state is not Connected (state:" << static_cast<int>(state_) << ")";
+        return false;
+    }
+    
+    if (clientSocket_->state() != QAbstractSocket::ConnectedState) {
+        qWarning() << "NetworkHost::sendMessage: socket state is not Connected (socket state:" << clientSocket_->state() << ")";
+        return false;
+    }
+
+    QByteArray data = message.serialize();
+    data.append("\n");
+    
+    qDebug() << "NetworkHost::sendMessage: Before write - bytesToWrite:" << clientSocket_->bytesToWrite();
+    
+    qint64 written = clientSocket_->write(data);
+    qDebug() << "NetworkHost::sendMessage: write returned:" << written << "expected:" << data.size();
+    
+    qDebug() << "NetworkHost::sendMessage: After write - bytesToWrite:" << clientSocket_->bytesToWrite();
+    
+    if (written != data.size()) {
+        qWarning() << "NetworkHost::sendMessage: wrote" << written << "bytes, expected" << data.size();
+        return false;
+    }
+    
+    // 确保数据被发送
+    clientSocket_->flush();
+    qDebug() << "NetworkHost::sendMessage: After flush - bytesToWrite:" << clientSocket_->bytesToWrite();
+    
+    // 检查是否有错误
+    if (clientSocket_->error() != QAbstractSocket::UnknownSocketError) {
+        qWarning() << "NetworkHost::sendMessage: Socket error:" << clientSocket_->errorString();
+    }
+    
+    return true;
+}
+
+bool NetworkHost::sendMove(int row, int col, const QString& player, int moveNumber)
+{
+    Message msg;
+    msg.type = MessageType::MOVE_MADE;
+    msg.timestamp = QDateTime::currentMSecsSinceEpoch();
+    
+    QJsonObject payload;
+    payload["row"] = row;
+    payload["col"] = col;
+    payload["player"] = player;
+    payload["moveNumber"] = moveNumber;
+    msg.payload = payload;
+    
+    qDebug() << "NetworkHost::sendMove: creating MOVE_MADE message, row:" << row << "col:" << col << "player:" << player;
+    qDebug() << "NetworkHost::sendMove: calling sendMessage";
+    
+    bool result = sendMessage(msg);
+    qDebug() << "NetworkHost::sendMove: sendMessage returned:" << result;
+    
+    return result;
 }
 
 } // namespace Network

@@ -16,7 +16,33 @@ MenuWindow::MenuWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MenuWindow) {
     ui->setupUi(this);
-    setFixedSize(400, 500);  // 增加高度以容纳新按钮
+    setFixedSize(450, 480);
+
+    // 设置标题样式
+    ui->titleLabel->setStyleSheet(
+        "QLabel {"
+        "    color: #2c3e50;"
+        "    font-weight: bold;"
+        "}"
+    );
+
+    // 设置副标题样式
+    ui->subtitleLabel->setStyleSheet(
+        "QLabel {"
+        "    color: #7f8c8d;"
+        "    font-size: 12pt;"
+        "}"
+    );
+
+    // 设置版本标签样式
+    if (ui->versionLabel) {
+        ui->versionLabel->setStyleSheet(
+            "QLabel {"
+            "    color: #95a5a6;"
+            "    font-size: 9pt;"
+            "}"
+        );
+    }
 
     // 设置 PvE 按钮样式
     ui->pveButton->setStyleSheet(
@@ -51,7 +77,7 @@ MenuWindow::MenuWindow(QWidget* parent)
     );
 
     // 动态添加AI研究模式按钮
-    QPushButton* aiResearchButton = new QPushButton(tr("AI Research Mode (v0.6.0)"), this);
+    QPushButton* aiResearchButton = new QPushButton(tr("AI Research Mode"), this);
     aiResearchButton->setObjectName("aiResearchButton");
     aiResearchButton->setStyleSheet(
         "QPushButton {"
@@ -78,52 +104,10 @@ MenuWindow::MenuWindow(QWidget* parent)
         }
     }
 
-    // 添加分隔线
-    QFrame* separator = new QFrame(this);
-    separator->setFrameShape(QFrame::HLine);
-    separator->setFrameShadow(QFrame::Sunken);
-    separator->setStyleSheet("background-color: #bdc3c7;");
-    if (mainLayout) {
-        int index = mainLayout->indexOf(aiResearchButton);
-        if (index >= 0) {
-            mainLayout->insertWidget(index + 1, separator);
-        }
-    }
-
-    // v0.9.0: 添加复盘分析按钮
-    QPushButton* replayButton = new QPushButton(tr("Game Replay Analysis (v0.9.0)"), this);
-    replayButton->setObjectName("replayButton");
-    replayButton->setStyleSheet(
-        "QPushButton {"
-        "    background-color: #e67e22;"
-        "    color: white;"
-        "    border-radius: 8px;"
-        "    padding: 10px;"
-        "    font-weight: bold;"
-        "}"
-        "QPushButton:hover {"
-        "    background-color: #d35400;"
-        "}"
-        "QPushButton:pressed {"
-        "    background-color: #ba4a00;"
-        "}"
-    );
-
-    // 将复盘按钮添加到布局中（位于分隔线之后）
-    if (mainLayout) {
-        int sepIndex = mainLayout->indexOf(separator);
-        if (sepIndex >= 0) {
-            mainLayout->insertWidget(sepIndex + 1, replayButton);
-        }
-    }
-
     setupConnections();
 
     // 连接AI研究按钮
     connect(aiResearchButton, &QPushButton::clicked, this, &MenuWindow::onAIResearchButtonClicked);
-
-    // v0.9.0: 连接复盘分析按钮
-    connect(replayButton, &QPushButton::clicked, this, &MenuWindow::onReplayAnalysisButtonClicked);
 }
 
 MenuWindow::~MenuWindow() {
@@ -202,7 +186,8 @@ void MenuWindow::onNetworkButtonClicked() {
         // 连接返回菜单信号
         connect(gameWindow, &NetworkGameWindow::backToMenu, this, [this, gameWindow, lobbyWindow]() {
             gameWindow->close();
-            lobbyWindow->show();  // 重新显示大厅
+            lobbyWindow->close();
+            this->show();  // 直接回到主界面
         });
 
         gameWindow->show();
@@ -226,7 +211,8 @@ void MenuWindow::onNetworkButtonClicked() {
         // 连接返回菜单信号
         connect(gameWindow, &NetworkGameWindow::backToMenu, this, [this, gameWindow, lobbyWindow]() {
             gameWindow->close();
-            lobbyWindow->show();  // 重新显示大厅
+            lobbyWindow->close();
+            this->show();  // 直接回到主界面
         });
 
         gameWindow->show();

@@ -18,9 +18,17 @@
 #include <QMessageBox>
 #include <QDebug>
 
+// 棋盘参数：窗口 800x600，右侧面板约 300px，左侧棋盘区域约 500x600
+const int BOARD_OFFSET_X = 0;
+const int BOARD_OFFSET_Y = 0;
+const int CELL_SIZE = 60;  // 每格 60 像素，8x8 = 480x480
+const int BOARD_SIZE = CELL_SIZE * 8;
+
 NetworkGameWindow::NetworkGameWindow(QWidget* parent)
     : QMainWindow(parent)
     , networkClient_(nullptr)
+    , networkHost_(nullptr)
+    , discovery_(nullptr)
     , synchronizer_(nullptr)
     , reconnector_(nullptr)
     , localPlayerName_("Player")
@@ -28,24 +36,58 @@ NetworkGameWindow::NetworkGameWindow(QWidget* parent)
     , isHost_(false)
     , isReconnecting_(false)
     , currentLatency_(0)
+    , localPlayerColor_(Reversi::PlayerColor::Black)
+    , localPlayerReady_(false)
+    , opponentReady_(false)
+    , gameStarted_(false)
+    , isClosing_(false)
+    , lastSentTimestamp_(0)
+    , lastReceivedTimestamp_(0)
 {
+    qDebug() << "===========================================";
+    qDebug() << "NetworkGameWindow::NetworkGameWindow() - Constructor START";
+    qDebug() << "===========================================";
+    
     // 初始化UI
     initGameUI();
     setupNetworkUI();
     
     // 创建GameController（网络PvP模式）
     gameController_ = std::make_unique<Reversi::GameController>(this);
+    qDebug() << "GameController created";
     
     // 加载资源
     loadResources();
     
     // 连接游戏信号
     setupGameConnections();
+    
+    qDebug() << "NetworkGameWindow::NetworkGameWindow() - Constructor END";
+    qDebug() << "===========================================";
 }
 
 NetworkGameWindow::~NetworkGameWindow()
 {
+    if (isClosing_) {
+        // 清理已在 closeEvent/onBackToMenuClicked 中完成，只需安全删除对象
+        if (discovery_) {
+            discovery_->stopBroadcasting();
+            discovery_->deleteLater();
+        }
+        if (networkHost_) {
+            networkHost_->deleteLater();
+        }
+        return;
+    }
     disconnectFromGame();
+    if (discovery_) {
+        discovery_->stopBroadcasting();
+        discovery_->deleteLater();
+    }
+    if (networkHost_) {
+        networkHost_->stopHosting();
+        networkHost_->deleteLater();
+    }
 }
 
 // ==================== UI Initialization ====================
@@ -57,22 +99,79 @@ void NetworkGameWindow::initGameUI()
     setWindowTitle(tr("Network Game - ReversiAI"));
     resize(800, 600);
     
-    // 创建主布局
+    // 创建主布局（水平，左侧棋盘+分数，右侧控制面板）
     QHBoxLayout* mainLayout = new QHBoxLayout();
     mainLayout->setContentsMargins(10, 10, 10, 10);
     
-    // 左侧：棋盘区域
-    QVBoxLayout* boardLayout = new QVBoxLayout();
-    boardLayout->setContentsMargins(0, 0, 0, 0);
+    // === 左侧区域：棋盘 + 分数 + 当前回合 ===
+    QWidget* leftWidget = new QWidget(this);
+    QVBoxLayout* leftLayout = new QVBoxLayout();
+    leftLayout->setContentsMargins(0, 0, 0, 0);
+    leftLayout->setSpacing(5);
     
-    // 棋盘标签
-    QLabel* boardLabel = new QLabel(this);
-    boardLabel->setFixedSize(400, 400);
-    boardLabel->setStyleSheet("background-color: #000000;");
-    boardLayout->addWidget(boardLabel);
+    // 占位空白，将棋盘向下推移到居中偏上位置
+    leftLayout->addSpacing(30);
     
-    // 游戏控制按钮
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    // 棋盘面板（占位，由 paintEvent 绘制）
+    QWidget* boardPanel = new QWidget(this);
+    boardPanel->setFixedSize(BOARD_SIZE, BOARD_SIZE);
+    leftLayout->addWidget(boardPanel);
+    
+    // 下方信息区（分数 + 当前回合），居中显示
+    QWidget* infoPanel = new QWidget(this);
+    infoPanel->setFixedHeight(90);
+    QVBoxLayout* infoLayout = new QVBoxLayout(infoPanel);
+    infoLayout->setContentsMargins(0, 5, 0, 0);
+    infoLayout->setSpacing(4);
+    
+    // 当前回合提示（大字）
+    turnIndicator_ = new QLabel(tr("Black's Turn"), this);
+    turnIndicator_->setAlignment(Qt::AlignCenter);
+    turnIndicator_->setStyleSheet(
+        "font-weight: bold; font-size: 18px;"
+        "color: #000000;"
+        "background-color: rgba(220,220,220,200);"
+        "border-radius: 6px;"
+        "padding: 4px 16px;"
+    );
+    infoLayout->addWidget(turnIndicator_, 0, Qt::AlignHCenter);
+    
+    // 棋子数量标签（放大字体，居中）
+    QHBoxLayout* scoreLayout = new QHBoxLayout();
+    scoreLayout->setSpacing(30);
+    
+    blackScoreLabel_ = new QLabel(tr("Black: 2"), this);
+    blackScoreLabel_->setAlignment(Qt::AlignCenter);
+    blackScoreLabel_->setStyleSheet(
+        "font-weight: bold; font-size: 20px; color: #111111;"
+        "background-color: rgba(240,240,240,180);"
+        "border-radius: 6px; padding: 3px 12px;"
+    );
+    scoreLayout->addWidget(blackScoreLabel_);
+    
+    whiteScoreLabel_ = new QLabel(tr("White: 2"), this);
+    whiteScoreLabel_->setAlignment(Qt::AlignCenter);
+    whiteScoreLabel_->setStyleSheet(
+        "font-weight: bold; font-size: 20px; color: #eeeeee;"
+        "background-color: rgba(30,30,30,220);"
+        "border-radius: 6px; padding: 3px 12px;"
+    );
+    scoreLayout->addWidget(whiteScoreLabel_);
+    
+    infoLayout->addLayout(scoreLayout);
+    leftLayout->addWidget(infoPanel);
+    
+    leftWidget->setLayout(leftLayout);
+    mainLayout->addWidget(leftWidget, 1);
+    
+    // 右侧：游戏控制和网络信息
+    QVBoxLayout* rightLayout = new QVBoxLayout();
+    rightLayout->setContentsMargins(15, 0, 0, 0);
+    
+    // 游戏控制按钮组
+    QGroupBox* gameControlGroup = new QGroupBox(tr("Game Control"), this);
+    QVBoxLayout* buttonLayout = new QVBoxLayout();
+    buttonLayout->setSpacing(8);
     
     startButton_ = new QPushButton(tr("Start Game"), this);
     startButton_->setStyleSheet(
@@ -80,7 +179,11 @@ void NetworkGameWindow::initGameUI()
         "    background-color: #4CAF50;"
         "    color: white;"
         "    border-radius: 5px;"
-        "    padding: 8px;"
+        "    padding: 10px;"
+        "    font-weight: bold;"
+        "}"
+        "QPushButton:disabled {"
+        "    background-color: #cccccc;"
         "}"
     );
     buttonLayout->addWidget(startButton_);
@@ -97,7 +200,7 @@ void NetworkGameWindow::initGameUI()
     );
     buttonLayout->addWidget(undoButton_);
     
-    backButton_ = new QPushButton(tr("Back"), this);
+    backButton_ = new QPushButton(tr("Back to Menu"), this);
     backButton_->setStyleSheet(
         "QPushButton {"
         "    background-color: #f44336;"
@@ -108,12 +211,8 @@ void NetworkGameWindow::initGameUI()
     );
     buttonLayout->addWidget(backButton_);
     
-    boardLayout->addLayout(buttonLayout);
-    mainLayout->addLayout(boardLayout, 1);
-    
-    // 右侧：网络信息和聊天
-    QVBoxLayout* rightLayout = new QVBoxLayout();
-    rightLayout->setContentsMargins(10, 0, 0, 0);
+    gameControlGroup->setLayout(buttonLayout);
+    rightLayout->addWidget(gameControlGroup);
     
     // 连接状态组
     connectionGroup_ = new QGroupBox(tr("Network Status"), this);
@@ -138,6 +237,16 @@ void NetworkGameWindow::initGameUI()
     opponentLayout->addWidget(opponentNameLabel_);
     opponentLayout->addStretch();
     connectionLayout->addLayout(opponentLayout);
+
+    // 本玩家颜色
+    QHBoxLayout* colorLayout = new QHBoxLayout();
+    QLabel* colorText = new QLabel(tr("Your Color:"), this);
+    colorLayout->addWidget(colorText);
+    playerColorLabel_ = new QLabel(tr("-"), this);
+    playerColorLabel_->setStyleSheet("font-weight: bold;");
+    colorLayout->addWidget(playerColorLabel_);
+    colorLayout->addStretch();
+    connectionLayout->addLayout(colorLayout);
     
     // 延迟显示
     QHBoxLayout* latencyLayout = new QHBoxLayout();
@@ -246,17 +355,20 @@ void NetworkGameWindow::setupGameConnections()
 void NetworkGameWindow::setupNetworkConnections()
 {
     // Reference: QtReversi widget.cpp signal pattern
-    
-    // 连接信号
-    connect(networkClient_, &Network::NetworkClient::connected,
+
+    // 连接网络客户端信号（适用于客户端和主机模式）
+    Network::NetworkClient* client = isHost_ ? networkHost_ : networkClient_;
+    if (!client) return;
+
+    connect(client, &Network::NetworkClient::connected,
             this, &NetworkGameWindow::onConnected);
-    connect(networkClient_, &Network::NetworkClient::disconnected,
+    connect(client, &Network::NetworkClient::disconnected,
             this, &NetworkGameWindow::onDisconnected);
-    connect(networkClient_, &Network::NetworkClient::errorOccurred,
+    connect(client, &Network::NetworkClient::errorOccurred,
             this, &NetworkGameWindow::onNetworkError);
-    connect(networkClient_, &Network::NetworkClient::connectionTimeout,
+    connect(client, &Network::NetworkClient::connectionTimeout,
             this, &NetworkGameWindow::onConnectionTimeout);
-    
+
     // 重连信号
     connect(reconnector_, &Network::ReconnectionManager::reconnectingChanged,
             this, &NetworkGameWindow::onReconnectingChanged);
@@ -266,18 +378,22 @@ void NetworkGameWindow::setupNetworkConnections()
             this, &NetworkGameWindow::onReconnectFailed);
     connect(reconnector_, &Network::ReconnectionManager::maxAttemptsReached,
             this, &NetworkGameWindow::onMaxAttemptsReached);
-    
+
     // 游戏信号
-    connect(networkClient_, &Network::NetworkClient::moveReceived,
+    connect(client, &Network::NetworkClient::moveReceived,
             this, &NetworkGameWindow::onMoveReceived);
-    connect(networkClient_, &Network::NetworkClient::gameStateReceived,
+    connect(client, &Network::NetworkClient::gameStateReceived,
             this, &NetworkGameWindow::onGameStateReceived);
-    
+    connect(client, &Network::NetworkClient::playerReadyReceived,
+            this, &NetworkGameWindow::onPlayerReadyReceived);
+
     // 延迟信号
-    connect(networkClient_, &Network::NetworkClient::pongReceived,
+    connect(client, &Network::NetworkClient::pongReceived,
             this, &NetworkGameWindow::onPongReceived);
-    
+
     // 聊天信号
+    connect(client, &Network::NetworkClient::chatMessageReceived,
+            this, &NetworkGameWindow::onChatMessageReceived);
     connect(sendChatButton_, &QPushButton::clicked, this, &NetworkGameWindow::onSendChatMessage);
     connect(chatInput_, &QLineEdit::returnPressed, this, &NetworkGameWindow::onSendChatMessage);
 }
@@ -291,6 +407,9 @@ void NetworkGameWindow::initNetwork(const QHostAddress& hostAddress, quint16 por
     localPlayerName_ = playerName;
     isHost_ = false;
     
+    // 客户端执白棋
+    localPlayerColor_ = Reversi::PlayerColor::White;
+    
     // 创建网络模块
     networkClient_ = new Network::NetworkClient(this);
     synchronizer_ = new Network::GameSynchronizer(this);
@@ -303,59 +422,120 @@ void NetworkGameWindow::initNetwork(const QHostAddress& hostAddress, quint16 por
     connectToHost(hostAddress, port, playerName);
 }
 
-void NetworkGameWindow::startHosting(const QString& playerName, quint16 port)
+void NetworkGameWindow::startHosting(const QString& playerName, quint16 /* port */)
 {
-    Q_UNUSED(port)
-    qDebug() << "Starting hosted game as" << playerName;
+    qDebug() << "===========================================";
+    qDebug() << "NetworkGameWindow::startHosting() - START";
+    qDebug() << "===========================================";
     
     localPlayerName_ = playerName;
     isHost_ = true;
     
-    // 创建网络模块
-    networkClient_ = new Network::NetworkClient(this);
-    synchronizer_ = new Network::GameSynchronizer(this);
-    reconnector_ = new Network::ReconnectionManager(this);
+    // 主机执黑棋
+    localPlayerColor_ = Reversi::PlayerColor::Black;
+
+    // 创建 NetworkHost（TCP 服务器）
+    qDebug() << "Creating NetworkHost...";
+    networkHost_ = new Network::NetworkHost(this);
+    qDebug() << "NetworkHost created";
     
+    qDebug() << "Creating GameSynchronizer...";
+    synchronizer_ = new Network::GameSynchronizer(this);
+    qDebug() << "GameSynchronizer created";
+    
+    qDebug() << "Creating ReconnectionManager...";
+    reconnector_ = new Network::ReconnectionManager(this);
+    qDebug() << "ReconnectionManager created";
+    
+    // 启动 TCP 服务器，使用 port=0 让系统自动分配可用端口
+    qDebug() << "Starting hosting server...";
+    if (!networkHost_->startHosting(0)) {
+        qWarning() << "Failed to start hosting server";
+        connectionStatusLabel_->setText(tr("Failed to start server"));
+        connectionStatusLabel_->setStyleSheet("color: red;");
+        return;
+    }
+
+    // 获取实际分配的端口
+    quint16 actualPort = networkHost_->getListeningPort();
+    qInfo() << "TCP server listening on port" << actualPort;
+
+    // 创建 UDP 广播模块并开始广播房间存在
+    qDebug() << "Creating NetworkDiscovery...";
+    discovery_ = new Network::NetworkDiscovery(this);
+    discovery_->setPlayerName(playerName);
+    discovery_->setRoomName("Reversi Room");
+    discovery_->setGameVersion("1.0.2");
+    qDebug() << "Starting UDP broadcast...";
+    discovery_->startBroadcasting(actualPort);
+    
+    qDebug() << "Setting up network connections...";
     // 连接网络信号
     setupNetworkConnections();
     
-    // 主机等待连接
-    connectionStatusLabel_->setText(tr("Waiting for opponent..."));
-    connectionStatusLabel_->setStyleSheet("color: blue;");
+    qDebug() << "Connecting clientConnected signal to onOpponentJoined...";
+    // 连接主机特有的客户端连接信号
+    connect(networkHost_, &Network::NetworkHost::clientConnected,
+            this, &NetworkGameWindow::onOpponentJoined,
+            Qt::QueuedConnection);
     
-    qDebug() << "Ready to host as" << playerName;
+    qDebug() << "Host setup complete";
+    // 主机等待连接
+    connectionStatusLabel_->setText(tr("Waiting for opponent on port %1...").arg(actualPort));
+    connectionStatusLabel_->setStyleSheet("color: blue;");
+
+    qDebug() << "===========================================";
+    qDebug() << "NetworkGameWindow::startHosting() - END";
+    qDebug() << "===========================================";
 }
 
 void NetworkGameWindow::connectToHost(const QHostAddress& address, quint16 port, const QString& playerName)
 {
-    qDebug() << "Connecting to" << address.toString() << ":" << port;
+    qInfo() << "NetworkGameWindow: Attempting to connect to" << address.toString() << ":" << port;
+    qInfo() << "Address protocol:" << (address.protocol() == QAbstractSocket::IPv4Protocol ? "IPv4" : "IPv6");
+    qInfo() << "Is loopback:" << address.isLoopback();
     
     localPlayerName_ = playerName;
-    connectionStatusLabel_->setText(tr("Connecting..."));
+    connectionStatusLabel_->setText(tr("Connecting to %1:%2...").arg(address.toString()).arg(port));
     connectionStatusLabel_->setStyleSheet("color: blue;");
-    
-    networkClient_->connectToHost(address, port);
+
+    bool result = networkClient_->connectToHost(address, port);
+    if (!result) {
+        qWarning() << "NetworkGameWindow: connectToHost returned false immediately";
+        connectionStatusLabel_->setText(tr("Failed to initiate connection"));
+        connectionStatusLabel_->setStyleSheet("color: red;");
+    }
 }
 
 void NetworkGameWindow::disconnectFromGame()
 {
     qDebug() << "Disconnecting from game";
-    
+
     // 停止重连
     if (reconnector_) {
         reconnector_->cancelReconnection();
     }
-    
+
     // 停止延迟更新
     if (latencyUpdateTimer_) {
         latencyUpdateTimer_->stop();
     }
-    
-    // 断开网络
+
+    // 停止 UDP 广播
+    if (discovery_) {
+        discovery_->stopBroadcasting();
+    }
+
+    // 断开网络客户端连接
     if (networkClient_) {
         networkClient_->disconnectFromHost();
     }
-    
+
+    // 停止 TCP 服务器
+    if (networkHost_) {
+        networkHost_->stopHosting();
+    }
+
     updateConnectionStatus();
 }
 
@@ -368,9 +548,17 @@ void NetworkGameWindow::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
     
-    // 绘制棋盘
+    // 绘制棋盘（棋盘铺满左侧区域，480x480）
     if (!background.isNull()) {
-        painter.drawPixmap(0, 0, 400, 400, background);
+        painter.drawPixmap(BOARD_OFFSET_X, BOARD_OFFSET_Y, BOARD_SIZE, BOARD_SIZE, background);
+    } else {
+        // 如果没有棋盘图片，绘制灰色背景和网格
+        painter.fillRect(BOARD_OFFSET_X, BOARD_OFFSET_Y, BOARD_SIZE, BOARD_SIZE, QColor(200, 200, 180));
+        painter.setPen(QPen(Qt::black, 1));
+        for (int i = 0; i <= 8; ++i) {
+            painter.drawLine(BOARD_OFFSET_X, BOARD_OFFSET_Y + i * CELL_SIZE, BOARD_OFFSET_X + BOARD_SIZE, BOARD_OFFSET_Y + i * CELL_SIZE);
+            painter.drawLine(BOARD_OFFSET_X + i * CELL_SIZE, BOARD_OFFSET_Y, BOARD_OFFSET_X + i * CELL_SIZE, BOARD_OFFSET_Y + BOARD_SIZE);
+        }
     }
     
     // 获取当前状态
@@ -394,22 +582,22 @@ void NetworkGameWindow::paintEvent(QPaintEvent* event)
             
             if (cellValue == 1) {  // 白子
                 if (!white.isNull()) {
-                    painter.drawPixmap(i * 50, j * 50, 50, 50, white);
+                    painter.drawPixmap(BOARD_OFFSET_X + i * CELL_SIZE, BOARD_OFFSET_Y + j * CELL_SIZE, CELL_SIZE, CELL_SIZE, white);
                 }
             } else if (cellValue == 2) {  // 黑子
                 if (!black.isNull()) {
-                    painter.drawPixmap(i * 50, j * 50, 50, 50, black);
+                    painter.drawPixmap(BOARD_OFFSET_X + i * CELL_SIZE, BOARD_OFFSET_Y + j * CELL_SIZE, CELL_SIZE, CELL_SIZE, black);
                 }
             }
             
             // 绘制合法移动高亮
             if (markHaveDraw[j][i] == 2 && cellValue == 0) {
                 if (!hintblack.isNull()) {
-                    painter.drawPixmap(i * 50, j * 50, 50, 50, hintblack);
+                    painter.drawPixmap(BOARD_OFFSET_X + i * CELL_SIZE, BOARD_OFFSET_Y + j * CELL_SIZE, CELL_SIZE, CELL_SIZE, hintblack);
                 }
             } else if (markHaveDraw[j][i] == 1 && cellValue == 0) {
                 if (!hintwhite.isNull()) {
-                    painter.drawPixmap(i * 50, j * 50, 50, 50, hintwhite);
+                    painter.drawPixmap(BOARD_OFFSET_X + i * CELL_SIZE, BOARD_OFFSET_Y + j * CELL_SIZE, CELL_SIZE, CELL_SIZE, hintwhite);
                 }
             }
         }
@@ -418,49 +606,210 @@ void NetworkGameWindow::paintEvent(QPaintEvent* event)
 
 void NetworkGameWindow::mousePressEvent(QMouseEvent* e)
 {
-    // 处理点击事件
+    // 处理点击事件（棋盘范围）
     int x = e->pos().x();
     int y = e->pos().y();
     
-    if (x >= 0 && x <= 400 && y >= 0 && y <= 400) {
-        int col = x / 50;
-        int row = y / 50;
+    if (x >= BOARD_OFFSET_X && x < BOARD_OFFSET_X + BOARD_SIZE &&
+        y >= BOARD_OFFSET_Y && y < BOARD_OFFSET_Y + BOARD_SIZE) {
+        int col = (x - BOARD_OFFSET_X) / CELL_SIZE;
+        int row = (y - BOARD_OFFSET_Y) / CELL_SIZE;
         
-        // 检查是否是当前玩家的回合
+        // 检查游戏是否已开始
         Reversi::GamePhase phase = gameController_->getCurrentPhase();
-        if (phase == Reversi::GamePhase::HumanTurn || phase == Reversi::GamePhase::AITurn) {
+        if (phase == Reversi::GamePhase::Waiting) {
+            addChatMessage(tr("System"), tr("Please wait for the game to start..."));
+            return;
+        }
+        
+        // 检查是否是当前玩家的回合，并且是本玩家的回合
+        Reversi::PlayerColor currentPlayer = gameController_->getCurrentPlayer();
+        if (phase == Reversi::GamePhase::HumanTurn && currentPlayer == localPlayerColor_) {
             // 发送移动到网络
             sendLocalMove(row, col);
+        } else if (phase == Reversi::GamePhase::HumanTurn) {
+            addChatMessage(tr("System"), tr("It's not your turn yet!"));
         }
     }
 }
 
 void NetworkGameWindow::closeEvent(QCloseEvent* event)
 {
-    // 询问用户
-    QMessageBox::StandardButton reply = QMessageBox::question(
-        this,
-        tr("Close Game"),
-        tr("Are you sure you want to leave the game?"),
-        QMessageBox::Yes | QMessageBox::No
-    );
-    
-    if (reply == QMessageBox::Yes) {
-        disconnectFromGame();
+    if (isClosing_) {
         event->accept();
-    } else {
-        event->ignore();
+        return;
     }
+    isClosing_ = true;
+    disconnectFromGame();
+    event->accept();
 }
 
 // ==================== Game Slots ====================
 
 void NetworkGameWindow::onStartGameClicked()
 {
-    qDebug() << "NetworkGameWindow: Starting game";
-    gameController_->startNewGame(Reversi::GameMode::PvP, Reversi::PlayerColor::Black);
+    qDebug() << "NetworkGameWindow: onStartGameClicked, isHost:" << isHost_;
     
-    addChatMessage(tr("System"), tr("Game started!"));
+    // 如果游戏已经开始了，忽略
+    if (gameStarted_) {
+        qDebug() << "Game already started, ignoring start button";
+        addChatMessage(tr("System"), tr("Game has already started!"));
+        return;
+    }
+    
+    // 如果已经准备，忽略
+    if (localPlayerReady_) {
+        qDebug() << "Already ready, ignoring start button";
+        addChatMessage(tr("System"), tr("You are already ready!"));
+        return;
+    }
+    
+    // 标记本地玩家已准备
+    localPlayerReady_ = true;
+    
+    // 发送准备消息给对手
+    Network::NetworkClient* client = isHost_ ? networkHost_ : networkClient_;
+    qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
+    if (client && client->isConnected()) {
+        QJsonObject payload;
+        payload["player"] = localPlayerName_;
+        payload["color"] = (localPlayerColor_ == Reversi::PlayerColor::Black) ? "black" : "white";
+        
+        Network::Message msg;
+        msg.type = Network::MessageType::PLAYER_READY;
+        msg.timestamp = currentTimestamp;
+        msg.sender = localPlayerName_;
+        msg.payload = payload;
+        
+        // 记录发送时间戳，用于回声检测
+        lastSentTimestamp_ = currentTimestamp;
+        
+        // 客户端发送消息时会使用队列，这里确保消息被发送
+        client->sendMessage(msg);
+        qDebug() << "Sent PLAYER_READY message, sender:" << msg.sender << "timestamp:" << msg.timestamp;
+    }
+    
+    // 显示准备状态
+    addChatMessage(tr("System"), tr("You are ready! Waiting for opponent..."));
+    startButton_->setEnabled(false);
+    startButton_->setText("Ready");
+    
+    // 如果是主机，发送初始游戏状态给对手（用于同步）
+    if (isHost_) {
+        qDebug() << "Sending initial game state to opponent";
+        const Reversi::Board& board = gameController_->getBoard();
+        
+        Network::GameStateMessage state;
+        state.board.resize(8);
+        for (int i = 0; i < 8; i++) {
+            state.board[i].resize(8);
+            for (int j = 0; j < 8; j++) {
+                state.board[i][j] = board.at(i, j);
+            }
+        }
+        state.currentPlayer = "black";
+        state.blackCount = 2;
+        state.whiteCount = 2;
+        state.moveNumber = 0;
+        
+        Network::Message stateMsg;
+        stateMsg.type = Network::MessageType::GAME_STATE_UPDATE;
+        stateMsg.timestamp = QDateTime::currentMSecsSinceEpoch();
+        stateMsg.payload = state.toJson();
+        
+        networkHost_->sendMessage(stateMsg);
+    }
+    
+    // 检查是否双方都准备好了
+    checkAndStartGame();
+}
+
+void NetworkGameWindow::onPlayerReadyReceived(const QString& playerName, const QString& sender, qint64 timestamp)
+{
+    qDebug() << "NetworkGameWindow::onPlayerReadyReceived from" << playerName << "sender:" << sender << "isHost:" << isHost_ << "timestamp:" << timestamp;
+    
+    // 如果游戏已经开始了，忽略
+    if (gameStarted_) {
+        qDebug() << "Game already started, ignoring ready message";
+        return;
+    }
+    
+    // 回声检测：比较时间戳
+    if (isHost_) {
+        qint64 now = QDateTime::currentMSecsSinceEpoch();
+        qint64 timeDiff = now - timestamp;
+        qint64 sentDiff = timestamp - lastSentTimestamp_;
+        
+        qDebug() << "=== Echo check ===";
+        qDebug() << "  now:" << now;
+        qDebug() << "  msg.timestamp:" << timestamp;
+        qDebug() << "  lastSentTimestamp_:" << lastSentTimestamp_;
+        qDebug() << "  time since msg sent (by sender):" << timeDiff << "ms";
+        qDebug() << "  msg.ts - lastSent.ts:" << sentDiff << "ms";
+        
+        // 如果消息时间戳 <= 最后发送时间戳 - 100ms，认为是回声
+        // 但如果时间差很大（>1秒），说明是来自客户端的消息
+        if (sentDiff < 0 && qAbs(sentDiff) > 100) {
+            // 消息比最后发送的还早，说明是对手的消息
+            qDebug() << "Host: msg is BEFORE last sent, this is opponent's message";
+        } else if (sentDiff > 100) {
+            // 消息比最后发送的晚 100ms 以上，说明是对手的消息
+            qDebug() << "Host: msg is AFTER last sent by" << sentDiff << "ms, this is opponent's message";
+        } else {
+            // 时间戳接近，可能是回声
+            if (sender == localPlayerName_) {
+                qDebug() << "Host ignoring own ready message (timestamp and sender echo)";
+                return;
+            }
+        }
+        
+        lastReceivedTimestamp_ = timestamp;
+    } else {
+        // 客户端：收到的任何消息都是来自主机的
+        qDebug() << "Client received ready from opponent (host)";
+        lastReceivedTimestamp_ = timestamp;
+    }
+    
+    // 这是对手的准备好了消息
+    QString opponentName = playerName.isEmpty() ? sender : playerName;
+    opponentPlayerName_ = opponentName;
+    opponentReady_ = true;
+    
+    addChatMessage(tr("System"), tr("%1 is ready!").arg(opponentName));
+    updateOpponentDisplay();
+    
+    qDebug() << "Opponent ready, localReady=" << localPlayerReady_ << "opponentReady=" << opponentReady_;
+    
+    // 检查是否双方都准备好了
+    checkAndStartGame();
+}
+
+void NetworkGameWindow::checkAndStartGame()
+{
+    qDebug() << "checkAndStartGame: localReady=" << localPlayerReady_ 
+             << "opponentReady=" << opponentReady_;
+    
+    // 只有当双方都准备好时才正式开始游戏
+    if (localPlayerReady_ && opponentReady_) {
+        qDebug() << "Both players ready, starting game!";
+        
+        gameStarted_ = true;
+        
+        // 主机执黑棋，客户端执白棋
+        Reversi::PlayerColor humanColor = isHost_ 
+            ? Reversi::PlayerColor::Black 
+            : Reversi::PlayerColor::White;
+        
+        localPlayerColor_ = humanColor;
+        
+        // 启动游戏
+        gameController_->startNewGame(Reversi::GameMode::PvP, humanColor);
+        
+        addChatMessage(tr("System"), tr("Both players ready! Game starting..."));
+        
+        qDebug() << "Network game started, localPlayerColor:" 
+                 << (humanColor == Reversi::PlayerColor::Black ? "Black" : "White");
+    }
 }
 
 void NetworkGameWindow::onUndoClicked()
@@ -472,35 +821,186 @@ void NetworkGameWindow::onUndoClicked()
 
 void NetworkGameWindow::onBackToMenuClicked()
 {
+    isClosing_ = true;
+    disconnectFromGame();
     emit backToMenu();
+    close();
 }
 
-void NetworkGameWindow::onGameStarted(Reversi::GameMode mode, Reversi::PlayerColor humanColor)
+void NetworkGameWindow::onGameStarted(Reversi::GameMode mode, Reversi::PlayerColor /* humanColor */)
 {
-    qDebug() << "Game started in network mode";
+    qDebug() << "Game started in network mode, localPlayerColor:" 
+             << (localPlayerColor_ == Reversi::PlayerColor::Black ? "Black" : "White");
+
+    // 使用本地保存的颜色（主机黑棋，客户端白棋）
+    QString colorStr = (localPlayerColor_ == Reversi::PlayerColor::Black) 
+        ? tr("Black") 
+        : tr("White");
+    playerColorLabel_->setText(colorStr);
+    playerColorLabel_->setStyleSheet(
+        localPlayerColor_ == Reversi::PlayerColor::Black
+            ? "font-weight: bold; color: #000000;"
+            : "font-weight: bold; color: #aaaaaa;"
+    );
+
     undoButton_->setEnabled(true);
-    
+
     addChatMessage(tr("System"), tr("Game started!"));
+    updateScoreDisplay();
     update();
+}
+
+void NetworkGameWindow::onOpponentJoined(const QHostAddress& address, quint16 port)
+{
+    qDebug() << "===========================================";
+    qDebug() << "NetworkGameWindow::onOpponentJoined called from" << address.toString() << ":" << port;
+    qDebug() << "isHost_:" << isHost_;
+    qDebug() << "===========================================";
+    
+    // 检查必要的组件是否已初始化
+    if (!gameController_) {
+        qWarning() << "Game controller not initialized, skipping opponent join handling";
+        return;
+    }
+    
+    qDebug() << "Game controller is valid, proceeding with join handling";
+    
+    QString name = isHost_ ? "Player" : opponentNameLabel_->text();
+    qDebug() << "Setting opponent name to:" << name;
+    
+    opponentNameLabel_->setText(name);
+    opponentNameLabel_->setStyleSheet("font-weight: bold; color: green;");
+    connectionStatusLabel_->setText(tr("Opponent connected"));
+    connectionStatusLabel_->setStyleSheet("color: green;");
+    addChatMessage(tr("System"), tr("Opponent joined the game!"));
+    qDebug() << "UI updated for opponent join";
+    
+    // 启用聊天（对手已连接，可以开始聊天了）
+    chatInput_->setEnabled(true);
+    sendChatButton_->setEnabled(true);
+    qDebug() << "Chat enabled for opponent join";
+    
+    // 主机发送完整的游戏状态给新连接的对手
+    // 注意：必须使用 NetworkHost::sendMessage() 直接发送，
+    // 因为 NetworkHost 继承的 sendGameState() 使用基类的 state_ (永远是 Disconnected)
+    if (isHost_) {
+        qDebug() << "This is the host, preparing to send game state";
+        
+        // 检查 NetworkHost 是否有效
+        if (!networkHost_) {
+            qWarning() << "NetworkHost is null, cannot send game state";
+            return;
+        }
+        
+        qDebug() << "NetworkHost is valid, checking connection status";
+        
+        // 检查是否已连接
+        if (!networkHost_->isConnected()) {
+            qWarning() << "NetworkHost not connected, cannot send game state";
+            return;
+        }
+        
+        qDebug() << "NetworkHost is connected, building game state message";
+        
+        // 获取当前棋盘状态
+        const Reversi::Board& board = gameController_->getBoard();
+        
+        Network::GameStateMessage state;
+        // 初始化 board 数组（GameStateMessage::board 默认是空的）
+        state.board.resize(8);
+        for (int i = 0; i < 8; i++) {
+            state.board[i].resize(8);
+            for (int j = 0; j < 8; j++) {
+                state.board[i][j] = board.at(i, j);
+            }
+        }
+        state.currentPlayer = (gameController_->getCurrentPlayer() == Reversi::PlayerColor::Black) ? "black" : "white";
+        int bc = 0, wc = 0;
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 8; j++) {
+                if (board.at(i, j) == 2) bc++;
+                else if (board.at(i, j) == 1) wc++;
+            }
+        state.blackCount = bc;
+        state.whiteCount = wc;
+        state.moveNumber = board.getMoveCount();
+        
+        qDebug() << "Game state built: black=" << bc << "white=" << wc << "currentPlayer=" << state.currentPlayer;
+        
+        Network::Message msg;
+        msg.type = Network::MessageType::GAME_STATE_UPDATE;
+        msg.timestamp = QDateTime::currentMSecsSinceEpoch();
+        msg.payload = state.toJson();
+        
+        qDebug() << "Sending game state message";
+        bool sent = networkHost_->sendMessage(msg);
+        if (sent) {
+            qDebug() << "Successfully sent game state via NetworkHost::sendMessage";
+        } else {
+            qWarning() << "Failed to send game state via NetworkHost::sendMessage";
+        }
+        
+        qDebug() << "===========================================";
+        qDebug() << "onOpponentJoined completed";
+        qDebug() << "===========================================";
+    }
 }
 
 void NetworkGameWindow::onPhaseChanged(Reversi::GamePhase phase)
 {
+    qDebug() << "=== onPhaseChanged START ===";
     qDebug() << "Phase changed:" << static_cast<int>(phase);
+    qDebug() << "turnIndicator_:" << (turnIndicator_ ? "valid" : "NULL");
     update();
+    qDebug() << "=== onPhaseChanged END ===";
 }
 
 void NetworkGameWindow::onTurnChanged(Reversi::PlayerColor player)
 {
+    qDebug() << "=== onTurnChanged START ===";
     qDebug() << "Turn changed:" << (player == Reversi::PlayerColor::Black ? "Black" : "White");
+    qDebug() << "turnIndicator_:" << (turnIndicator_ ? "valid" : "NULL");
+    qDebug() << "gameController_:" << (gameController_ ? "valid" : "NULL");
+
+    // 更新回合提示
+    QString turnText = (player == Reversi::PlayerColor::Black) ? tr("Black's Turn") : tr("White's Turn");
+    turnIndicator_->setText(turnText);
+
+    // 根据当前玩家设置颜色高亮
+    if (player == Reversi::PlayerColor::Black) {
+        turnIndicator_->setStyleSheet(
+            "font-weight: bold; font-size: 18px;"
+            "color: #000000;"
+            "background-color: rgba(200,200,200,220);"
+            "border-radius: 6px; padding: 4px 16px;"
+        );
+    } else {
+        turnIndicator_->setStyleSheet(
+            "font-weight: bold; font-size: 18px;"
+            "color: #ffffff;"
+            "background-color: rgba(50,50,50,220);"
+            "border-radius: 6px; padding: 4px 16px;"
+        );
+    }
+
+    qDebug() << "Calling updateScoreDisplay()...";
+    updateScoreDisplay();
+    qDebug() << "Calling update()...";
     update();
+    qDebug() << "=== onTurnChanged END ===";
 }
 
 void NetworkGameWindow::onMoveMade(int row, int col, Reversi::PlayerColor player)
 {
+    qDebug() << "=== onMoveMade START ===";
     QString playerStr = (player == Reversi::PlayerColor::Black) ? "Black" : "White";
     qDebug() << "Move made:" << playerStr << "@" << row << "," << col;
+    qDebug() << "gameController_:" << (gameController_ ? "valid" : "NULL");
+    qDebug() << "Calling updateScoreDisplay()...";
+    updateScoreDisplay();
+    qDebug() << "Calling update()...";
     update();
+    qDebug() << "=== onMoveMade END ===";
 }
 
 void NetworkGameWindow::onGameEnded(Reversi::GameResult result)
@@ -568,10 +1068,34 @@ void NetworkGameWindow::onDisconnected()
 
 void NetworkGameWindow::onNetworkError(Network::NetworkError error, const QString& message)
 {
-    qDebug() << "Network error:" << static_cast<int>(error) << "-" << message;
+    qWarning() << "NetworkGameWindow: Network error:" << static_cast<int>(error) << "-" << message;
     
-    QString errorMsg = tr("Network error: %1").arg(message);
-    addChatMessage(tr("System"), errorMsg);
+    // Provide user-friendly error messages
+    QString errorMsg;
+    switch (error) {
+        case Network::NetworkError::ConnectionRefused:
+            errorMsg = tr("Connection refused. The host may not be running or the port is blocked by firewall.");
+            break;
+        case Network::NetworkError::HostNotFound:
+            errorMsg = tr("Host not found. Please refresh and try again.");
+            break;
+        case Network::NetworkError::ConnectionTimeout:
+            errorMsg = tr("Connection timeout. Network may be too slow or host is unreachable.");
+            break;
+        case Network::NetworkError::ConnectionReset:
+            errorMsg = tr("Connection was reset by host.");
+            break;
+        case Network::NetworkError::ProtocolError:
+            errorMsg = tr("Protocol error: %1").arg(message);
+            break;
+        default:
+            errorMsg = tr("Network error: %1").arg(message);
+            break;
+    }
+    
+    addChatMessage(tr("System"), tr("[ERROR] %1").arg(errorMsg));
+    connectionStatusLabel_->setText(errorMsg);
+    connectionStatusLabel_->setStyleSheet("color: red;");
     
     // 检查是否需要重连
     if (error == Network::NetworkError::ConnectionReset ||
@@ -637,21 +1161,79 @@ void NetworkGameWindow::onMaxAttemptsReached()
 
 void NetworkGameWindow::onMoveReceived(int row, int col, const QString& player)
 {
-    qDebug() << "Remote move received:" << player << "@" << row << "," << col;
-    
-    // 验证并应用移动
-    synchronizer_->verifyState(Network::GameStateMessage());
-    
-    // 应用到游戏
+    qDebug() << "onMoveReceived called:" << player << "@" << row << "," << col;
+
+    // 检查游戏是否已开始
+    if (!gameStarted_) {
+        qWarning() << "Game not started yet, ignoring move";
+        return;
+    }
+
+    // 应用远程移动
+    qDebug() << "Calling applyRemoteMove...";
     applyRemoteMove(row, col, player);
+    qDebug() << "applyRemoteMove completed";
 }
 
 void NetworkGameWindow::onGameStateReceived(const Network::GameStateMessage& state)
 {
-    qDebug() << "Game state received";
+    qDebug() << "NetworkGameWindow::onGameStateReceived called, currentPlayer:" << state.currentPlayer
+             << "gameStarted:" << gameStarted_;
     
-    // 验证状态一致性
-    synchronizer_->verifyState(state);
+    // 如果游戏已经开始了，这可能是同步消息，只验证不应用
+    if (gameStarted_) {
+        qDebug() << "Game already started, verifying received state";
+        if (synchronizer_) {
+            synchronizer_->verifyState(state);
+        }
+        return;
+    }
+    
+    // 检查必要的组件是否已初始化
+    if (!synchronizer_) {
+        qWarning() << "Synchronizer not initialized, cannot verify state";
+    } else {
+        synchronizer_->verifyState(state);
+    }
+    
+    // 如果我们是客户端（不是主机），应用接收到的初始棋盘状态
+    // 主机已有完整状态，只有客户端需要同步初始状态
+    if (!isHost_ && gameController_) {
+        qDebug() << "Applying initial game state to client board";
+        
+        // 检查 gameController_ 是否有效
+        try {
+            // 重置棋盘到标准开局
+            gameController_->resetGame();
+            
+            // 将 QVector 转换为 std::vector（Board 不链接 Qt）
+            std::vector<std::vector<int>> stdBoard(8, std::vector<int>(8));
+            for (int row = 0; row < 8; ++row) {
+                for (int col = 0; col < 8; ++col) {
+                    stdBoard[row][col] = state.board[row][col];
+                }
+            }
+            
+            // 直接从状态同步棋盘
+            Reversi::PlayerColor nextPlayer = (state.currentPlayer == "black")
+                ? Reversi::PlayerColor::Black
+                : Reversi::PlayerColor::White;
+            gameController_->getBoard().syncFrom(stdBoard, nextPlayer, state.moveNumber);
+            
+            // 设置为等待状态（等双方都准备好才开始）
+            gameController_->setGamePhase(Reversi::GamePhase::Waiting);
+            
+            // 更新 UI
+            updateScoreDisplay();
+            update();
+            
+            qDebug() << "Initial game state applied, board synchronized, moveCount:" << state.moveNumber;
+        } catch (const std::exception& e) {
+            qWarning() << "Exception while applying game state:" << e.what();
+        } catch (...) {
+            qWarning() << "Unknown exception while applying game state";
+        }
+    }
 }
 
 // ==================== Chat Slots ====================
@@ -662,26 +1244,34 @@ void NetworkGameWindow::onSendChatMessage()
     if (message.isEmpty()) {
         return;
     }
+
+    // 发送到网络（host 模式和 client 模式都走同一个 client 指针）
+    Network::NetworkClient* client = isHost_ ? networkHost_ : networkClient_;
+    qDebug() << "onSendChatMessage: isHost=" << isHost_ << "client=" << client << "isConnected=" << (client ? client->isConnected() : false);
     
-    // 发送到网络
-    if (networkClient_ && networkClient_->isConnected()) {
+    if (client && client->isConnected()) {
         Network::ChatMessage chat(localPlayerName_, message);
         QJsonObject json = chat.toJson();
-        
+
         Network::Message msg;
         msg.type = Network::MessageType::CHAT_MESSAGE;
         msg.payload = json;
-        networkClient_->sendMessage(msg);
-        
+        qDebug() << "Sending chat message:" << message;
+        bool sent = client->sendMessage(msg);
+        qDebug() << "Chat message sent:" << sent;
+
         // 显示自己的消息
         addChatMessage(localPlayerName_ + " (you)", message);
+    } else {
+        qWarning() << "Cannot send chat: client not connected";
     }
-    
+
     chatInput_->clear();
 }
 
 void NetworkGameWindow::onChatMessageReceived(const QString& sender, const QString& message)
 {
+    qDebug() << "onChatMessageReceived: from=" << sender << "message=" << message;
     addChatMessage(sender, message);
 }
 
@@ -778,29 +1368,56 @@ void NetworkGameWindow::handleConnectionLoss()
 
 void NetworkGameWindow::sendLocalMove(int row, int col)
 {
-    if (networkClient_ && networkClient_->isConnected()) {
-        Reversi::PlayerColor color = gameController_->getCurrentPlayer();
-        QString player = (color == Reversi::PlayerColor::Black) ? "black" : "white";
-        
+    // 获取当前玩家颜色（在 makeHumanMove 之前，因为 makeHumanMove 会切换玩家）
+    Reversi::PlayerColor color = gameController_->getCurrentPlayer();
+    QString player = (color == Reversi::PlayerColor::Black) ? "black" : "white";
+    
+    // 应用本地移动
+    gameController_->makeHumanMove(row, col);
+    
+    // 同时发送到网络
+    Network::NetworkHost* host = qobject_cast<Network::NetworkHost*>(networkHost_);
+    if (host && host->isConnected()) {
         // 获取当前移动编号
         int moveNumber = gameController_->getBoard().getMoveCount();
-        networkClient_->sendMove(row, col, player, moveNumber);
-        
-        qDebug() << "Sent local move:" << player << "@" << row << "," << col;
+        bool sent = host->sendMove(row, col, player, moveNumber);
+        qDebug() << "Sent local move via NetworkHost::sendMove, result:" << sent << player << "@" << row << "," << col;
+    } else {
+        // 客户端模式
+        Network::NetworkClient* client = networkClient_;
+        if (client && client->isConnected()) {
+            int moveNumber = gameController_->getBoard().getMoveCount();
+            bool sent = client->sendMove(row, col, player, moveNumber);
+            qDebug() << "Sent local move via NetworkClient::sendMove, result:" << sent << player << "@" << row << "," << col;
+        } else {
+            qWarning() << "Cannot send move: no valid connection";
+        }
     }
 }
 
 void NetworkGameWindow::applyRemoteMove(int row, int col, const QString& player)
 {
+    qDebug() << "=== applyRemoteMove START ===";
+    qDebug() << "applyRemoteMove called:" << player << "@" << row << "," << col;
+
+    if (!gameController_) {
+        qCritical() << "applyRemoteMove: gameController_ is null!";
+        qDebug() << "=== applyRemoteMove END (gameController_ is null) ===";
+        return;
+    }
+
+    qDebug() << "Getting board from gameController_...";
     // Reference: PvPWindow handleLocalMove pattern
-    Reversi::PlayerColor color = (player == "black") 
-        ? Reversi::PlayerColor::Black 
+    Reversi::PlayerColor color = (player == "black")
+        ? Reversi::PlayerColor::Black
         : Reversi::PlayerColor::White;
-    
+
     // 获取合法移动列表
+    qDebug() << "Getting valid moves from board...";
     const Reversi::Board& board = gameController_->getBoard();
     auto validMoves = board.getValidMoves();
-    
+    qDebug() << "Got" << validMoves.size() << "valid moves";
+
     // 检查移动是否合法
     bool isValid = false;
     for (const auto& move : validMoves) {
@@ -809,11 +1426,38 @@ void NetworkGameWindow::applyRemoteMove(int row, int col, const QString& player)
             break;
         }
     }
-    
+
+    qDebug() << "Move isValid:" << isValid;
+
     if (isValid) {
+        qDebug() << "Calling gameController_->makeHumanMove...";
         gameController_->makeHumanMove(row, col);
+        qDebug() << "makeHumanMove completed";
+        qDebug() << "Calling updateScoreDisplay()...";
+        updateScoreDisplay();
         qDebug() << "Applied remote move:" << player << "@" << row << "," << col;
     } else {
         qWarning() << "Invalid remote move received:" << player << "@" << row << "," << col;
     }
+
+    qDebug() << "=== applyRemoteMove END ===";
+}
+
+void NetworkGameWindow::updateScoreDisplay()
+{
+    const Reversi::Board& board = gameController_->getBoard();
+    
+    int blackCount = 0;
+    int whiteCount = 0;
+    
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            int cellValue = board.at(i, j);
+            if (cellValue == 2) blackCount++;
+            else if (cellValue == 1) whiteCount++;
+        }
+    }
+    
+    blackScoreLabel_->setText(tr("Black: %1").arg(blackCount));
+    whiteScoreLabel_->setText(tr("White: %1").arg(whiteCount));
 }

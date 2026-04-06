@@ -1,5 +1,6 @@
 #include "Board.h"
 #include <stdexcept>
+#include <vector>
 
 // 跨平台位操作支持
 #if defined(_MSC_VER)
@@ -104,6 +105,32 @@ int Board::at(int row, int col) const {
         return 1;  // 白棋
     }
     return 0;  // 空位
+}
+
+void Board::syncFrom(const std::vector<std::vector<int>>& state,
+                     PlayerColor nextPlayer,
+                     int moveCount) {
+    bitboard_.reset();
+    history_.clear();
+    move_count_ = moveCount;
+    current_turn_ = nextPlayer;
+
+    for (int row = 0; row < 8; ++row) {
+        for (int col = 0; col < 8; ++col) {
+            int val = state[row][col];
+            if (val != 0) {
+                int pos = row * 8 + col;
+                bitboard_.setBit(pos, val == 2);
+            }
+        }
+    }
+}
+
+void Board::setCell(int row, int col, int value) {
+    if (value != 0) {
+        int pos = row * 8 + col;
+        bitboard_.setBit(pos, value == 2);
+    }
 }
 
 } // namespace Reversi

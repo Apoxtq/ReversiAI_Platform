@@ -208,6 +208,18 @@ public:
      */
     void clear();
 
+    /**
+     * @brief 重置为空棋盘（clear的别名）
+     */
+    void reset() { clear(); }
+
+    /**
+     * @brief 设置指定位置的玩家棋子
+     * @param pos 位置索引 (0-63)
+     * @param isBlack true=黑棋, false=白棋
+     */
+    void setBit(int pos, bool isBlack);
+
     // 位图直接访问 (高级用户)
 
     /**

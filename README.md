@@ -1,7 +1,7 @@
 # ReversiAI_Platform 🎓
 
-|**Version**: v1.0.2
-|**Status**: ✅ Final Release Completed
+|**Version**: v1.0.2|
+|**Status**: ✅ Bug Fix Release (Network Stability)
 |**Project**: University of Liverpool COMP390 Honours Year Project
 
 A comprehensive Othello/Reversi AI research and benchmarking platform implemented in modern C++, demonstrating academic excellence in open-source learning and software engineering.

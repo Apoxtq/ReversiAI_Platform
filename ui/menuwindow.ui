@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>450</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>400</width>
-    <height>300</height>
+    <width>450</width>
+    <height>550</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>400</width>
-    <height>300</height>
+    <width>450</width>
+    <height>550</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -97,8 +97,39 @@
       <property name="alignment">
        <set>Qt::AlignCenter</set>
       </property>
+    <property name="text">
+     <string>选择游戏模式</string>
+    </property>
+   </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="versionLabel">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: #888888;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
       <property name="text">
-       <string>选择游戏模式</string>
+       <string>v1.0.2 | University of Liverpool COMP390</string>
       </property>
      </widget>
     </item>

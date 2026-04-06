@@ -1,10 +1,15 @@
 #pragma once
 
+#ifdef _WIN32
+#define NOMINMAX
+#endif
+
 #include "Board.h"
 #include <memory>
 #include <string>
 #include <chrono>
 #include <optional>
+#include <algorithm>
 
 /**
  * @file AIStrategy.h
@@ -81,7 +86,7 @@ struct AIStats {
         avgBranching = (avgBranching + other.avgBranching) / 2.0;  // 简单平均
         evaluationCount += other.evaluationCount;
         cutoffs += other.cutoffs;
-        depthReached = std::max(depthReached, other.depthReached);
+        depthReached = (depthReached > other.depthReached) ? depthReached : other.depthReached;
         return *this;
     }
 };

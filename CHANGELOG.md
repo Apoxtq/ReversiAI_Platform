@@ -2,7 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v1.0.2] - 2026-03-14
+## [v1.0.2] - 2026-04-05
+### Fixed
+- **NetworkGameWindow**: Fixed recursive closeEvent crash — added `isClosing_` guard flag to prevent double-trigger
+- **NetworkGameWindow**: Fixed double `stopHosting()` call in destructor by moving `isClosing_` check before network cleanup
+- **NetworkHost**: Fixed `clientSocket_` signal cascade — `disconnect()` now called before `close()` to prevent `onClientDisconnected` re-entry
+- **MenuWindow**: Optimized back-to-menu navigation — returns directly to main menu instead of network lobby
+
+### Changed
+- **MenuWindow**: backToMenu lambda now closes both gameWindow and lobbyWindow, shows main menu directly
+
+### Notes
+- v1.0.2 fixes critical stability issues in network multiplayer module
+- All network window close scenarios (button/X button/double-click) now verified safe
+- AI Research Mode (button 4) not yet tested
+
+## [v1.0.3] - 2026-03-14
 ### Fixed
 - **MCTSAI Factory**: Fixed factory returning nullptr issue
 - **MCTSAI Compilation**: Added missing Evaluator header, fixed type conversion

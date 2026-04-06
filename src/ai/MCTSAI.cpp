@@ -53,9 +53,12 @@ double MCTSNode::getUCT(double c_puct) const {
 
 MCTSAI::MCTSAI(MCTSConfig config, std::unique_ptr<Evaluator> evaluator)
     : config_(config),
-      evaluator_(evaluator ? std::move(evaluator) : EvaluatorFactory::createStaticEvaluator()),
-      rng_(std::random_device{}()),
+      evaluator_(evaluator ? std::move(evaluator) : nullptr),
+      rng_(42),
       uniform_dist_(0.0, 1.0) {
+    if (!evaluator_) {
+        evaluator_ = std::make_unique<StaticEvaluator>();
+    }
 }
 
 Move MCTSAI::findBestMove(const Board& board, const SearchLimits& limits) {
@@ -85,7 +88,6 @@ Move MCTSAI::findBestMove(const Board& board, const SearchLimits& limits) {
         stats_.nodesExplored++;
     }
 
-    // 找到访问次数最多的移动
     Move best_move;
     int max_visits = -1;
 
@@ -126,15 +128,11 @@ void MCTSAI::search(const Board& board, const SearchLimits& limits) {
 
     // 1. 选择阶段 (Selection) - 找到叶子节点
     MCTSNode* current = root_.get();
-    if (!current) {
-        std::cerr << "[MCTSAI] Warning: root node is null" << std::endl;
-        return;
-    }
 
     std::vector<MCTSNode*> path;
 
     // 向下遍历到叶子节点
-    while (!current->isLeaf()) {
+    while (current && !current->isLeaf()) {
         path.push_back(current);
 
         // 选择UCT值最大的子节点
@@ -165,9 +163,9 @@ void MCTSAI::search(const Board& board, const SearchLimits& limits) {
             for (size_t i = 0; i < max_children; ++i) {
                 auto child = std::make_unique<MCTSNode>(leaf_node);
                 child->prior = 1.0 / max_children; // 均匀先验概率
-                // 使用安全的方式添加子节点
-                valid_moves[i]; // 确保移动有效
-                leaf_node->addChild(valid_moves[i], std::move(child));
+                // 安全复制移动
+                Move move = valid_moves[i];
+                leaf_node->addChild(move, std::move(child));
             }
         }
     }
@@ -176,16 +174,11 @@ void MCTSAI::search(const Board& board, const SearchLimits& limits) {
     MCTSNode* simulation_node = leaf_node;
     if (leaf_node->getChildCount() > 0) {
         simulation_node = leaf_node->getChild(0);
-    } else {
-        // 如果没有子节点，直接仿真当前局面
-        return;  // 避免空指针
+        // 3. 仿真阶段 (Simulation) - 使用复制后的棋盘
+        double value = simulate(board);
+        // 4. 回传阶段 (Backpropagation)
+        backpropagate(simulation_node, value);
     }
-
-    // 3. 仿真阶段 (Simulation)
-    double value = simulate(board);
-
-    // 4. 回传阶段 (Backpropagation)
-    backpropagate(simulation_node, value);
 }
 
 // 已整合到search方法中
