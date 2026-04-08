@@ -17,8 +17,8 @@
 
 namespace Reversi {
 
-// 悔棋最大步数
-constexpr int MAX_UNDO_STEPS = 10;
+// 悔棋最大步数 (Reversi 最多 60 步)
+constexpr int MAX_UNDO_STEPS = 60;
 
 GameController::GameController(QObject* parent)
     : QObject(parent)
@@ -33,16 +33,19 @@ GameController::GameController(QObject* parent)
 GameController::~GameController() = default;
 
 void GameController::startNewGame(GameMode mode, PlayerColor humanColor,
-                                  Difficulty difficulty) {
+                                  Difficulty difficulty,
+                                  int algorithm,
+                                  int depth) {
     qDebug() << "GameController: Starting new game"
              << "mode:" << (int)mode
              << "humanColor:" << (int)humanColor
-             << "difficulty:" << (int)difficulty;
+             << "difficulty:" << (int)difficulty
+             << "algorithm:" << algorithm
+             << "depth:" << depth;
 
     gameMode_ = mode;
     humanColor_ = humanColor;
-    currentPlayer_ = PlayerColor::Black;  // 黑棋先手
-    currentPlayer_ = PlayerColor::Black;  // 黑棋先手
+    currentPlayer_ = PlayerColor::Black;
     moveHistory_.clear();
 
     // 创建新的棋盘（因为Board没有reset()方法）
@@ -50,15 +53,29 @@ void GameController::startNewGame(GameMode mode, PlayerColor humanColor,
 
     // 创建AI（如果不是PvP模式）
     if (mode != GameMode::PvP) {
-        // 暂时使用MinimaxAI，MCTS AI正在开发中
-        qDebug() << "GameController: Creating MinimaxAI...";
-        ai_ = AIStrategyFactory::createMinimaxAI(difficulty);
-        qDebug() << "GameController: AI pointer:" << ai_.get();
+        // 根据 algorithm 选择 AI 类型
+        qDebug() << "GameController: Creating AI, algorithm type:" << algorithm;
+        switch (algorithm) {
+            case 0: // Minimax
+                ai_ = AIStrategyFactory::createMinimaxAI(difficulty);
+                break;
+            case 1: // MCTS
+                ai_ = AIStrategyFactory::createMCTSAI(difficulty);
+                break;
+            case 2: // Random
+            default:
+                ai_ = AIStrategyFactory::createRandomAI();
+                break;
+        }
+
+        qDebug() << "GameController: AI created," << QString::fromStdString(ai_->getName());
         if (!ai_) {
             emit errorOccurred("Failed to create AI");
             return;
         }
-        qDebug() << "GameController: AI created," << QString::fromStdString(ai_->getName());
+
+        // 设置 AI 搜索深度
+        aiDepth_ = depth;
     } else {
         ai_.reset();  // PvP模式不需要AI
     }
@@ -223,7 +240,7 @@ void GameController::executeAIMove() {
 
     // 设置搜索限制
     SearchLimits limits = SearchLimits::createDefault();
-    limits.maxDepth = 4;  // 默认搜索深度
+    limits.maxDepth = aiDepth_;  // 使用配置的搜索深度
 
     // 找到最佳移动
     Move bestMove = ai_->findBestMove(*board_, limits);
@@ -272,12 +289,8 @@ void GameController::undoMove() {
     board_ = std::make_unique<Board>(*moveHistory_.back());
     moveHistory_.pop_back();
 
-    // 恢复当前玩家
-    if (!moveHistory_.empty()) {
-        currentPlayer_ = moveHistory_.back()->getCurrentTurn();
-    } else {
-        currentPlayer_ = PlayerColor::Black;
-    }
+    // 恢复当前玩家 - 直接从恢复的棋盘获取，而不是从 moveHistory_ 获取
+    currentPlayer_ = board_->getCurrentTurn();
 
     // 更新阶段
     bool isHumanTurn = (currentPlayer_ == humanColor_) &&

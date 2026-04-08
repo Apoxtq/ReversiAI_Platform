@@ -1,512 +1,472 @@
-# ReversiAI_Platform 🎓
+# ReversiAI_Platform
 
-|**Version**: v1.0.2|
-|**Status**: ✅ Bug Fix Release (Network Stability)
-|**Project**: University of Liverpool COMP390 Honours Year Project
+**Version**: v1.0.3
+**Status**: Production Ready
+**Project**: University of Liverpool COMP390 Honours Year Project
 
-A comprehensive Othello/Reversi AI research and benchmarking platform implemented in modern C++, demonstrating academic excellence in open-source learning and software engineering.
-
-[![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://isocpp.org/)
-[![Qt](https://img.shields.io/badge/Qt-6.10-blue.svg)](https://www.qt.io/)
-[![CMake](https://img.shields.io/badge/CMake-3.16+-green.svg)](https://cmake.org/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Academic Project](https://img.shields.io/badge/Academic-University%20of%20Liverpool-red.svg)](https://www.liverpool.ac.uk/)
+一个基于现代 C++ 的黑白棋/奥赛罗 AI 研究与基准测试平台，展示了学术卓越的开源学习和软件工程能力。
 
 ---
 
-## ✨ Core Features
+## 目录
 
-### 🛠️ Dual Compiler Support (v1.0.1 ✅ Completed)
-- **MinGW Support**: GCC 12.2.0 with Qt 6.10.1/mingw_64
-- **MSVC Support**: Visual Studio 2022 with Qt 6.10.2/msvc2022_64
-- **Auto-Detection**: CMake automatically detects compiler and selects appropriate Qt6
-- **Verified Builds**: Both MinGW and MSVC builds tested and working
-
-### 🔢 BitBoard System (v0.2.0 ✅ Completed)
-- **Efficient Implementation**: uint64_t bitboard with 10M+ ops/sec performance
-- **Complete Game Logic**: Precise Othello flip rules and move generation
-- **Cross-Platform**: CMake build system supporting Windows/Linux/macOS
-- **Academic Validation**: Thoroughly tested with standard opening scenarios
-
-### 🤖 AI Algorithms (v0.3.0 ✅ Completed)
-- **MinimaxAI**: Classical game tree search with Alpha-Beta pruning
-- **MCTSAI**: Monte Carlo Tree Search probabilistic algorithm
-- **RandomAI**: Baseline AI for benchmarking and testing
-- **Evaluation Functions**: Dynamic heuristic assessment
-- **Difficulty Levels**: Easy/Medium/Hard AI opponents
-
-### 🎮 User Interface (v0.4.0 ✅ Completed)
-- **MenuWindow**: Game mode selection interface (PvE/PvP/Network)
-- **PvEWindow**: Human vs AI gameplay with difficulty selection
-- **PvPWindow**: Local two-player mode with undo functionality
-- **Real-time Display**: Board visualization and move highlighting
-- **Statistics**: Game history and win rate tracking
-
-### 🌐 Network Multiplayer (v0.5.0 ✅ Completed)
-- **TCP Communication**: Stable client-server architecture
-- **LAN Discovery**: Automatic host detection via UDP broadcast
-- **Game State Synchronization**: Real-time board sync with Zobrist hashing
-- **Room System**: Create/Join rooms with customizable settings
-- **Reconnection Handling**: Exponential backoff reconnection with auto-retry
-- **Heartbeat Mechanism**: 30-second keep-alive for connection stability
-- **Network Lobby**: Room browser with auto-refresh
-- **Network Game Window**: Full-featured online gameplay with chat
-- **Latency Monitoring**: Real-time ping display
-
-### 📊 Research Framework (v0.6.0 ✅ Completed)
-- **Zobrist Hashing**: 64-bit position encoding, 2MB memory, 33M entries
-- **Transposition Table**: 112MB cache, 4.2M entries, search optimization
-- **Position Suite**: 64 standard test positions for reproducible experiments
-- **Battle Engine**: Head-to-head AI battle system with win rate statistics
-- **Statistics Tools**: Wilcoxon test, confidence intervals, statistical significance
-- **AI vs AI Window**: Visual interface for automated benchmark testing
-
-### ⚡ AI Optimization (v0.7.0 ✅ Completed)
-- **Killer Moves**: Record pruned moves for future优先 ordering
-- **History Heuristic**: 64x64 matrix for move history scoring
-- **Move Orderer**: Unified sorting: PV > Killer > History > Static
-- **Search Parameters**: Configurable weights for midgame/endgame
-- **Performance Target**: ≥10% search efficiency improvement
-
-### 📊 Performance Benchmarking (v0.8.0 ✅ Completed)
-- **Bitboard Benchmark**: Flip/Move/Legal/Copy performance testing
-- **AI Search Benchmark**: Minimax/MCTS throughput measurement
-- **Head-to-Head Engine**: Win rate verification with statistical analysis
-- **Data Exporter**: JSON/CSV/Markdown multi-format export
-- **Position Suite**: 64 standard test positions
-- **Statistics**: Wilcoxon test, confidence intervals
-
-### 📈 Visualization Enhancement (v0.9.0 ✅ Completed)
-- **Search Tree Visualization**: Textual display of search tree and PV line
-- **Real-time Statistics Panel**: Live AI search statistics during gameplay
-- **Board Heatmap**: Visual representation of position evaluation
-- **Game Replay System**: Load/Save game records with playback controls
-- **PGN/SGF Support**: Standard game notation import/export
-- **Replay Analysis Window**: Dedicated interface for game analysis
+- [快速开始](#快速开始)
+- [项目结构](#项目结构)
+- [编译指南](#编译指南)
+- [运行指南](#运行指南)
+- [关键路径参考](#关键路径参考)
+- [版本历史](#版本历史)
+- [文档目录](#文档目录)
+- [常见问题](#常见问题)
 
 ---
 
-## 🚀 Quick Start
+## 快速开始
 
-### Prerequisites
-- **C++ Compiler**: GCC 9+, Clang 10+, or MSVC 2019+
-- **CMake**: Version 3.16 or higher
-- **Qt6**: Version 6.10 or higher (for GUI)
+### 方法一：直接运行（推荐新手）
 
-### Build Instructions
+使用已编译好的可运行版本：
 
-#### Prerequisites
-- **C++ Compiler**: GCC 9+ (MinGW) or MSVC 2019+
-- **CMake**: Version 3.16 or higher
-- **Qt6**: Version 6.10 or higher (for GUI)
+| 版本 | 路径 | 说明 |
+|------|------|------|
+| **Debug 版本** | `end_submite/Debug/ReversiAI_Platform.exe` | 包含调试信息，适合开发测试 |
+| **Release 版本** | `Release_Package/ReversiAI_Platform.exe` | 优化版本，适合发布使用 |
 
-#### Qt6 Installation
+### 方法二：从源码编译
 
-**MinGW users**: Install Qt6 with MinGW compiler
-- Download from https://www.qt.io/download
-- Select: Qt 6.10.x → MSVC 2022 x64
+详见 [编译指南](#编译指南) 部分。
 
-**MSVC users**: Install Qt6 with MSVC compiler
-- Download from https://www.qt.io/download
-- Select: Qt 6.10.x → MSVC 2022 x64
+---
 
-#### Build with MinGW
+## 项目结构
 
-```bash
-# Clone the repository
-git clone https://github.com/Apoxtq/ReversiAI_Platform.git
-cd ReversiAI_Platform
-
-# Create build directory
-mkdir build_mingw && cd build_mingw
-
-# Configure with CMake (MinGW)
-cmake -G "MinGW Makefiles" -DBUILD_QT_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
-
-# Build the project
-cmake --build . --parallel 8
-
-# Deploy Qt dependencies (Windows)
-windeployqt ReversiAI_Platform.exe
-
-# Run the GUI application
-./ReversiAI_Platform
+```
+D:\Project\Reversi\ReversiAI_Platform\
+├── include/                    # 头文件目录
+│   ├── core/                   # 核心游戏逻辑
+│   │   ├── Board.h            # 棋盘表示
+│   │   ├── BitBoard.h          # 位棋盘优化
+│   │   └── Move.h              # 走法结构
+│   ├── ai/                    # AI 算法
+│   │   ├── AIStrategy.h        # AI 接口
+│   │   ├── MinimaxAI.h         # Minimax 算法
+│   │   ├── MCTSAI.h            # MCTS 算法
+│   │   └── RandomAI.h          # 随机 AI
+│   ├── research/              # 研究框架
+│   │   ├── TranspositionTable.h # 置换表
+│   │   └── ZobristHash.h       # Zobrist 哈希
+│   └── ui/                    # 用户界面
+│       ├── MenuWindow.h        # 主菜单
+│       ├── PvEWindow.h         # 人机对战窗口
+│       ├── PvPWindow.h         # 本地双人窗口
+│       ├── NetworkLobbyWindow.h # 网络大厅
+│       └── NetworkGameWindow.h # 网络对战窗口
+├── src/                       # 源代码实现
+│   ├── core/                  # 核心实现
+│   ├── ai/                   # AI 实现
+│   ├── research/             # 研究框架实现
+│   ├── ui/                  # UI 实现
+│   └── rsc.qrc              # Qt 资源文件
+├── ui/                       # Qt UI 设计文件 (.ui)
+├── tests/                    # 测试代码
+├── network/                  # 网络模块
+├── docs/                     # 文档目录
+├── scripts/                  # 脚本工具
+└── 项目计划（文档放置）/       # 项目计划文档
 ```
 
-#### Build with MSVC
+---
 
-```bash
-# Clone the repository
-git clone https://github.com/Apoxtq/ReversiAI_Platform.git
-cd ReversiAI_Platform
+## 编译指南
 
-# Create build directory
-mkdir build_msvc && cd build_msvc
+### 环境要求
 
-# Configure with CMake (Visual Studio)
+| 组件 | 要求 | 说明 |
+|------|------|------|
+| **编译器** | MSVC 2022 或 MinGW (GCC) | 二选一 |
+| **CMake** | 3.16+ | 构建系统 |
+| **Qt6** | 6.10+ | GUI 框架 |
+| **C++ 标准** | C++17 | 项目使用现代 C++ |
+
+### Qt6 安装
+
+**重要**：根据编译器选择正确的 Qt6 版本！
+
+| 编译器 | Qt6 版本 | 路径格式 |
+|--------|----------|----------|
+| **MSVC 2022** | Qt 6.10.2 | `msvc2022_64` |
+| **MinGW (GCC)** | Qt 6.10.1 | `mingw_64` |
+
+**下载地址**：https://www.qt.io/download-qt-installer
+
+安装时选择对应组件：
+- MSVC 用户：Qt 6.10.x → MSVC 2022 x64
+- MinGW 用户：Qt 6.10.x → MinGW 12.2.0 x64
+
+### 方法一：使用 MSVC 编译
+
+```powershell
+# 1. 进入项目目录
+cd D:\Project\Reversi\ReversiAI_Platform
+
+# 2. 创建构建目录
+mkdir build_msvc
+cd build_msvc
+
+# 3. 配置 CMake (使用 MSVC)
 cmake -G "Visual Studio 17 2022" -A x64 -DBUILD_QT_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
 
-# Build the project
+# 4. 编译
 cmake --build . --parallel 8
 
-# Deploy Qt dependencies (Windows)
+# 5. 部署 Qt 依赖
+windeployqt Release\ReversiAI_Platform.exe
+
+# 6. 运行
+.\Release\ReversiAI_Platform.exe
+```
+
+### 方法二：使用 MinGW 编译
+
+```powershell
+# 1. 进入项目目录
+cd D:\Project\Reversi\ReversiAI_Platform
+
+# 2. 创建构建目录
+mkdir build_mingw
+cd build_mingw
+
+# 3. 配置 CMake (使用 MinGW)
+cmake -G "MinGW Makefiles" -DBUILD_QT_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
+
+# 4. 编译
+cmake --build . --parallel 8
+
+# 5. 部署 Qt 依赖
 windeployqt ReversiAI_Platform.exe
 
-# Run the GUI application
-./ReversiAI_Platform.exe
+# 6. 运行
+.\ReversiAI_Platform.exe
 ```
 
-#### CMake Auto-Detection
+### CMake 自动检测
 
-The CMake build system automatically detects your compiler and selects the appropriate Qt6 version:
-- **MinGW** → Uses `Qt 6.10.x/mingw_64`
-- **MSVC** → Uses `Qt 6.10.x/msvc2022_64`
-
-### GUI Features
+CMake 会自动检测编译器并选择对应的 Qt6：
 
 ```
-Main Menu (目录界面)
-├── PvE Button (人机对战) → PvE Window
-│   ├── Select AI difficulty (Easy/Medium/Hard)
-│   ├── Choose who plays first (AI First / Player First)
-│   ├── View AI thinking stats (nodes, time)
-│   └── Back to menu option
-├── PvP Button (本地双人) → PvP Window
-│   ├── Two-player local gameplay
-│   ├── Undo functionality
-│   └── Back to menu option
-├── Network Button (线上对战) → Network Lobby
-│   ├── Create new room
-│   ├── Browse and join existing rooms
-│   ├── Online multiplayer gameplay
-│   ├── Real-time chat
-│   └── Latency display
-└── Replay Analysis (棋谱回放分析) → Replay Analysis Window
-    ├── Load/Save game records (PGN/SGF)
-    ├── Playback controls (play/pause/step)
-    ├── Board heatmap visualization
-    └── Search tree analysis
+MSVC   → D:/Dev/SDKs/Qt/6.10.2/msvc2022_64/
+MinGW  → D:/Dev/SDKs/Qt/6.10.1/mingw_64/
+```
+
+### 构建配置选项
+
+| 选项 | 值 | 说明 |
+|------|-----|------|
+| `BUILD_QT_GUI` | ON/OFF | 是否构建 Qt GUI |
+| `BUILD_TESTS` | ON/OFF | 是否构建单元测试 |
+| `CMAKE_BUILD_TYPE` | Debug/Release | 构建类型 |
+| `PERFORMANCE_TESTING` | ON/OFF | 性能测试模式 |
+
+### Debug 构建
+
+```powershell
+# Debug 构建 (用于调试)
+cmake -G "Visual Studio 17 2022" -A x64 -DBUILD_QT_GUI=ON -DCMAKE_BUILD_TYPE=Debug ..
+cmake --build . --parallel 8
+windeployqt Debug\ReversiAI_Platform.exe
 ```
 
 ---
 
-## 📚 Documentation
+## 运行指南
 
-All documentation is available in the `项目计划（文档放置）/` directory:
+### 可运行版本
 
-### Project Tracking
-- **[项目进展跟踪.md](项目计划（文档放置）/项目进展跟踪.md)** - Project progress and milestone tracking
-- **[ReversiAI_Platform_项目计划.md](项目计划（文档放置）/ReversiAI_Platform_项目计划.md)** - Complete project roadmap
+#### Debug 版本 (end_submite/Debug)
 
-### Version Documentation
-- **[v0.9.0-完成报告.md](项目计划（文档放置）/v0.9.0-完成报告.md)** - v0.9.0 completion report (Visualization Enhancement)
-- **[v0.9.0-设计规划.md](项目计划（文档放置）/v0.9.0-设计规划.md)** - v0.9.0 visualization design
-- **[v0.8.0-完成报告.md](项目计划（文档放置）/v0.8.0-完成报告.md)** - v0.8.0 completion report (Performance Benchmarking)
-- **[v0.8.0-设计规划.md](项目计划（文档放置）/v0.8.0-设计规划.md)** - v0.8.0 performance benchmarking design
-- **[v0.7.0-完成报告.md](项目计划（文档放置）/v0.7.0-完成报告.md)** - v0.7.0 completion report (AI Optimization)
-- **[v0.7.0-设计规划.md](项目计划（文档放置）/v0.7.0-设计规划.md)** - v0.7.0 AI optimization design
-- **[v0.6.0-完成报告.md](项目计划（文档放置）/v0.6.0-完成报告.md)** - v0.6.0 completion report
-- **[v0.6.0-设计规划.md](项目计划（文档放置）/v0.6.0-设计规划.md)** - v0.6.0 research framework design
+**路径**：`D:\Project\Reversi\ReversiAI_Platform\end_submite\Debug\ReversiAI_Platform.exe`
 
-### Core Documents
-- **[技术债务与开源参考.md](项目计划（文档放置）/技术债务与开源参考.md)** - Open-source reference guide
-- **[学术项目检查清单.md](项目计划（文档放置）/学术项目检查清单.md)** - Academic compliance verification
-- **[API设计规范.md](项目计划（文档放置）/API设计规范.md)** - Code design standards
-
----
-
-## 🏗️ Architecture
-
+**包含文件**：
 ```
-ReversiAI_Platform/
-├── include/
-│   ├── core/              # Core game logic
-│   │   ├── Board.h       # Board representation
-│   │   ├── BitBoard.h    # BitBoard optimization
-│   │   └── Move.h        # Move structure
-│   ├── ai/               # AI algorithms
-│   │   ├── AIStrategy.h  # AI interface
-│   │   ├── MinimaxAI.h   # Minimax algorithm
-│   │   ├── MCTSAI.h      # MCTS algorithm
-│   │   └── RandomAI.h    # Random AI
-│   └── ui/               # User interface
-│       ├── MenuWindow.h  # Main menu
-│       ├── PvEWindow.h   # PvE game window
-│       ├── PvPWindow.h   # PvP game window
-│       ├── NetworkLobbyWindow.h  # Network lobby
-│       ├── NetworkGameWindow.h   # Network game
-│       ├── GameController.h       # Game state management
-│       └── StatisticsManager.h    # Game statistics
-├── network/               # Network module (v0.5.0)
-│   ├── include/network/
-│   │   ├── message.hpp           # Message serialization
-│   │   ├── networkclient.hpp     # TCP client
-│   │   ├── networkdiscovery.hpp  # UDP discovery
-│   │   ├── gamesynchronizer.hpp  # State sync
-│   │   ├── roommanager.hpp       # Room management
-│   │   └── reconnectionmanager.hpp # Reconnection
-│   └── src/
-│       ├── message.cpp
-│       ├── networkclient.cpp
-│       ├── networkdiscovery.cpp
-│       ├── gamesynchronizer.cpp
-│       ├── roommanager.cpp
-│       └── reconnectionmanager.cpp
-├── src/
-│   ├── core/             # Core implementation
-│   ├── ai/               # AI implementation
-│   └── ui/               # UI implementation
-├── ui/                   # Qt UI files (.ui)
-└── 项目计划（文档放置）/   # Academic documentation
+Debug/
+├── ReversiAI_Platform.exe          # 主程序 (2.8 MB)
+├── Qt6Cored.dll                    # Qt 核心 (21 MB)
+├── Qt6Guid.dll                     # Qt GUI (27 MB)
+├── Qt6Widgetsd.dll                 # Qt Widgets (17 MB)
+├── Qt6Networkd.dll                 # Qt 网络 (5 MB)
+├── Qt6Svgd.dll                     # Qt SVG (2 MB)
+├── D3Dcompiler_47.dll              # Direct3D 着色器
+├── opengl32sw.dll                 # OpenGL 软件渲染 (20 MB)
+├── icuuc.dll                      # ICU Unicode
+├── generic/                       # 触摸插件
+│   └── qtuiotouchplugind.dll
+├── iconengines/                   # 图标引擎
+│   └── qsvgicond.dll
+├── imageformats/                  # 图片格式
+│   ├── qgifd.dll
+│   ├── qjpegd.dll
+│   ├── qpngd.dll
+│   ├── qsvgd.dll
+│   └── ... (更多格式)
+├── platforms/                     # ★ 平台插件 (必须！)
+│   └── qwindowsd.dll
+├── styles/                        # 样式
+│   └── qmodernwindowsstyled.dll
+└── tls/                          # TLS/SSL
+    ├── qcertonlybackendd.dll
+    └── qschannelbackendd.dll
 ```
 
-### Design Principles
-- **Academic Rigor**: Harvard citation standards and ethical compliance
-- **Modern C++**: C++17 features with RAII and smart pointers
-- **Modular Design**: Clean separation of concerns for research and extension
-- **Qt Framework**: Signal/slot mechanism for inter-object communication
-- **Cross-Platform**: Native support for Windows, Linux, and macOS
+**注意**：这个版本已包含所有必需的 DLL 和插件，可直接运行！
+
+#### Release 版本 (Release_Package)
+
+**路径**：`D:\Project\Reversi\ReversiAI_Platform\Release_Package\ReversiAI_Platform.exe`
+
+**特性**：
+- MinGW 编译
+- 优化版本
+- 包含 Qt 运行时
+- 适合发布
+
+### 运行时依赖
+
+如果需要自己部署 Qt 依赖，确保包含以下内容：
+
+#### 1. 核心 DLL (必须)
+
+| DLL | 用途 |
+|-----|------|
+| `Qt6Core.dll` / `Qt6Cored.dll` | Qt 核心库 |
+| `Qt6Gui.dll` / `Qt6Guid.dll` | Qt GUI 库 |
+| `Qt6Widgets.dll` / `Qt6Widgetsd.dll` | Qt Widgets 库 |
+
+#### 2. 平台插件 (必须)
+
+| 文件夹 | 文件 | 用途 |
+|--------|------|------|
+| `platforms/` | `qwindows.dll` / `qwindowsd.dll` | **Windows 平台插件** |
+
+> ⚠️ **重要**：缺少 `platforms/qwindows.dll` 会导致错误：
+> ```
+> This application failed to start because no Qt platform plugin could be initialized.
+> ```
+
+#### 3. 可选插件
+
+| 文件夹 | 用途 |
+|--------|------|
+| `iconengines/` | SVG 图标支持 |
+| `imageformats/` | 更多图片格式 (GIF, JPEG, PNG, WebP 等) |
+| `styles/` | Windows 10/11 现代风格 |
+| `generic/` | 触摸屏支持 |
+
+#### 4. 图形依赖
+
+| DLL | 用途 |
+|-----|------|
+| `D3Dcompiler_47.dll` | Direct3D 着色器编译 |
+| `opengl32sw.dll` | OpenGL 软件渲染 (无显卡时使用) |
+
+### windeployqt 自动部署
+
+如果安装了 Qt，可以使用 `windeployqt` 自动复制所有依赖：
+
+```powershell
+# 部署到指定目录
+windeployqt --dir D:\output\folder D:\path\to\ReversiAI_Platform.exe
+
+# 或直接覆盖 EXE 所在目录
+windeployqt D:\path\to\ReversiAI_Platform.exe
+```
 
 ---
 
-## 📈 Development Roadmap
+## 关键路径参考
 
-### ✅ Completed Versions
+### 项目目录
 
-#### v0.9.0 (February 2026) - Visualization Enhancement
-- **Features**: Search tree visualization, Real-time statistics panel, Board heatmap, Game replay
-- **Status**: 100% Complete
-- **Code Lines**: ~1,800 new lines
-- **Key Features**:
-  - ✅ Search Tree Visualization (Textual display of PV line and search tree)
-  - ✅ Real-time Statistics Panel (Nodes, depth, time, NPS, TT hit rate)
-  - ✅ Board Heatmap (Evaluation visualization with multiple modes)
-  - ✅ Game Replay System (Load/Save game records)
-  - ✅ PGN/SGF Support (Standard game notation import/export)
-  - ✅ Replay Analysis Window (Dedicated analysis interface)
-  - ✅ Compilation: MinGW verified
+```
+D:\Project\Reversi\ReversiAI_Platform\    # 项目根目录
+├── build_qt/                            # Qt GUI 构建 (MSVC)
+├── build_mingw/                         # MinGW 构建
+├── build_msvc/                          # MSVC 构建
+├── build_console/                        # 控制台构建
+├── build_test/                          # 测试构建
+├── end_submite/                         # 提交的预编译版本
+│   └── Debug/                           # ★ 可运行的 Debug 版本
+├── Release_Package/                    # ★ 可运行的 Release 版本
+└── zhiqiandebanbenneirong/             # GitHub 下载的旧版本备份
+    └── ReversiAI_Platform-main/         #   用于恢复参考
+```
 
-#### v0.8.0 (February 2026) - Performance Benchmarking
-- **Features**: Bitboard benchmark, AI search benchmark, Head-to-Head engine, Data export
-- **Status**: 100% Complete
-- **Code Lines**: ~1,400 new lines
-- **Key Features**:
-  - ✅ Bitboard Benchmark (Flip/Move/Legal/Copy/Hash performance)
-  - ✅ AI Search Benchmark (Minimax/MCTS throughput)
-  - ✅ Head-to-Head Engine (Win rate verification with statistics)
-  - ✅ Data Exporter (JSON/CSV/Markdown multi-format)
-  - ✅ Position Suite (64 standard test positions)
-  - ✅ Statistics Tools (Wilcoxon test, confidence intervals)
-  - ✅ Compilation: MinGW + MSVC verified
+### 预编译可运行版本
 
-#### v0.7.0 (February 2026) - AI Optimization
-- **Features**: Killer Moves, History Heuristic, Move Orderer, Search Parameters
-- **Status**: 100% Complete
-- **Code Lines**: ~13,100 new lines
-- **Key Features**:
-  - ✅ Killer Moves (2 killers per depth, 64 depths)
-  - ✅ History Heuristic (64x64 matrix, depth-weighted scoring)
-  - ✅ Move Orderer (PV > Killer > History > Static priority)
-  - ✅ Search Parameters (configurable midgame/endgame weights)
-  - ✅ MinimaxAI Integration (Killer/History recording)
-  - ✅ Compilation: MinGW + MSVC verified
+| 版本 | 路径 | 编译器 |
+|------|------|--------|
+| Debug | `end_submite\Debug\ReversiAI_Platform.exe` | MSVC |
+| Release | `Release_Package\ReversiAI_Platform.exe` | MinGW |
 
-#### v0.6.0 (February 2026) - Research Framework
-- **Features**: Zobrist hashing, Transposition table, Position suite, Battle engine, Statistics
-- **Status**: 100% Complete
-- **Code Lines**: ~2,000 new lines
-- **Key Features**:
-  - ✅ Zobrist Hashing (64-bit position encoding, 2MB memory, 33M entries)
-  - ✅ Transposition Table (112MB cache, 4.2M entries, search optimization)
-  - ✅ Position Suite (64 standard test positions for reproducible experiments)
-  - ✅ Battle Engine (Head-to-head AI battle system with win rate statistics)
-  - ✅ Statistics Tools (Wilcoxon test, confidence intervals, statistical significance)
-  - ✅ AI vs AI Window (Visual interface for automated benchmark testing)
-  - ✅ MinimaxAI Integration (Transposition table search optimization)
+### Qt 安装路径 (参考)
 
-#### v0.5.0 (February 2026)
-- **Features**: LAN network multiplayer, TCP/UDP communication, Room system
-- **Status**: 100% Complete
-- **Git Commit**: `Network module implemented UDP discovery, room management`
- with TCP client,- **Code Lines**: ~5,000 new lines
-- **Key Features**:
-  - ✅ TCP Communication Framework
-  - ✅ LAN Network Discovery (UDP Broadcast)
-  - ✅ Game State Synchronization (Zobrist Hashing)
-  - ✅ Room System (Create/Join/Leave)
-  - ✅ Heartbeat Mechanism (30s keep-alive)
-  - ✅ Reconnection Handling (Exponential backoff)
-  - ✅ Network Lobby UI
-  - ✅ Network Game Window with Chat
-  - ✅ Latency Monitoring
+```
+# MSVC
+D:/Dev/SDKs/Qt/6.10.2/msvc2022_64/
 
-#### v0.4.0 (January 2026)
-- **Features**: Menu interface, PvE mode, PvP mode
-- **Status**: 100% Complete
-- **Git Commit**: `259d367` - feat: v0.4.0 - 实现本地多人对战功能
+# MinGW
+D:/Dev/SDKs/Qt/6.10.1/mingw_64/
+```
 
-#### v0.3.0 (January 2026)
-- **Features**: AIStrategy pattern, MinimaxAI, MCTSAI, RandomAI
-- **Status**: 100% Complete
+### 运行时搜索路径
 
-#### v0.2.0 (January 2026)
-- **Features**: BitBoard system, Board logic, Move validation
-- **Status**: 100% Complete
+Qt 按以下顺序搜索插件：
 
-#### v0.1.0 (January 2026)
-- **Features**: CMake build system, project structure, compilation verification
-- **Status**: 100% Complete
-
-### 📅 Planned Versions
-
-#### v1.0.1 (March 2026) - Dual Compiler Support
-- **Features**: MinGW + MSVC dual compiler support, CMake auto-detection
-- **Status**: ✅ Completed
-- **Key Features**:
-  - ✅ MinGW compilation support (GCC 12.2.0)
-  - ✅ MSVC compilation support (Visual Studio 2022)
-  - ✅ CMake auto-detection of compiler type
-  - ✅ Automatic Qt6 version selection based on compiler
-  - ✅ Updated CMakeLists.txt with MSVC Qt6 path configuration
-  - ✅ Verified both MinGW and MSVC builds work correctly
-
-#### v1.0.0 (March 2026) - Final Release
-- Complete feature set
-- Performance optimization
-- Final documentation
-- Academic presentation materials
-- **Status**: ✅ Completed
+1. `QCoreApplication::applicationDirPath()/platforms/`
+2. `QT_PLUGIN_PATH` 环境变量
+3. 编译时指定的 Qt 插件路径
 
 ---
 
-## 🎓 Academic Background
+## 版本历史
 
-This project is part of the **COMP390 Honours Year Project** at the University of Liverpool, demonstrating:
+### v1.0.3 - UI 优化与悔棋修复
 
-- **Systematic Open-Source Learning**: How to study and integrate knowledge from mature projects
-- **Academic Implementation**: Proper citation and intellectual property management
-- **Research Methodology**: Combining multiple approaches into a cohesive research platform
-- **Engineering Excellence**: Modern C++ practices in academic software development
+- **Bug 修复**：修复本地双人模式悔棋功能
+  - 修复 `undoMove()` 玩家轮次恢复逻辑错误
+  - 增加 `MAX_UNDO_STEPS` 从 10 步到 60 步
+- **UI 优化**：调整 PvEWindow 右面板布局
+  - AI First/Player First 改为垂直排列
+  - Controls 组往下移动，填充右下角空缺
 
-### Learning Sources
+### v1.0.2 - Bug Fix Release
 
-This project learns from and builds upon excellent open-source implementations:
+- 修复网络稳定性问题
+- 优化性能
 
-| Project | Reference | Contribution |
-|---------|-----------|--------------|
-| **[Egaroucid](https://github.com/Nyanyan/Egaroucid)** | ⭐⭐⭐⭐⭐ | Primary technical reference (world-class Othello AI) - GGS protocol, GTP commands, network architecture |
-| **[edax-reversi](https://github.com/abulmo/edax-reversi)** | ⭐⭐⭐⭐ | Classic C implementation guidance - XBoard protocol |
-| **[Reversi(Java)](https://github.com/abulmo/Reversi)** | ⭐⭐⭐ | Clean object-oriented architecture |
-| **[MCTS-AI-Reversi](https://github.com/whatlulumomo/MCTS-AI-Reversi)** | ⭐⭐⭐ | Initial framework and Qt integration |
-| **[QtReversi](OtherProjects/QtReversi)** | ⭐⭐⭐ | Qt UI patterns and widget layout |
+### v1.0.1 - 双编译器支持
 
----
+- MinGW 编译支持 (GCC)
+- MSVC 编译支持 (Visual Studio 2022)
+- CMake 自动检测编译器类型
+- Qt6 版本自动选择
 
-## 🧪 Testing
+### v0.9.0 - 可视化增强
 
-### Current Test Coverage
-- **Unit Tests**: Network message serialization, TCP communication
-- **Integration Tests**: AI vs AI battles, Network discovery
-- **Manual Testing**: UI functionality verification, Network gameplay
-- **GUI Tests**: Menu navigation, Lobby operations, Gameplay
+- 搜索树可视化
+- 实时统计面板
+- 棋盘热力图
+- 棋谱回放系统
+- PGN/SGF 支持
 
-### Test Results (v0.5.0)
-- ✅ TCP connection: Working correctly
-- ✅ UDP discovery: Hosts detected reliably
-- ✅ Room creation/joining: All operations functional
-- ✅ Game sync: Real-time board synchronization
-- ✅ Reconnection: Auto-retry with exponential backoff
-- ✅ Chat: Message sending/receiving
-- ✅ Latency: Accurate ping measurement
+### v0.8.0 - 性能基准测试
 
----
+- 位棋盘基准测试
+- AI 搜索基准测试
+- 对战引擎
+- 数据导出 (JSON/CSV/Markdown)
 
-## 📊 Version Statistics
+### v0.7.0 - AI 优化
 
-| Version | Features | Code Lines | Files |
-|---------|----------|------------|-------|
-| v0.1.0 | Build system | ~800 | 20 |
-| v0.2.0 | Core logic | ~2,500 | 30 |
-| v0.3.0 | AI algorithms | ~4,000 | 40 |
-| v0.4.0 | UI system | ~5,500 | 45 |
-| v0.5.0 | Network features | ~10,500 | 69 |
-| v0.6.0 | Research framework | ~12,500 | 80 |
-| v0.7.0 | AI optimization | ~13,100 | 86 |
-| v0.8.0 | Performance benchmark | ~14,500 | 92 |
-| v0.9.0 | Visualization enhancement | ~16,300 | 100 |
+- Killer Moves
+- History Heuristic
+- Move Orderer
+- 搜索参数配置
 
----
+### v0.6.0 - 研究框架
 
-## 🤝 Contributing
+- Zobrist 哈希
+- 置换表
+- 位置测试套件
+- 对战引擎
+- 统计分析工具
 
-This is an academic project, but contributions and feedback are welcome:
+### v0.5.0 - 网络功能
 
-1. **Fork** the repository
-2. **Create** a feature branch
-3. **Implement** your changes with proper documentation
-4. **Add tests** for new functionality
-5. **Submit** a pull request
+- TCP/UDP 通信
+- 局域网发现
+- 房间系统
+- 重连机制
+- 延迟监测
 
-### Academic Collaboration
-- **Code Review**: All contributions undergo academic peer review
-- **Citation Requirements**: New features must include proper attribution
-- **Testing Standards**: All code must pass the established test suite
-- **Documentation**: New features require complete technical documentation
+### v0.4.0 - UI 系统
 
----
+- 主菜单
+- 人机对战模式
+- 本地双人模式
 
-## 📧 Contact & Academic Supervision
+### v0.3.0 - AI 算法
 
-| Field | Information |
-|-------|-------------|
-| **Student** | Tianqixing (201821852) |
-| **Institution** | University of Liverpool, Department of Computer Science |
-| **Course** | COMP390 Honours Year Project |
-| **Supervisor** | [To be assigned by department] |
-| **Ethical Approval** | Reference #12779 (Low Risk, Category B/Participant 2) |
+- MinimaxAI
+- MCTSAI
+- RandomAI
+
+### v0.2.0 - 核心逻辑
+
+- BitBoard 系统
+- 棋盘逻辑
+- 走法验证
 
 ---
 
-## 🙏 Acknowledgments
+## 文档目录
 
-This project stands on the shoulders of excellent open-source projects and academic research in the field of game AI and Othello algorithms.
+项目文档位于 `项目计划（文档放置）/` 目录：
 
-### Special Thanks
-- **Egaroucid Project**: For providing world-class Othello AI implementation and network protocol reference
-- **edax-reversi Team**: For the classic C implementation that inspired many
-- **University of Liverpool**: For the academic environment and support
-- **Open-Source Community**: For making knowledge freely available
+### 重要文档
 
----
-
-## 📄 License
-
-This project is released under the MIT License. See [LICENSE](LICENSE) for details.
-
-### Academic Licensing Notes
-- **Open-Source Respect**: All referenced projects' licenses are respected
-- **Academic Freedom**: Research and educational use is encouraged
-- **Commercial Use**: Check individual component licenses for commercial applications
+| 文档 | 说明 |
+|------|------|
+| `docs/未完成功能说明.md` | 待完成功能列表 |
+| `docs/录制展示指南.md` | 视频录制指南 |
+| `docs/人机对战界面改进方案.md` | UI 改进方案 |
+| `项目计划（文档放置）/项目进展跟踪.md` | 项目进度 |
+| `项目计划（文档放置）/学术项目检查清单.md` | 学术合规检查 |
 
 ---
 
-## 🎓 Educational Impact
+## 常见问题
 
-This project serves as an excellent example for:
+### Q1: 运行时报错 "no Qt platform plugin could be initialized"
 
-- **Computer Science Students**: Learning modern C++ and algorithm implementation
-- **AI Researchers**: Understanding Othello as a research domain
-- **Open-Source Contributors**: Studying proper attribution and academic integrity
-- **Academic Projects**: Template for university-level software engineering
+**原因**：缺少 `platforms` 文件夹或 `qwindows.dll`
 
-### Learning Outcomes Demonstrated
-- **Systematic Research**: How to approach complex software projects academically
-- **Open-Source Integration**: Proper methods for learning from and building upon existing work
-- **Engineering Excellence**: Modern software development practices in academic context
-- **Documentation Standards**: Professional documentation and project management
+**解决方法**：
+1. 从 `end_submite\Debug\` 复制 `platforms/` 文件夹到 EXE 目录
+2. 或使用 `windeployqt` 重新部署
+
+### Q2: MSVC 和 MinGW 的 DLL 能否混用？
+
+**不能**！MSVC 编译的 EXE 必须使用 MSVC 版本的 Qt DLL，MinGW 编译的 EXE 必须使用 MinGW 版本的 Qt DLL。
+
+| EXE 编译器 | 需要的 Qt DLL |
+|------------|---------------|
+| MSVC | `Qt6Cored.dll` (不带 `d` 后缀的 MSVC 版本) |
+| MinGW | `Qt6Cored.dll` (MinGW 版本) |
+
+### Q3: 如何重新编译？
+
+详见 [编译指南](#编译指南)。
+
+### Q4: DLL 版本不匹配？
+
+确保 Qt6 版本与编译器匹配：
+- MSVC 2022 → Qt 6.10.2 `msvc2022_64`
+- MinGW → Qt 6.10.1 `mingw_64`
+
+### Q5: windeployqt 找不到？
+
+确保 Qt 的 `bin` 目录在 PATH 中：
+```powershell
+$env:PATH += ";D:\Dev\SDKs\Qt\6.10.2\msvc2022_64\bin"
+```
 
 ---
 
-|**⭐ Star this repository to support academic open-source development!**  
-|**🎓 University of Liverpool COMP390 Honours Year Project**  
-|**Current Version**: v1.0.0 | **Final Release Completed**
+## 许可证
+
+MIT License - 详见 [LICENSE](LICENSE) 文件。
+
+---
+
+**⭐ 如果这个项目对你有帮助，请给个 Star！**
+**🎓 University of Liverpool COMP390 Honours Year Project**

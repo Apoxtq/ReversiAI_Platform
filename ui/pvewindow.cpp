@@ -1,64 +1,318 @@
 /**
  * @file PvEWindow.cpp
- * @brief 人机对战窗口实现
- *
- * 功能:
- * - 人机对战模式
- * - AI难度选择
- * - 先手/后手选择
- * - 返回菜单功能
- *
- * @reference QtReversi/代码/chess/widget.cpp - 游戏规则和界面交互
- * @reference MCTS-AI-Reversi/mainwindow.cpp - paintEvent()实现保留
+ * @brief PvE (Player vs AI) game window implementation
  */
 
 #include "ui/PvEWindow.h"
-#include "ui_pvewindow.h"
-#include "QPainter"
-#include "QPixmap"
-#include "QMouseEvent"
-#include "QDebug"
-#include "QTimer"
+#include <QPainter>
+#include <QFont>
+#include <QDebug>
+#include <QApplication>
 
 PvEWindow::PvEWindow(QWidget* parent)
     : QMainWindow(parent)
-    , ui(new Ui::PvEWindow) {
-    ui->setupUi(this);
+    , centralWidget_(nullptr)
+    , leftLayout_(nullptr)
+    , rightLayout_(nullptr)
+    , resultLabel_(nullptr)
+    , turnIndicator_(nullptr)
+    , blackScoreLabel_(nullptr)
+    , whiteScoreLabel_(nullptr)
+    , aiConfigGroup_(nullptr)
+    , aiFirstRadio_(nullptr)
+    , playerFirstRadio_(nullptr)
+    , algorithmCombo_(nullptr)
+    , difficultyCombo_(nullptr)
+    , depthCombo_(nullptr)
+    , delayCombo_(nullptr)
+    , startButton_(nullptr)
+    , newGameButton_(nullptr)
+    , backButton_(nullptr)
+    , gameState_(GameWatchState::IDLE)
+    , currentPlayer_(Reversi::PlayerColor::Black)
+    , gameResult_(Reversi::GameResult::Unknown)
+    , moveDelayMs_(500)
+    , moveDelayTimer_(nullptr)
+{
+    qDebug() << "PvEWindow::PvEWindow() - Constructor START";
 
-    // 初始化UI组件
-    initUI();
+    board_ = Reversi::Board();
 
-    // 创建GameController
-    gameController_ = std::make_unique<Reversi::GameController>(this);
+    setupUI();
+    loadResources();
+    initGame();
+    updateButtonStates();
 
-    // 连接信号槽
-    setupConnections();
-
-    // 加载资源文件
-    background.load(":/rsc/board.png");
-    black.load(":/rsc/black.png");
-    white.load(":/rsc/white.png");
-    hintwhite.load(":/rsc/whitepotential.png");
-    hintblack.load(":/rsc/blackpotential.png");
-    hintred.load(":/rsc/redpotential.png");
-
-    // 连接按钮信号
-    connect(ui->pushButton, &QPushButton::clicked,
-            this, &PvEWindow::onStartGameClicked);
-    connect(ui->backButton, &QPushButton::clicked,
-            this, &PvEWindow::onBackToMenuClicked);
+    qDebug() << "PvEWindow::PvEWindow() - Constructor END";
 }
 
-PvEWindow::~PvEWindow() {
-    delete ui;
+PvEWindow::~PvEWindow()
+{
+    qDebug() << "PvEWindow destroyed";
+
+    if (moveDelayTimer_) {
+        moveDelayTimer_->stop();
+        delete moveDelayTimer_;
+    }
 }
 
-void PvEWindow::initUI() {
-    // init() 在 ui_pvewindow.h 中定义，由 uic 自动生成
+void PvEWindow::setupUI()
+{
+    setWindowTitle(tr("PvE Mode"));
+    setFixedSize(830, 580);
+    setAttribute(Qt::WA_DeleteOnClose);
+
+    centralWidget_ = new QWidget(this);
+    setCentralWidget(centralWidget_);
+
+    QHBoxLayout* mainLayout = new QHBoxLayout(centralWidget_);
+    mainLayout->setContentsMargins(10, 10, 10, 10);
+    mainLayout->setSpacing(15);
+
+    QWidget* leftPanel = new QWidget(this);
+    leftLayout_ = new QVBoxLayout(leftPanel);
+    leftLayout_->setContentsMargins(0, 5, 0, 5);
+    leftLayout_->setSpacing(8);
+
+    resultLabel_ = new QLabel("", this);
+    resultLabel_->setAlignment(Qt::AlignCenter);
+    resultLabel_->setFixedHeight(40);
+    resultLabel_->setVisible(false);
+    resultLabel_->setStyleSheet(
+        "QLabel { font-size: 28px; font-weight: bold; color: #e74c3c; "
+        "background-color: rgba(255,255,255,220); border-radius: 8px; padding: 5px 20px; }"
+    );
+    leftLayout_->addWidget(resultLabel_, 0, Qt::AlignHCenter);
+
+    QWidget* boardContainer = new QWidget(this);
+    boardContainer->setFixedSize(BOARD_SIZE, BOARD_SIZE);
+    leftLayout_->addWidget(boardContainer, 0, Qt::AlignHCenter);
+
+    QHBoxLayout* infoLayout = new QHBoxLayout();
+    infoLayout->setSpacing(10);
+    infoLayout->setContentsMargins(0, 5, 0, 10);
+
+    turnIndicator_ = new QLabel(tr("Black's Turn"), this);
+    turnIndicator_->setAlignment(Qt::AlignCenter);
+    turnIndicator_->setFixedSize(130, 35);
+    turnIndicator_->setStyleSheet(
+        "QLabel { font-weight: bold; font-size: 14px; color: #000000; "
+        "background-color: rgba(220,220,220,220); border-radius: 6px; padding: 4px 10px; }"
+    );
+    infoLayout->addWidget(turnIndicator_);
+
+    blackScoreLabel_ = new QLabel(tr("Black: 2"), this);
+    blackScoreLabel_->setAlignment(Qt::AlignCenter);
+    blackScoreLabel_->setFixedSize(100, 35);
+    blackScoreLabel_->setStyleSheet(
+        "QLabel { font-weight: bold; font-size: 14px; color: #000000; "
+        "background-color: rgba(220,220,220,220); border-radius: 6px; padding: 4px 10px; }"
+    );
+    infoLayout->addWidget(blackScoreLabel_);
+
+    whiteScoreLabel_ = new QLabel(tr("White: 2"), this);
+    whiteScoreLabel_->setAlignment(Qt::AlignCenter);
+    whiteScoreLabel_->setFixedSize(100, 35);
+    whiteScoreLabel_->setStyleSheet(
+        "QLabel { font-weight: bold; font-size: 14px; color: #ffffff; "
+        "background-color: rgba(50,50,50,220); border-radius: 6px; padding: 4px 10px; }"
+    );
+    infoLayout->addWidget(whiteScoreLabel_);
+
+    leftLayout_->addLayout(infoLayout);
+    leftLayout_->addStretch();
+
+    QWidget* rightPanel = new QWidget(this);
+    rightLayout_ = new QVBoxLayout(rightPanel);
+    rightLayout_->setContentsMargins(0, 0, 0, 0);
+    rightLayout_->setSpacing(10);
+
+    setupAIConfig();
+    rightLayout_->addWidget(aiConfigGroup_);
+
+    setupControls();
+    rightLayout_->addWidget(controlsGroup_);
+
+    // 添加弹性空间，让 controls 往下移动
+    rightLayout_->addStretch(2);
+
+    mainLayout->addWidget(leftPanel, 65);
+    mainLayout->addWidget(rightPanel, 35);
 }
 
-void PvEWindow::setupConnections() {
-    // GameController 信号槽连接
+void PvEWindow::setupAIConfig()
+{
+    aiConfigGroup_ = new QGroupBox(tr("AI Configuration"), this);
+    aiConfigGroup_->setAlignment(Qt::AlignLeft);
+    aiConfigGroup_->setStyleSheet(
+        "QGroupBox { font-weight: bold; font-size: 13px; border: 2px solid #34495e; "
+        "border-radius: 6px; margin-top: 8px; padding-top: 8px; }"
+        "QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top center; padding: 0 5px; }"
+    );
+    QVBoxLayout* groupLayout = new QVBoxLayout(aiConfigGroup_);
+    groupLayout->setSpacing(10);
+
+    // AI First / Player First 垂直排列
+    aiFirstRadio_ = new QRadioButton(tr("AI First"), this);
+    playerFirstRadio_ = new QRadioButton(tr("Player First"), this);
+    playerFirstRadio_->setChecked(true);
+
+    QVBoxLayout* firstMoveLayout = new QVBoxLayout();
+    firstMoveLayout->setSpacing(5);
+    firstMoveLayout->addWidget(aiFirstRadio_);
+    firstMoveLayout->addWidget(playerFirstRadio_);
+    groupLayout->addLayout(firstMoveLayout);
+
+    QGridLayout* gridLayout = new QGridLayout();
+    gridLayout->setSpacing(8);
+
+    QLabel* algoLabel = new QLabel(tr("Algorithm:"), this);
+    algoLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    algorithmCombo_ = new QComboBox(this);
+    algorithmCombo_->setFixedHeight(30);
+    algorithmCombo_->addItem("Minimax", 0);
+    algorithmCombo_->addItem("MCTS", 1);
+    algorithmCombo_->addItem("Random", 2);
+    algorithmCombo_->setStyleSheet(
+        "QComboBox { padding: 5px 10px; font-size: 13px; border: 1px solid #34495e; border-radius: 4px; }"
+    );
+    gridLayout->addWidget(algoLabel, 0, 0, Qt::AlignLeft);
+    gridLayout->addWidget(algorithmCombo_, 0, 1);
+
+    QLabel* diffLabel = new QLabel(tr("Difficulty:"), this);
+    diffLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    difficultyCombo_ = new QComboBox(this);
+    difficultyCombo_->setFixedHeight(30);
+    difficultyCombo_->addItem("Easy", static_cast<int>(Reversi::Difficulty::EASY));
+    difficultyCombo_->addItem("Medium", static_cast<int>(Reversi::Difficulty::MEDIUM));
+    difficultyCombo_->addItem("Hard", static_cast<int>(Reversi::Difficulty::HARD));
+    difficultyCombo_->setCurrentIndex(1);
+    difficultyCombo_->setStyleSheet(
+        "QComboBox { padding: 5px 10px; font-size: 13px; border: 1px solid #34495e; border-radius: 4px; }"
+    );
+    gridLayout->addWidget(diffLabel, 1, 0, Qt::AlignLeft);
+    gridLayout->addWidget(difficultyCombo_, 1, 1);
+
+    QLabel* depthLabel = new QLabel(tr("Depth:"), this);
+    depthLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    depthCombo_ = new QComboBox(this);
+    depthCombo_->setFixedHeight(30);
+    depthCombo_->addItem("2", 2);
+    depthCombo_->addItem("3", 3);
+    depthCombo_->addItem("4", 4);
+    depthCombo_->addItem("5", 5);
+    depthCombo_->addItem("6", 6);
+    depthCombo_->setCurrentIndex(2);
+    depthCombo_->setStyleSheet(
+        "QComboBox { padding: 5px 10px; font-size: 13px; border: 1px solid #34495e; border-radius: 4px; }"
+    );
+    gridLayout->addWidget(depthLabel, 2, 0, Qt::AlignLeft);
+    gridLayout->addWidget(depthCombo_, 2, 1);
+
+    QLabel* delayLabel = new QLabel(tr("Move Delay:"), this);
+    delayLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    delayCombo_ = new QComboBox(this);
+    delayCombo_->setFixedHeight(30);
+    delayCombo_->addItem("0s", 0);
+    delayCombo_->addItem("0.5s", 500);
+    delayCombo_->addItem("1s", 1000);
+    delayCombo_->addItem("2s", 2000);
+    delayCombo_->setCurrentIndex(1);
+    delayCombo_->setStyleSheet(
+        "QComboBox { padding: 5px 10px; font-size: 13px; border: 1px solid #34495e; border-radius: 4px; }"
+    );
+    gridLayout->addWidget(delayLabel, 3, 0, Qt::AlignLeft);
+    gridLayout->addWidget(delayCombo_, 3, 1);
+
+    groupLayout->addLayout(gridLayout);
+
+    connect(delayCombo_, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, [this](int index) {
+                moveDelayMs_ = delayCombo_->itemData(index).toInt();
+            });
+}
+
+void PvEWindow::setupControls()
+{
+    controlsGroup_ = new QGroupBox(tr("Controls"), this);
+    controlsGroup_->setAlignment(Qt::AlignLeft);
+    controlsGroup_->setStyleSheet(
+        "QGroupBox { font-weight: bold; font-size: 13px; border: 2px solid #34495e; "
+        "border-radius: 6px; margin-top: 8px; padding-top: 8px; }"
+        "QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top center; padding: 0 5px; }"
+    );
+    QVBoxLayout* groupLayout = new QVBoxLayout(controlsGroup_);
+    groupLayout->setSpacing(15);
+
+    startButton_ = new QPushButton(tr("Start"), this);
+    startButton_->setFixedHeight(40);
+    startButton_->setStyleSheet(
+        "QPushButton { background-color: #2ecc71; color: white; border: none; "
+        "border-radius: 5px; font-weight: bold; font-size: 14px; }"
+        "QPushButton:hover { background-color: #27ae60; }"
+        "QPushButton:disabled { background-color: #bdc3c7; }"
+    );
+    groupLayout->addWidget(startButton_);
+
+    newGameButton_ = new QPushButton(tr("New Game"), this);
+    newGameButton_->setFixedHeight(40);
+    newGameButton_->setStyleSheet(
+        "QPushButton { background-color: #3498db; color: white; border: none; "
+        "border-radius: 5px; font-weight: bold; font-size: 14px; }"
+        "QPushButton:hover { background-color: #2980b9; }"
+        "QPushButton:disabled { background-color: #bdc3c7; }"
+    );
+    groupLayout->addWidget(newGameButton_);
+
+    backButton_ = new QPushButton(tr("Back to Menu"), this);
+    backButton_->setFixedHeight(40);
+    backButton_->setStyleSheet(
+        "QPushButton { background-color: #95a5a6; color: white; border: none; "
+        "border-radius: 5px; font-weight: bold; font-size: 14px; }"
+        "QPushButton:hover { background-color: #7f8c8d; }"
+    );
+    groupLayout->addWidget(backButton_);
+}
+
+void PvEWindow::loadResources()
+{
+    pixmapBackground_.load(":/rsc/board.png");
+    pixmapBlack_.load(":/rsc/black.png");
+    pixmapWhite_.load(":/rsc/white.png");
+    pixmapHintWhite_.load(":/rsc/whitepotential.png");
+    pixmapHintBlack_.load(":/rsc/blackpotential.png");
+    pixmapHintRed_.load(":/rsc/redpotential.png");
+}
+
+void PvEWindow::initGame()
+{
+    board_ = Reversi::Board();
+    gameState_ = GameWatchState::IDLE;
+    currentPlayer_ = Reversi::PlayerColor::Black;
+    gameResult_ = Reversi::GameResult::Unknown;
+
+    // 只在第一次时创建 timer 和 controller
+    if (!moveDelayTimer_) {
+        moveDelayTimer_ = new QTimer(this);
+        moveDelayTimer_->setSingleShot(true);
+        connect(moveDelayTimer_, &QTimer::timeout, this, &PvEWindow::onDelayTimerTimeout);
+    }
+
+    if (!gameController_) {
+        gameController_ = std::make_unique<Reversi::GameController>(this);
+        setupConnections();
+    }
+
+    updateButtonStates();
+    repaint();
+}
+
+void PvEWindow::setupConnections()
+{
+    connect(startButton_, &QPushButton::clicked, this, &PvEWindow::onStartGameClicked);
+    connect(newGameButton_, &QPushButton::clicked, this, &PvEWindow::onNewGameClicked);
+    connect(backButton_, &QPushButton::clicked, this, &PvEWindow::onBackToMenuClicked);
+
     connect(gameController_.get(), &Reversi::GameController::gameStarted,
             this, &PvEWindow::onGameStarted);
     connect(gameController_.get(), &Reversi::GameController::phaseChanged,
@@ -79,80 +333,215 @@ void PvEWindow::setupConnections() {
             this, &PvEWindow::onErrorOccurred);
 }
 
-void PvEWindow::paintEvent(QPaintEvent* event) {
-    this->resize(600, 400);
+void PvEWindow::updateButtonStates()
+{
+    switch (gameState_) {
+    case GameWatchState::IDLE:
+        startButton_->setEnabled(true);
+        newGameButton_->setEnabled(false);
+        aiFirstRadio_->setEnabled(true);
+        playerFirstRadio_->setEnabled(true);
+        algorithmCombo_->setEnabled(true);
+        difficultyCombo_->setEnabled(true);
+        depthCombo_->setEnabled(true);
+        delayCombo_->setEnabled(true);
+        break;
+    case GameWatchState::PLAYING:
+        startButton_->setEnabled(false);
+        newGameButton_->setEnabled(true);
+        aiFirstRadio_->setEnabled(false);
+        playerFirstRadio_->setEnabled(false);
+        algorithmCombo_->setEnabled(false);
+        difficultyCombo_->setEnabled(false);
+        depthCombo_->setEnabled(false);
+        delayCombo_->setEnabled(false);
+        break;
+    case GameWatchState::PAUSED:
+        startButton_->setEnabled(false);
+        newGameButton_->setEnabled(true);
+        break;
+    case GameWatchState::GAME_OVER:
+        startButton_->setEnabled(false);
+        newGameButton_->setEnabled(true);
+        aiFirstRadio_->setEnabled(false);
+        playerFirstRadio_->setEnabled(false);
+        algorithmCombo_->setEnabled(false);
+        difficultyCombo_->setEnabled(false);
+        depthCombo_->setEnabled(false);
+        delayCombo_->setEnabled(false);
+        break;
+    }
+}
+
+void PvEWindow::paintEvent(QPaintEvent* event)
+{
+    Q_UNUSED(event);
     QPainter painter(this);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-    painter.drawPixmap(0, 0, 400, 400, background);
 
-    // 从GameController获取当前状态
+    painter.drawPixmap(BOARD_OFFSET_X, BOARD_OFFSET_Y, BOARD_SIZE, BOARD_SIZE, pixmapBackground_);
+
     const Reversi::Board& board = gameController_->getBoard();
-    Reversi::PlayerColor currentPlayer = gameController_->getCurrentPlayer();
+    currentPlayer_ = gameController_->getCurrentPlayer();
 
-    // 确定当前显示的棋子颜色（合法移动高亮用）
-    int tile = (currentPlayer == Reversi::PlayerColor::Black) ? 2 : 1;
+    int tile = (currentPlayer_ == Reversi::PlayerColor::Black) ? 2 : 1;
 
-    // 获取合法移动并绘制高亮
     int markHaveDraw[8][8] = {0};
     auto validMoves = board.getValidMoves();
     for (const auto& move : validMoves) {
         markHaveDraw[move.row][move.col] = tile;
     }
 
-    // 绘制棋子和高亮
-    // 注意：board.at(row, col) - row 是垂直方向(y)，col 是水平方向(x)
-    // painter.drawPixmap(x, y) - x 是水平方向，y 是垂直方向
-    // 所以应该用 board.at(j, i) 其中 j=row, i=col
-    for (int i = 0; i < 8; i++) {  // i = col (水平方向)
-        for (int j = 0; j < 8; j++) {  // j = row (垂直方向)
-            int cellValue = board.at(j, i);  // j=row, i=col
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            int cellValue = board.at(j, i);
 
-            // 绘制棋子
-            if (cellValue == 1) {  // White
-                painter.drawPixmap(0 + 50 * i, 0 + 50 * j, 50, 50, white);
-            } else if (cellValue == 2) {  // Black
-                painter.drawPixmap(0 + 50 * i, 0 + 50 * j, 50, 50, black);
+            if (cellValue == 1) {
+                painter.drawPixmap(BOARD_OFFSET_X + CELL_SIZE * i,
+                                 BOARD_OFFSET_Y + CELL_SIZE * j,
+                                 CELL_SIZE, CELL_SIZE, pixmapWhite_);
+            } else if (cellValue == 2) {
+                painter.drawPixmap(BOARD_OFFSET_X + CELL_SIZE * i,
+                                 BOARD_OFFSET_Y + CELL_SIZE * j,
+                                 CELL_SIZE, CELL_SIZE, pixmapBlack_);
             }
 
-            // 绘制合法移动高亮
-            // markHaveDraw[row][col] -> markHaveDraw[j][i]
-            if (markHaveDraw[j][i] == 2) {  // Black的合法位置
-                painter.drawPixmap(0 + 50 * i, 0 + 50 * j, 50, 50, hintblack);
+            if (markHaveDraw[j][i] == 2) {
+                painter.drawPixmap(BOARD_OFFSET_X + CELL_SIZE * i,
+                                 BOARD_OFFSET_Y + CELL_SIZE * j,
+                                 CELL_SIZE, CELL_SIZE, pixmapHintBlack_);
             }
-            if (markHaveDraw[j][i] == 1) {  // White的合法位置
-                painter.drawPixmap(0 + 50 * i, 0 + 50 * j, 50, 50, hintwhite);
+            if (markHaveDraw[j][i] == 1) {
+                painter.drawPixmap(BOARD_OFFSET_X + CELL_SIZE * i,
+                                 BOARD_OFFSET_Y + CELL_SIZE * j,
+                                 CELL_SIZE, CELL_SIZE, pixmapHintWhite_);
             }
         }
     }
 }
 
-void PvEWindow::mousePressEvent(QMouseEvent* e) {
-    // 检查游戏状态
-    if (gameController_->getCurrentPhase() != Reversi::GamePhase::HumanTurn) {
-        return;
-    }
+void PvEWindow::mousePressEvent(QMouseEvent* e)
+{
+    if (gameState_ != GameWatchState::PLAYING) return;
+    if (gameController_->getCurrentPhase() != Reversi::GamePhase::HumanTurn) return;
 
-    // 坐标转换
-    int row = e->y() / 50;
-    int col = e->x() / 50;
+    int row = (e->y() - BOARD_OFFSET_Y) / CELL_SIZE;
+    int col = (e->x() - BOARD_OFFSET_X) / CELL_SIZE;
 
-    // 检查是否在棋盘范围内
-    if (row < 0 || row >= 8 || col < 0 || col >= 8) {
-        return;
-    }
+    if (row < 0 || row >= 8 || col < 0 || col >= 8) return;
 
-    // 使用GameController处理落子
     gameController_->makeHumanMove(row, col);
 }
 
-void PvEWindow::updateScoreDisplay() {
-    // 从GameController获取分数
+void PvEWindow::onStartGameClicked()
+{
+    qDebug() << "PvEWindow::onStartGameClicked()";
+
+    Reversi::PlayerColor humanColor = playerFirstRadio_->isChecked()
+        ? Reversi::PlayerColor::Black : Reversi::PlayerColor::White;
+
+    Reversi::Difficulty difficulty = static_cast<Reversi::Difficulty>(difficultyCombo_->currentData().toInt());
+
+    // 从 ComboBox 读取 AI 配置
+    int algorithm = algorithmCombo_->currentData().toInt();
+    int depth = depthCombo_->currentText().toInt();
+
+    qDebug() << "PvEWindow: Starting game with algorithm=" << algorithm
+             << "difficulty=" << (int)difficulty << "depth=" << depth;
+
+    resultLabel_->setVisible(false);
+    gameController_->startNewGame(Reversi::GameMode::PvE, humanColor, difficulty, algorithm, depth);
+
+    gameState_ = GameWatchState::PLAYING;
+    updateButtonStates();
+}
+
+void PvEWindow::onNewGameClicked()
+{
+    moveDelayTimer_->stop();
+
+    gameState_ = GameWatchState::IDLE;
+    gameResult_ = Reversi::GameResult::Unknown;
+    resultLabel_->setVisible(false);
+
+    board_ = Reversi::Board();
+    initGame();
+
+    updateButtonStates();
+    repaint();
+}
+
+void PvEWindow::onDelayTimerTimeout()
+{
+    // GameController handles AI moves internally
+}
+
+void PvEWindow::onGameStarted(Reversi::GameMode, Reversi::PlayerColor)
+{
+    updateScoreDisplay();
+    repaint();
+}
+
+void PvEWindow::onPhaseChanged(Reversi::GamePhase phase)
+{
+    if (phase == Reversi::GamePhase::AITurn && gameState_ == GameWatchState::PLAYING && moveDelayMs_ > 0) {
+        moveDelayTimer_->start(moveDelayMs_);
+    }
+    repaint();
+}
+
+void PvEWindow::onTurnChanged(Reversi::PlayerColor player)
+{
+    currentPlayer_ = player;
+    QString turnText = (player == Reversi::PlayerColor::Black) ? tr("Black's Turn") : tr("White's Turn");
+    turnIndicator_->setText(turnText);
+    updateScoreDisplay();
+    repaint();
+}
+
+void PvEWindow::onMoveMade(int, int, Reversi::PlayerColor)
+{
+    updateScoreDisplay();
+    repaint();
+}
+
+void PvEWindow::onGameEnded(Reversi::GameResult result)
+{
+    gameState_ = GameWatchState::GAME_OVER;
+    gameResult_ = result;
+    moveDelayTimer_->stop();
+
+    turnIndicator_->setText(tr("Game Over"));
+
+    QString resultText;
+    switch (result) {
+    case Reversi::GameResult::BlackWins: resultText = tr("Black Wins!"); break;
+    case Reversi::GameResult::WhiteWins: resultText = tr("White Wins!"); break;
+    case Reversi::GameResult::Draw: resultText = tr("Draw!"); break;
+    default: resultText = tr("Game Over"); break;
+    }
+
+    resultLabel_->setText(resultText);
+    resultLabel_->setVisible(true);
+
+    updateScoreDisplay();
+    updateButtonStates();
+    repaint();
+}
+
+void PvEWindow::onAIThinkingStarted(const QString&) {}
+void PvEWindow::onAIThinkingFinished(int, int) {}
+void PvEWindow::onAIStatsUpdated(const Reversi::AIStats&) {}
+void PvEWindow::onErrorOccurred(const QString& message)
+{
+    qDebug() << "PvEWindow::onErrorOccurred:" << message;
+}
+
+void PvEWindow::updateScoreDisplay()
+{
     const Reversi::Board& board = gameController_->getBoard();
 
-    // 统计棋子数量
-    int blackCount = 0;
-    int whiteCount = 0;
-
+    int blackCount = 0, whiteCount = 0;
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             int cellValue = board.at(i, j);
@@ -161,127 +550,12 @@ void PvEWindow::updateScoreDisplay() {
         }
     }
 
-    // 更新UI显示
-    if (ui->blabel) {
-        ui->blabel->setText(QString::number(blackCount));
-    }
-    if (ui->wlabel) {
-        ui->wlabel->setText(QString::number(whiteCount));
-    }
+    blackScoreLabel_->setText(QString("Black: %1").arg(blackCount));
+    whiteScoreLabel_->setText(QString("White: %1").arg(whiteCount));
 }
 
-void PvEWindow::onStartGameClicked() {
-    // 确定游戏模式：默认是人机对战 (PvE)
-    Reversi::GameMode mode = Reversi::GameMode::PvE;
-    Reversi::Difficulty difficulty = Reversi::Difficulty::MEDIUM;
-
-    // 确定人类玩家颜色（根据UI选择谁先手）
-    Reversi::PlayerColor humanColor;
-    if (ui->AIchoice && ui->AIchoice->isChecked()) {
-        humanColor = Reversi::PlayerColor::White;  // AI先手，人类是白棋
-    } else if (ui->playerchoice && ui->playerchoice->isChecked()) {
-        humanColor = Reversi::PlayerColor::Black;  // 玩家先手，人类是黑棋
-    } else {
-        // 默认玩家先手
-        humanColor = Reversi::PlayerColor::Black;
-    }
-
-    qDebug() << "PvEWindow: Starting game, humanColor:" << (int)humanColor;
-
-    // 开始游戏（始终是人机对战PvE模式）
-    gameController_->startNewGame(mode, humanColor, difficulty);
-}
-
-void PvEWindow::onGameStarted(Reversi::GameMode mode, Reversi::PlayerColor humanColor) {
-    qDebug() << "PvEWindow: Game started, mode:" << (int)mode
-             << "humanColor:" << (int)humanColor;
-    updateScoreDisplay();
-    repaint();
-}
-
-void PvEWindow::onPhaseChanged(Reversi::GamePhase phase) {
-    qDebug() << "PvEWindow: Phase changed to" << (int)phase;
-
-    // 根据阶段更新UI
-    switch (phase) {
-    case Reversi::GamePhase::Waiting:
-        break;
-    case Reversi::GamePhase::HumanTurn:
-        break;
-    case Reversi::GamePhase::AITurn:
-        break;
-    case Reversi::GamePhase::GameOver:
-        qDebug() << "PvEWindow: Game Over";
-        break;
-    }
-
-    repaint();
-}
-
-void PvEWindow::onTurnChanged(Reversi::PlayerColor player) {
-    qDebug() << "PvEWindow: Turn changed to" << (int)player;
-    updateScoreDisplay();
-    repaint();
-}
-
-void PvEWindow::onMoveMade(int row, int col, Reversi::PlayerColor player) {
-    qDebug() << "PvEWindow: Move made at" << row << col << "by player" << (int)player;
-    updateScoreDisplay();
-    repaint();
-}
-
-void PvEWindow::onGameEnded(Reversi::GameResult result) {
-    qDebug() << "PvEWindow: Game ended, result:" << (int)result;
-
-    QString resultText;
-    switch (result) {
-    case Reversi::GameResult::BlackWins:
-        resultText = "黑棋获胜!";
-        break;
-    case Reversi::GameResult::WhiteWins:
-        resultText = "白棋获胜!";
-        break;
-    case Reversi::GameResult::Draw:
-        resultText = "平局!";
-        break;
-    default:
-        resultText = "游戏结束";
-        break;
-    }
-
-    // 显示游戏结果
-    if (ui->AIGO) {
-        ui->AIGO->setText(resultText);
-    }
-
-    updateScoreDisplay();
-    repaint();
-}
-
-void PvEWindow::onAIThinkingStarted(const QString& aiName) {
-    qDebug() << "PvEWindow: AI thinking started:" << aiName;
-    if (ui->AIGO) {
-        ui->AIGO->setText("AI思考中: " + aiName);
-    }
-}
-
-void PvEWindow::onAIThinkingFinished(int row, int col) {
-    qDebug() << "PvEWindow: AI move finished at" << row << col;
-    if (ui->AIGO) {
-        ui->AIGO->setText(QString("AI落子: %1,%2").arg(col).arg(row));
-    }
-}
-
-void PvEWindow::onAIStatsUpdated(const Reversi::AIStats& stats) {
-    qDebug() << "PvEWindow: AI stats - nodes:" << stats.nodesExplored
-             << "time:" << stats.timeUsed.count() << "ms";
-}
-
-void PvEWindow::onErrorOccurred(const QString& message) {
-    qDebug() << "PvEWindow: Error -" << message;
-}
-
-void PvEWindow::onBackToMenuClicked() {
+void PvEWindow::onBackToMenuClicked()
+{
+    moveDelayTimer_->stop();
     emit backToMenu();
 }
-

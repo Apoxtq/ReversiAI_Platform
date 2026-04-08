@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v1.0.3] - 2026-04-08
+### Fixed
+- **GameController**: Fixed `undoMove()` player turn restoration logic — now uses `board_->getCurrentTurn()` instead of `moveHistory_.back()` after pop
+- **GameController**: Increased `MAX_UNDO_STEPS` from 10 to 60 to support full game undo
+
+### Changed
+- **PvEWindow**: Reorganized AI Configuration layout — AI First/Player First now vertically stacked instead of horizontal
+- **PvEWindow**: Adjusted Controls group position — increased stretch factor from 1 to 2 to fill bottom-right gap
+
+### Notes
+- v1.0.3 fixes critical undo functionality issue in PvP mode
+- Undo now properly restores both board state and player turn
+- Full game undo (up to 60 moves) now supported
+
 ## [v1.0.2] - 2026-04-08
 ### Fixed
 - **NetworkGameWindow**: Fixed recursive closeEvent crash — added `isClosing_` guard flag to prevent double-trigger
