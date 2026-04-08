@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v1.0.2] - 2026-04-05
+## [v1.0.2] - 2026-04-08
 ### Fixed
 - **NetworkGameWindow**: Fixed recursive closeEvent crash — added `isClosing_` guard flag to prevent double-trigger
 - **NetworkGameWindow**: Fixed double `stopHosting()` call in destructor by moving `isClosing_` check before network cleanup
@@ -11,10 +11,18 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - **MenuWindow**: backToMenu lambda now closes both gameWindow and lobbyWindow, shows main menu directly
+- **Project Structure**: Organized scattered test and debug files into dedicated directories
+
+### Project Reorganization
+- Created `tests/experiments/` — 21 experimental test files moved from root
+- Created `tests/debug/` — 13 debug files moved from root  
+- Moved 3 backup files to `src/core/`
+- Cleaned up 18 orphaned .exe and .o build artifacts from root directory
 
 ### Notes
 - v1.0.2 fixes critical stability issues in network multiplayer module
 - All network window close scenarios (button/X button/double-click) now verified safe
+- Project structure now clearly separates production code from experimental/debug code
 - AI Research Mode (button 4) not yet tested
 
 ## [v1.0.3] - 2026-03-14
