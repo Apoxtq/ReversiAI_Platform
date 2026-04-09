@@ -100,14 +100,18 @@ struct MCTSNode {
  * @brief MCTS configuration parameters
  */
 struct MCTSConfig {
-    int num_simulations = 1000;    ///< Simulations per move
-    double c_puct = 1.0;           ///< Exploration constant (alpha-zero-general default 1.0)
-    bool use_dirichlet_noise = false;  ///< Whether to use Dirichlet noise
+    int num_simulations = 5000;    ///< Simulations per move
+    double c_puct = 1.5;           ///< Exploration constant
+    bool use_dirichlet_noise = false;  ///< Dirichlet noise (disabled for performance)
     double dirichlet_alpha = 0.3;  ///< Dirichlet noise parameter
     double dirichlet_epsilon = 0.25;  ///< Noise mixing ratio
 
     // Time control
     std::chrono::milliseconds time_limit = std::chrono::milliseconds(3000);
+
+    // Improved playout settings
+    bool use_smart_playout = true;    ///< Use heuristic-based playout
+    int playout_max_depth = 50;       ///< Maximum depth for playout
 };
 
 /**

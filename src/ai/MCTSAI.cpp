@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <numeric>
+#include <random>
 
 namespace Reversi {
 
@@ -104,12 +105,14 @@ void MCTSAI::search(const Board& board, const SearchLimits& limits) {
 
     MCTSNode* current = root_.get();
     std::vector<MCTSNode*> path;
+    Board current_board = board;  // Track board state as we traverse
 
     while (current && !current->isLeaf()) {
         path.push_back(current);
 
         double best_uct = -std::numeric_limits<double>::infinity();
         MCTSNode* best_child = nullptr;
+        size_t best_move_idx = 0;
 
         for (size_t i = 0; i < current->getChildCount(); ++i) {
             MCTSNode* child = current->getChild(i);
@@ -117,22 +120,37 @@ void MCTSAI::search(const Board& board, const SearchLimits& limits) {
             if (uct_value > best_uct) {
                 best_uct = uct_value;
                 best_child = child;
+                best_move_idx = i;
             }
         }
 
         if (!best_child) break;
+
+        // Update board state by applying the move
+        const Move& move = current->getChildMove(best_move_idx);
+        current_board.makeMove(move);
         current = best_child;
     }
 
     MCTSNode* leaf_node = current;
     if (leaf_node->isLeaf()) {
-        auto valid_moves = board.getValidMoves();
+        auto valid_moves = current_board.getValidMoves();
         if (!valid_moves.empty()) {
-            size_t max_children = std::min(size_t(4), valid_moves.size());
+            // Limit children to prevent memory explosion
+            size_t max_children = std::min(valid_moves.size(), size_t(8));
             for (size_t i = 0; i < max_children; ++i) {
                 auto child = std::make_unique<MCTSNode>(leaf_node);
-                child->prior = 1.0 / max_children;
                 Move move = valid_moves[i];
+
+                // Prior probability based on position
+                double prior = 1.0;
+                bool is_corner = (move.row == 0 || move.row == 7) && (move.col == 0 || move.col == 7);
+                bool is_edge = (move.row == 0 || move.row == 7 || move.col == 0 || move.col == 7) && !is_corner;
+
+                if (is_corner) prior = 3.0;
+                else if (is_edge) prior = 1.5;
+
+                child->prior = prior;
                 leaf_node->addChild(move, std::move(child));
             }
         }
@@ -140,8 +158,28 @@ void MCTSAI::search(const Board& board, const SearchLimits& limits) {
 
     MCTSNode* simulation_node = leaf_node;
     if (leaf_node->getChildCount() > 0) {
+        // Select best child for simulation based on UCT
+        double best_uct = -std::numeric_limits<double>::infinity();
         simulation_node = leaf_node->getChild(0);
-        double value = simulate(board);
+        for (size_t i = 0; i < leaf_node->getChildCount(); ++i) {
+            MCTSNode* child = leaf_node->getChild(i);
+            double uct_value = child->getUCT(config_.c_puct);
+            if (uct_value > best_uct) {
+                best_uct = uct_value;
+                simulation_node = child;
+            }
+        }
+
+        // Apply move and simulate
+        Board sim_board = current_board;
+        for (size_t i = 0; i < leaf_node->getChildCount(); ++i) {
+            if (leaf_node->getChild(i) == simulation_node) {
+                sim_board.makeMove(leaf_node->getChildMove(i));
+                break;
+            }
+        }
+
+        double value = simulate(sim_board, config_.playout_max_depth);
         backpropagate(simulation_node, value);
     }
 }
@@ -162,9 +200,58 @@ double MCTSAI::simulate(const Board& board, int max_depth) {
                 }
             } else {
                 if (valid_moves.size() == 0) break;
-                size_t random_index = static_cast<size_t>(uniform_dist_(rng_) * valid_moves.size());
-                random_index = std::min(random_index, valid_moves.size() - 1);
-                sim_board.makeMove(valid_moves[random_index]);
+
+                Move selected_move;
+                if (config_.use_smart_playout) {
+                    // Smart playout: prefer good positions based on Reversi heuristics
+                    int best_move_idx = 0;
+                    int best_score = -1000;
+
+                    for (size_t i = 0; i < valid_moves.size(); ++i) {
+                        const Move& move = valid_moves[i];
+                        int score = 0;
+
+                        // Corner positions: (0,0), (0,7), (7,0), (7,7)
+                        bool is_corner = (move.row == 0 || move.row == 7) && (move.col == 0 || move.col == 7);
+                        // Edge positions (non-corner edges)
+                        bool is_edge = (move.row == 0 || move.row == 7 || move.col == 0 || move.col == 7) && !is_corner;
+                        // Cursed squares (adjacent to corners)
+                        bool is_cursed = false;
+                        if (!is_corner && !is_edge) {
+                            if ((move.row == 0 && (move.col == 1 || move.col == 6)) ||
+                                (move.row == 7 && (move.col == 1 || move.col == 6)) ||
+                                (move.col == 0 && (move.row == 1 || move.row == 6)) ||
+                                (move.col == 7 && (move.row == 1 || move.row == 6))) {
+                                is_cursed = true;
+                            }
+                        }
+
+                        // Scoring based on position
+                        if (is_corner) {
+                            score += 100;
+                        } else if (is_edge) {
+                            score += 10;
+                        } else if (is_cursed) {
+                            score -= 50;
+                        }
+
+                        // Add small random factor for diversity
+                        score += uniform_dist_(rng_) * 5;
+
+                        if (score > best_score) {
+                            best_score = score;
+                            best_move_idx = i;
+                        }
+                    }
+                    selected_move = valid_moves[best_move_idx];
+                } else {
+                    // Random playout (original behavior)
+                    size_t random_index = static_cast<size_t>(uniform_dist_(rng_) * valid_moves.size());
+                    random_index = std::min(random_index, valid_moves.size() - 1);
+                    selected_move = valid_moves[random_index];
+                }
+
+                sim_board.makeMove(selected_move);
             }
 
             current_player = (current_player == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
@@ -245,7 +332,87 @@ bool MCTSAI::supportsFeature(const std::string& feature) const {
     if (feature == "time_control") return true;
     if (feature == "simulation_limit") return true;
     if (feature == "dirichlet_noise") return config_.use_dirichlet_noise;
+    if (feature == "smart_playout") return config_.use_smart_playout;
     return AIStrategy::supportsFeature(feature);
+}
+
+std::vector<double> MCTSAI::getPriorProbabilities(const Board& board) {
+    std::vector<double> priors;
+    auto valid_moves = board.getValidMoves();
+
+    if (valid_moves.empty()) {
+        return priors;
+    }
+
+    priors.resize(valid_moves.size(), 1.0);
+
+    // Adjust priors based on heuristics (same logic as in search)
+    for (size_t i = 0; i < valid_moves.size(); ++i) {
+        const Move& move = valid_moves[i];
+
+        // Corner positions: (0,0), (0,7), (7,0), (7,7)
+        bool is_corner = (move.row == 0 || move.row == 7) && (move.col == 0 || move.col == 7);
+        bool is_edge = (move.row == 0 || move.row == 7 || move.col == 0 || move.col == 7) && !is_corner;
+        bool is_cursed = false;
+        if (!is_corner && !is_edge) {
+            if ((move.row == 0 && (move.col == 1 || move.col == 6)) ||
+                (move.row == 7 && (move.col == 1 || move.col == 6)) ||
+                (move.col == 0 && (move.row == 1 || move.row == 6)) ||
+                (move.col == 7 && (move.row == 1 || move.row == 6))) {
+                is_cursed = true;
+            }
+        }
+
+        if (is_corner) {
+            priors[i] = 3.0;
+        } else if (is_edge) {
+            priors[i] = 1.5;
+        } else if (is_cursed) {
+            priors[i] = 0.1;
+        }
+    }
+
+    // Normalize
+    double sum = 0.0;
+    for (double p : priors) sum += p;
+    if (sum > 0) {
+        for (double& p : priors) p /= sum;
+    }
+
+    return priors;
+}
+
+std::vector<double> MCTSAI::addDirichletNoise(const std::vector<double>& priors) {
+    std::vector<double> noisy_priors = priors;
+    std::vector<double> noise = sampleDirichlet(config_.dirichlet_alpha, priors.size());
+
+    for (size_t i = 0; i < noisy_priors.size(); ++i) {
+        noisy_priors[i] = (1.0 - config_.dirichlet_epsilon) * priors[i]
+                        + config_.dirichlet_epsilon * noise[i];
+    }
+
+    return noisy_priors;
+}
+
+std::vector<double> MCTSAI::sampleDirichlet(double alpha, size_t size) {
+    std::vector<double> samples(size);
+    double sum = 0.0;
+
+    std::gamma_distribution<double> gamma_dist(alpha, 1.0);
+
+    for (size_t i = 0; i < size; ++i) {
+        samples[i] = gamma_dist(rng_);
+        sum += samples[i];
+    }
+
+    // Normalize to get Dirichlet distribution
+    if (sum > 0) {
+        for (double& s : samples) s /= sum;
+    } else {
+        for (double& s : samples) s = 1.0 / size;
+    }
+
+    return samples;
 }
 
 } // namespace Reversi
