@@ -1,7 +1,0 @@
--DWIN32
---compiler-flavor=msvc
--o
-D:/Project/Reversi/ReversiAI_Platform/build_qt/include/ui/moc_NetworkGameWindow.cpp
-D:/Project/Reversi/ReversiAI_Platform/include/ui/NetworkGameWindow.h
--DWIN32
---compiler-flavor=msvc
