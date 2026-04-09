@@ -1,13 +1,15 @@
 /**
  * @file AIvsAIWindow.h
- * @brief AI vs AI 对战窗口
+ * @brief AI vs AI Battle Window
  *
- * 用于展示AI自动对战功能，支持：
- * - 选择两个AI进行对战
- * - 实时显示对局进度
- * - 统计对战结果
+ * Features:
+ * - Select two AIs for battle
+ * - Real-time battle progress display
+ * - Detailed statistics display
+ * - Random seed configuration for reproducibility
+ * - Verification mode for determinism testing
  *
- * @reference 参考Egaroucid和edax-reversi的界面设计
+ * @reference Based on Egaroucid and edax-reversi UI design
  */
 
 #pragma once
@@ -28,6 +30,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTimer>
+#include <QCheckBox>
 #include <chrono>
 #include "Board.h"
 #include "ai/AIStrategy.h"
@@ -36,6 +39,8 @@
 #include "research/PositionSuite.h"
 #include "research/BitboardBenchmark.h"
 #include "research/AIBenchmark.h"
+#include "research/RuntimeEstimator.h"
+#include "research/ValidationSuite.h"
 
 namespace Ui {
 class AIvsAIWindow;
@@ -45,115 +50,142 @@ namespace Reversi {
 
 /**
  * @class AIvsAIWindow
- * @brief AI vs AI 对战窗口类
+ * @brief AI vs AI Battle Window
  *
- * 提供AI自动对战的可视化界面，可以：
- * - 选择对战双方AI
- * - 设置对局数量
- * - 实时显示对局进度
- * - 展示详细统计结果
+ * Features:
+ * - Select two AIs for battle
+ * - Set number of games
+ * - Configure random seed for reproducibility
+ * - Enable verification mode for determinism testing
+ * - Real-time progress display
+ * - Detailed statistics with Pass/Fail indicators
  */
 class AIvsAIWindow : public QMainWindow {
     Q_OBJECT
 
 public:
     /**
-     * @brief 构造函数
-     * @param parent 父窗口指针
+     * @brief Constructor
+     * @param parent Parent window pointer
      */
     explicit AIvsAIWindow(QWidget* parent = nullptr);
 
     /**
-     * @brief 析构函数
+     * @brief Destructor
      */
     ~AIvsAIWindow() override;
 
 signals:
     /**
-     * @brief 返回主菜单信号
+     * @brief Signal to return to main menu
      */
     void backToMenu();
 
 private slots:
     /**
-     * @brief 开始对战按钮点击
+     * @brief Start battle button clicked
      */
     void onStartBattleClicked();
 
     /**
-     * @brief 停止对战按钮点击
+     * @brief Stop battle button clicked
      */
     void onStopBattleClicked();
 
     /**
-     * @brief 导出报告按钮点击
+     * @brief Export report button clicked
      */
     void onExportReportClicked();
 
     /**
-     * @brief 运行Bitboard基准测试
+     * @brief Random seed button clicked
+     */
+    void onRandomSeedClicked();
+
+    /**
+     * @brief Run Bitboard benchmark
      */
     void onRunBitboardBenchmarkClicked();
 
     /**
-     * @brief 运行AI基准测试
+     * @brief Run AI benchmark
      */
     void onRunAIBenchmarkClicked();
 
     /**
-     * @brief Bitboard基准测试完成
+     * @brief Bitboard benchmark completed
      */
     void onBitboardBenchmarkComplete(const QVariant& results);
 
     /**
-     * @brief AI基准测试完成
+     * @brief AI benchmark completed
      */
     void onAIBenchmarkComplete(const QVariant& results);
 
     /**
-     * @brief 返回主菜单
+     * @brief Run all validation tests
+     */
+    void onRunAllValidationClicked();
+
+    /**
+     * @brief Validation tests completed
+     */
+    void onValidationComplete(const QVariant& results);
+
+    /**
+     * @brief Export validation report
+     */
+    void onExportValidationClicked();
+
+    /**
+     * @brief Update runtime estimate display
+     */
+    void updateRuntimeEstimate();
+
+    /**
+     * @brief Return to main menu
      */
     void onBackClicked();
 
     /**
-     * @brief 更新对局进度
+     * @brief Update battle progress
      */
     void updateProgress();
 
     /**
-     * @brief 对局完成更新结果
-     * @param stats 对战统计结果
+     * @brief Battle completed, update results
+     * @param stats Battle statistics
      */
     void onBattleCompleted(const BattleStats& stats);
 
 private:
     /**
-     * @brief 初始化UI组件
+     * @brief Initialize UI components
      */
     void setupUI();
 
     /**
-     * @brief 连接信号槽
+     * @brief Connect signals and slots
      */
     void setupConnections();
 
     /**
-     * @brief 获取当前选中的AI类型名称
+     * @brief Get AI type name
      */
     QString getAIString(AIStrategy* ai);
 
     /**
-     * @brief 更新统计表格
+     * @brief Update statistics table
      */
     void updateStatsTable();
 
     /**
-     * @brief 清除统计
+     * @brief Clear statistics
      */
     void clearStats();
 
     /**
-     * @brief 启用/禁用控制按钮
+     * @brief Enable/disable control buttons
      */
     void setControlsEnabled(bool enabled);
 
@@ -164,13 +196,27 @@ private:
     // 对战配置区域
     QGroupBox* configGroup_;
     QGridLayout* configLayout_;
-    QComboBox* ai1Combo_;
-    QComboBox* ai2Combo_;
+    QComboBox* ai1TypeCombo_;   // AI1算法类型选择
+    QComboBox* ai2TypeCombo_;   // AI2算法类型选择
+    QComboBox* ai1Combo_;       // AI1难度选择
+    QComboBox* ai2Combo_;       // AI2难度选择
     QSpinBox* gamesSpinBox_;
     QComboBox* depth1Combo_;
     QComboBox* depth2Combo_;
 
-    // 控制按钮
+    // Random Seed Configuration
+    QSpinBox* seedSpinBox_;
+    QPushButton* randomSeedButton_;
+    QCheckBox* verificationModeCheckBox_;
+
+    // Position Suite Selection
+    QComboBox* suiteCombo_;
+
+    // Parallel Processing Configuration
+    QCheckBox* parallelCheckBox_;
+    QSpinBox* threadsSpinBox_;
+
+    // Control buttons
     QPushButton* startButton_;
     QPushButton* stopButton_;
     QPushButton* exportButton_;
@@ -178,33 +224,39 @@ private:
     QPushButton* benchmarkButton_;
     QPushButton* bitboardBenchmarkButton_;
     QPushButton* aiBenchmarkButton_;
+    QPushButton* runAllValidationButton_;
+    QPushButton* exportValidationButton_;
 
-    // 进度显示
+    // Progress display
     QProgressBar* progressBar_;
     QLabel* progressLabel_;
+    QLabel* runtimeEstimateLabel_;
 
-    // 棋盘显示
+    // Board display
     QLabel* boardLabel_;
     QLabel* currentMoveLabel_;
 
-    // 统计结果区域
+    // Statistics results
     QGroupBox* statsGroup_;
     QVBoxLayout* statsLayout_;
     QTableWidget* statsTable_;
     QTextEdit* resultText_;
 
-    // 对战状态
+    // Battle state
     bool isRunning_;
     BattleConfig battleConfig_;
     QTimer* updateTimer_;
 
-    // 统计数据
+    // Statistics data
     int gamesPlayed_;
     int gamesWon1_;
     int gamesWon2_;
     int draws_;
     double avgMoves_;
     std::chrono::milliseconds totalTime_;
+
+    // Validation results
+    std::vector<ValidationResult> validationResults_;
 };
 
 } // namespace Reversi

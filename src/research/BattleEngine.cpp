@@ -9,10 +9,13 @@
 #include <cmath>
 namespace Reversi {
 // ============================================================================
-// 静态成员初始化
+// 静态成员初始化 - 使用确定性种子避免静态初始化顺序问题
 // ============================================================================
 uint64_t BattleEngine::global_seed_ = 0;
-std::mt19937_64 BattleEngine::rng_(std::random_device{}());
+// 使用固定种子 42 而不是 random_device{}() 来避免静态初始化顺序问题
+// 这确保了多线程环境下的确定性行为
+std::mt19937_64 BattleEngine::rng_(42);
+
 // ============================================================================
 // BattleStats 实现
 // ============================================================================
@@ -27,18 +30,20 @@ void BattleStats::calculate() {
     double total_score1 = 0;
     double total_score2 = 0;
     int max_m = 0;
+    double total_margin = 0;
     for (const auto& game : games) {
         total_moves += game.moves_count;
         total_duration += game.duration_ms;
         total_score1 += game.black_score;
         total_score2 += game.white_score;
+        total_margin += game.getMargin();
         max_m = std::max(max_m, game.getMargin());
     }
     avg_moves = total_moves / total_games;
     avg_duration_ms = total_duration / total_games;
     avg_score1 = total_score1 / total_games;
     avg_score2 = total_score2 / total_games;
-    avg_margin = std::abs(avg_score1 - avg_score2);
+    avg_margin = total_margin / total_games;  // 平均每局的净胜分，而不是总平均分之差
     max_margin = max_m;
     // 计算先手胜率
     if (player1_first_games > 0) {
@@ -93,14 +98,14 @@ BattleStats BattleEngine::runBattle(const BattleConfig& config,
     config.player1->reset();
     config.player2->reset();
     // 根据配置选择对战方式
-    std::vector<GameResult> results;
+    std::vector<SingleGameResult> results;
     if (config.parallel && config.num_games > 1) {
         results = runParallelBattle(config);
     } else {
         results.reserve(config.num_games);
         for (int i = 0; i < config.num_games; ++i) {
             bool player1_first = (i % 2 == 0) == config.alternate_first;
-            GameResult result = playGameInternal(
+            SingleGameResult result = playGameInternal(
                 *config.player1, *config.player2,
                 player1_first ? PlayerColor::Black : PlayerColor::White,
                 config.limits1, config.limits2
@@ -150,7 +155,7 @@ BattleStats BattleEngine::runBattle(const BattleConfig& config,
     }
     return stats;
 }
-GameResult BattleEngine::playSingleGame(
+SingleGameResult BattleEngine::playSingleGame(
     AIStrategy& player1,
     AIStrategy& player2,
     PlayerColor first_player,
@@ -291,21 +296,27 @@ void BattleEngine::setRandomSeed(uint64_t seed) {
 uint64_t BattleEngine::getRandomSeed() {
     return global_seed_;
 }
-GameResult BattleEngine::playGameInternal(
+SingleGameResult BattleEngine::playGameInternal(
     AIStrategy& p1,
     AIStrategy& p2,
     PlayerColor first,
     const SearchLimits& l1,
     const SearchLimits& l2
 ) {
-    GameResult result;
+    SingleGameResult result;
     auto start_time = std::chrono::steady_clock::now();
     Board board;
-    PlayerColor current = first;
+    // 设置AI的颜色，让它们知道自己的角色
+    // p1扮演first指定的一方，p2扮演另一方
+    p1.setColor(first);
+    p2.setColor((first == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black);
+    PlayerColor current = board.getCurrentTurn();
     // 记录着法
     std::vector<Move> moves;
     // 对局循环
     while (!board.isGameOver()) {
+        // 根据棋盘当前玩家确定使用哪个AI
+        // p1扮演first指定的颜色，p2扮演另一颜色
         AIStrategy& current_ai = (current == first) ? p1 : p2;
         const SearchLimits& current_limits = (current == first) ? l1 : l2;
         Move move = current_ai.findBestMove(board, current_limits);
@@ -316,7 +327,7 @@ GameResult BattleEngine::playGameInternal(
             // 跳过回合
             board.makeMove(move);
             moves.push_back(move);
-            current = (current == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
+            current = board.getCurrentTurn();
             // 检查双方是否都无棋可下
             if (board.getValidMoves().empty() && board.isGameOver()) {
                 break;
@@ -332,7 +343,7 @@ GameResult BattleEngine::playGameInternal(
             }
         }
         moves.push_back(move);
-        current = (current == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
+        current = board.getCurrentTurn();
     }
     auto end_time = std::chrono::steady_clock::now();
     result.duration_ms = std::chrono::duration<double, std::milli>(end_time - start_time).count();
@@ -347,33 +358,42 @@ GameResult BattleEngine::playGameInternal(
     } else if (result.white_score > result.black_score) {
         result.winner = PlayerColor::White;
     } else {
-        result.winner = PlayerColor::Black;  // 平局
+        result.winner = PlayerColor::Black;  // 平局时默认为黑棋（不影响统计，isDraw会处理）
     }
     return result;
 }
-void BattleEngine::updateStats(BattleStats& stats, const GameResult& result,
+void BattleEngine::updateStats(BattleStats& stats, const SingleGameResult& result,
                                 bool player1_first) {
+    // 统计先手游戏
+    if (player1_first) {
+        stats.player1_first_games++;
+    } else {
+        stats.player2_first_games++;
+    }
+
     if (result.isDraw()) {
         stats.draws++;
-    } else {
-        bool player1_won = (result.winner == (player1_first ? PlayerColor::Black : PlayerColor::White));
-        if (player1_won) {
-            stats.player1_wins++;
-            if (player1_first) stats.player1_first_wins++;
-            else stats.player2_first_wins++;
-        } else {
-            stats.player2_wins++;
-            if (player1_first) stats.player2_first_wins++;
-            else stats.player1_first_wins++;
-        }
+        return;
     }
-    if (player1_first) stats.player1_first_games++;
-    else stats.player2_first_games++;
+
+    // winner 是 Black 还是 White (实际的胜者颜色)
+    // player1 (MinimaxAI) 在 player1_first=true 时是 Black，否则是 White
+    bool player1_won = (result.winner == (player1_first ? PlayerColor::Black : PlayerColor::White));
+
+    if (player1_won) {
+        stats.player1_wins++;
+        if (player1_first) stats.player1_first_wins++;
+        else stats.player2_first_wins++;
+    } else {
+        stats.player2_wins++;
+        if (player1_first) stats.player2_first_wins++;
+        else stats.player1_first_wins++;
+    }
 }
-std::vector<GameResult> BattleEngine::runParallelBattle(const BattleConfig& config) {
-    std::vector<GameResult> results;
+std::vector<SingleGameResult> BattleEngine::runParallelBattle(const BattleConfig& config) {
+    std::vector<SingleGameResult> results;
     results.reserve(config.num_games);
-    std::vector<std::future<GameResult>> futures;
+    std::vector<std::future<SingleGameResult>> futures;
     int batch_size = std::min(config.num_games, config.max_threads);
     int current = 0;
     while (current < config.num_games) {
@@ -399,5 +419,185 @@ std::vector<GameResult> BattleEngine::runParallelBattle(const BattleConfig& conf
     }
     return results;
 }
+
+// Position Suite Integration Implementation
+
+namespace {
+    // Helper: Convert BitBoard to 8x8 vector representation
+    std::vector<std::vector<int>> bitboardToVector(const BitBoard& bb, PlayerColor currentPlayer) {
+        std::vector<std::vector<int>> state(8, std::vector<int>(8, 0));
+        uint64_t player = bb.getPlayerBits();
+        uint64_t opponent = bb.getOpponentBits();
+
+        for (int row = 0; row < 8; ++row) {
+            for (int col = 0; col < 8; ++col) {
+                int bit = row * 8 + col;
+                if (player & (1ULL << bit)) {
+                    state[row][col] = (currentPlayer == PlayerColor::Black) ? 1 : 2;
+                } else if (opponent & (1ULL << bit)) {
+                    state[row][col] = (currentPlayer == PlayerColor::Black) ? 2 : 1;
+                }
+            }
+        }
+        return state;
+    }
+}
+
+SingleGameResult BattleEngine::playFromPosition(
+    const TestPosition& position,
+    AIStrategy& player1,
+    AIStrategy& player2,
+    const SearchLimits& limits1,
+    const SearchLimits& limits2
+) {
+    // Start with the given position
+    Board board;
+    auto state = bitboardToVector(position.board, position.player);
+    int moveCount = position.board.getPlayerBits() + position.board.getOpponentBits() - 4;  // Initial 4 pieces
+    board.syncFrom(state, position.player, moveCount);
+    PlayerColor current = position.player;
+
+    std::vector<Move> moves;
+    auto start_time = std::chrono::steady_clock::now();
+    SingleGameResult result;
+
+    // Play from this position until game over
+    while (!board.isGameOver()) {
+        if (board.getValidMoves().empty()) {
+            // Pass
+            board.makeMove(Move::pass());
+            moves.push_back(Move::pass());
+            current = board.getCurrentTurn();
+            // Check if both players can't move
+            if (board.getValidMoves().empty()) {
+                break;
+            }
+            continue;
+        }
+
+        // Get current AI and limits
+        AIStrategy& current_ai = (current == PlayerColor::Black) ? player1 : player2;
+        const SearchLimits& current_limits = (current == PlayerColor::Black) ? limits1 : limits2;
+
+        Move move = current_ai.findBestMove(board, current_limits);
+        if (!move.isValid()) {
+            // Use first valid move if AI returns invalid
+            auto valid = board.getValidMoves();
+            if (!valid.empty()) {
+                move = valid[0];
+            } else {
+                move = Move::pass();
+            }
+        }
+
+        if (move.is_pass) {
+            board.makeMove(move);
+        } else {
+            if (!board.makeMove(move)) {
+                // Try first valid move if move fails
+                auto valid = board.getValidMoves();
+                if (!valid.empty()) {
+                    move = valid[0];
+                    board.makeMove(move);
+                }
+            }
+        }
+
+        moves.push_back(move);
+        current = board.getCurrentTurn();
+    }
+
+    auto end_time = std::chrono::steady_clock::now();
+    result.duration_ms = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    result.moves_count = static_cast<int>(moves.size());
+    result.game_moves = std::move(moves);
+    result.black_score = board.getBitBoard().getScore(PlayerColor::Black);
+    result.white_score = board.getBitBoard().getScore(PlayerColor::White);
+
+    if (result.black_score > result.white_score) {
+        result.winner = PlayerColor::Black;
+    } else if (result.white_score > result.black_score) {
+        result.winner = PlayerColor::White;
+    } else {
+        result.winner = PlayerColor::Black;  // Draw
+    }
+
+    return result;
+}
+
+BattleStats BattleEngine::runSuiteBattle(
+    const std::vector<TestPosition>& positions,
+    const BattleConfig& config,
+    BattleProgressCallback progress_callback
+) {
+    BattleStats stats;
+    stats.player1_name = config.player1_name;
+    stats.player2_name = config.player2_name;
+
+    // Set random seed
+    if (config.random_seed != 0) {
+        setRandomSeed(config.random_seed);
+    }
+
+    // Validate config
+    if (!validateConfig(config)) {
+        std::cerr << "[BattleEngine] Invalid config, aborting suite battle" << std::endl;
+        return stats;
+    }
+
+    // Reset AI state
+    config.player1->reset();
+    config.player2->reset();
+
+    int total_positions = static_cast<int>(positions.size());
+    int games_per_position = config.num_games / total_positions;
+    if (games_per_position < 1) games_per_position = 1;
+
+    // Run battle on each position
+    for (int pos_idx = 0; pos_idx < total_positions; ++pos_idx) {
+        const auto& position = positions[pos_idx];
+
+        for (int game = 0; game < games_per_position; ++game) {
+            bool player1_first = (game % 2 == 0) == config.alternate_first;
+
+            SingleGameResult result = playFromPosition(
+                position,
+                *config.player1,
+                *config.player2,
+                config.limits1,
+                config.limits2
+            );
+
+            result.game_number = pos_idx * games_per_position + game + 1;
+            updateStats(stats, result, player1_first);
+            stats.games.push_back(result);
+
+            // Progress callback
+            if (progress_callback) {
+                progress_callback(result.game_number, config.num_games, result);
+            }
+
+            // Reset AI state
+            config.player1->reset();
+            config.player2->reset();
+        }
+    }
+
+    stats.total_games = config.num_games;
+    stats.calculate();
+
+    return stats;
+}
+
+std::vector<TestPosition> BattleEngine::getSuiteByType(int type) {
+    switch (type) {
+        case 1: return PositionSuite::getOpening();
+        case 2: return PositionSuite::getMidgame();
+        case 3: return PositionSuite::getEndgame();
+        case 0:
+        default: return PositionSuite::getStandard64();
+    }
+}
+
 } // namespace Reversi
 

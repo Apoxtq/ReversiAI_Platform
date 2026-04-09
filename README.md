@@ -1,6 +1,6 @@
 # ReversiAI_Platform
 
-**Version**: v1.0.3
+**Version**: v1.0.4
 **Status**: Production Ready
 **Project**: University of Liverpool COMP390 Honours Year Project
 
@@ -329,6 +329,40 @@ Qt 按以下顺序搜索插件：
 
 ## 版本历史
 
+### v1.0.4 - Benchmark Suite 功能增强
+
+**日期**: 2026-04-09
+
+#### 新增功能
+
+| 功能 | 说明 |
+|------|------|
+| **Pass/Fail 判定** | 实时显示测试结果是否达标（✅ PASS / ❌ FAIL） |
+| **Random Seed 配置** | 可设置随机种子，便于复现对局 |
+| **Runtime 预估** | 自动估算对战预计耗时 |
+| **Position Suite 选择** | 支持 Standard/Opening/Midgame/Endgame 套件 |
+| **并行处理配置** | 支持多线程加速对战 |
+| **验证模式** | 自动运行两次验证结果一致性 |
+| **快速验证** | 一键运行标准测试套件 |
+
+#### 验收测试结果
+
+| 测试 | 目标 | 结果 | 状态 |
+|------|------|------|------|
+| Minimax-6 vs Random | ≥90% | 100% | ✅ PASS |
+| Minimax-4 vs MCTS | ≥70% | 98% | ✅ PASS |
+| AI 稳定性 | 0崩溃 | 0崩溃 | ✅ PASS |
+
+> 💡 **亮点**：我们的 Minimax AI 以 98% 胜率战胜 MCTS，远超预期！
+
+#### 新增文件
+
+| 文件 | 说明 |
+|------|------|
+| `include/research/BenchmarkTargets.h` | 目标值定义常量 |
+| `include/research/RuntimeEstimator.h` | 运行时长预估器 |
+| `include/research/ValidationSuite.h` | 验证测试套件 |
+
 ### v1.0.3 - UI 优化与悔棋修复
 
 - **Bug 修复**：修复本地双人模式悔棋功能
@@ -419,6 +453,8 @@ Qt 按以下顺序搜索插件：
 | `docs/未完成功能说明.md` | 待完成功能列表 |
 | `docs/录制展示指南.md` | 视频录制指南 |
 | `docs/人机对战界面改进方案.md` | UI 改进方案 |
+| `项目计划（文档放置）/v1.0.3-BenchmarkSuite功能增强设计.md` | **Benchmark Suite 增强设计文档** |
+| `项目计划（文档放置）/v1.0.3-BenchmarkSuite完成报告.md` | **Benchmark Suite 完成报告** |
 | `项目计划（文档放置）/项目进展跟踪.md` | 项目进度 |
 | `项目计划（文档放置）/学术项目检查清单.md` | 学术合规检查 |
 

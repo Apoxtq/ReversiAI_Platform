@@ -1,30 +1,27 @@
 /**
  * @file PvEWindow.h
- * @brief 人机对战窗口
- *
- * 功能:
- * - 人机对战模式
- * - AI难度选择
- * - 先手/后手选择
- * - 返回菜单功能
+ * @brief PvE (Player vs AI) game window
  */
 
-#ifndef PVEWINDOW_H
-#define PVEWINDOW_H
+#pragma once
 
 #include <QMainWindow>
-#include <memory>
+#include <QPushButton>
+#include <QComboBox>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QRadioButton>
+#include <QTimer>
+#include <QPainter>
+#include <QMouseEvent>
 #include <QPixmap>
+#include <memory>
+#include "Board.h"
+#include "ai/AIStrategy.h"
 #include "ui/GameController.h"
-
-// 前向声明，避免循环引用
-namespace Ui {
-class PvEWindow;
-}
-
-namespace Reversi {
-class GameController;
-}
 
 class PvEWindow : public QMainWindow
 {
@@ -35,7 +32,7 @@ public:
     ~PvEWindow() override;
 
 signals:
-    void backToMenu();  // 返回菜单
+    void backToMenu();
 
 protected:
     void paintEvent(QPaintEvent* event) override;
@@ -43,6 +40,7 @@ protected:
 
 private slots:
     void onStartGameClicked();
+    void onNewGameClicked();
     void onGameStarted(Reversi::GameMode mode, Reversi::PlayerColor humanColor);
     void onPhaseChanged(Reversi::GamePhase phase);
     void onTurnChanged(Reversi::PlayerColor player);
@@ -53,19 +51,65 @@ private slots:
     void onAIStatsUpdated(const Reversi::AIStats& stats);
     void onErrorOccurred(const QString& message);
     void onBackToMenuClicked();
+    void onDelayTimerTimeout();
 
 private:
-    void initUI();
+    void setupUI();
+    void setupAIConfig();
+    void setupControls();
     void setupConnections();
     void updateScoreDisplay();
+    void updateButtonStates();
+    void loadResources();
+    void initGame();
 
-    Ui::PvEWindow* ui;
+    // Board dimensions
+    static constexpr int CELL_SIZE = 60;
+    static constexpr int BOARD_SIZE = CELL_SIZE * 8;
+    static constexpr int BOARD_OFFSET_X = 50;
+    static constexpr int BOARD_OFFSET_Y = 30;
+
+    // UI Components
+    QWidget* centralWidget_;
+    QVBoxLayout* leftLayout_;
+    QVBoxLayout* rightLayout_;
+
+    // Board display
+    QPixmap pixmapBackground_, pixmapWhite_, pixmapBlack_;
+    QPixmap pixmapHintWhite_, pixmapHintBlack_, pixmapHintRed_;
+
+    // Info display
+    QLabel* resultLabel_;           // Victory announcement
+    QLabel* turnIndicator_;
+    QLabel* blackScoreLabel_;
+    QLabel* whiteScoreLabel_;
+
+    // AI Configuration
+    QGroupBox* aiConfigGroup_;
+    QRadioButton* aiFirstRadio_;
+    QRadioButton* playerFirstRadio_;
+    QComboBox* algorithmCombo_;
+    QComboBox* difficultyCombo_;
+    QComboBox* depthCombo_;
+    QComboBox* delayCombo_;
+
+    // Control buttons
+    QGroupBox* controlsGroup_;
+    QPushButton* startButton_;
+    QPushButton* newGameButton_;
+    QPushButton* backButton_;
+
+    // Game state
+    enum class GameWatchState { IDLE, PLAYING, PAUSED, GAME_OVER };
+    GameWatchState gameState_;
+    Reversi::Board board_;
+    Reversi::PlayerColor currentPlayer_;
+    Reversi::GameResult gameResult_;
+
+    // Game controller
     std::unique_ptr<Reversi::GameController> gameController_;
 
-    QPixmap background;
-    QPixmap white, black;
-    QPixmap hintwhite, hintblack, hintred;
+    // Move delay
+    int moveDelayMs_;
+    QTimer* moveDelayTimer_;
 };
-
-#endif // PVEWINDOW_H
-
