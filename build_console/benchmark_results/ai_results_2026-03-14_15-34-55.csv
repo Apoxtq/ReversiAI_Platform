@@ -1,5 +1,0 @@
-AI Name,Test Name,Depth,Nodes,Time (ms),Throughput,Unit,Passed
-"MinimaxAI","Minimax",6,8394,41.86,0.00,"M nodes/sec",false
-"MinimaxAI","Minimax",4,309,1.51,0.00,"M nodes/sec",true
-"RandomAI","Random",0,0,0.00,0.00,"games/sec",true
-"MinimaxAI","Minimax",8,34287,206.86,0.00,"M nodes/sec",false

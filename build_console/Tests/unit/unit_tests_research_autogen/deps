@@ -1,4 +1,0 @@
-unit_tests_research_autogen/timestamp: \
-	D:/Project/Reversi/ReversiAI_Platform/Tests/unit/CMakeLists.txt \
-	D:/Project/Reversi/ReversiAI_Platform/Tests/unit/research/BattleEngineTest.cpp \
-	D:/Dev/Scoop/apps/cmake/current/bin/cmake.exe

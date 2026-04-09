@@ -1,5 +1,0 @@
-unit_tests_core_autogen/timestamp: \
-	D:/Project/Reversi/ReversiAI_Platform/Tests/unit/CMakeLists.txt \
-	D:/Project/Reversi/ReversiAI_Platform/Tests/unit/core/BitBoardTest.cpp \
-	D:/Project/Reversi/ReversiAI_Platform/Tests/unit/core/BoardTest.cpp \
-	D:/Dev/Scoop/apps/cmake/current/bin/cmake.exe

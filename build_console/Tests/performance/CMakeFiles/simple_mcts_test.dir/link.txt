@@ -1,3 +1,0 @@
-D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -E rm -f CMakeFiles\simple_mcts_test.dir/objects.a
-D:\Dev\Compilers\MinGW\12.2.0\bin\ar.exe qc CMakeFiles\simple_mcts_test.dir/objects.a @CMakeFiles\simple_mcts_test.dir\objects1.rsp
-D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe -O3 -DNDEBUG -Wl,--whole-archive CMakeFiles\simple_mcts_test.dir/objects.a -Wl,--no-whole-archive -o simple_mcts_test.exe -Wl,--out-implib,libsimple_mcts_test.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\simple_mcts_test.dir\linkLibs.rsp

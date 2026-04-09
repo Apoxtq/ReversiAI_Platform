@@ -1,2 +1,0 @@
-D:\Dev\Compilers\MinGW\12.2.0\bin\ar.exe qc libai_lib.a CMakeFiles/ai_lib.dir/ai_lib_autogen/mocs_compilation.cpp.obj CMakeFiles/ai_lib.dir/src/ai/Evaluator.cpp.obj CMakeFiles/ai_lib.dir/src/ai/AIStrategy.cpp.obj CMakeFiles/ai_lib.dir/src/ai/MinimaxAI.cpp.obj CMakeFiles/ai_lib.dir/src/ai/RandomAI.cpp.obj CMakeFiles/ai_lib.dir/src/ai/AIBattle.cpp.obj CMakeFiles/ai_lib.dir/src/ai/ZobristHash.cpp.obj CMakeFiles/ai_lib.dir/src/ai/TranspositionTable.cpp.obj
-D:\Dev\Compilers\MinGW\12.2.0\bin\ranlib.exe libai_lib.a

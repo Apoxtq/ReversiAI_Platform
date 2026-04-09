@@ -1,2 +1,0 @@
-D:\Dev\Compilers\MinGW\12.2.0\bin\ar.exe qc ..\..\..\lib\libgtest.a CMakeFiles/gtest.dir/gtest_autogen/mocs_compilation.cpp.obj "CMakeFiles/gtest.dir/src/gtest-all.cc.obj"
-D:\Dev\Compilers\MinGW\12.2.0\bin\ranlib.exe ..\..\..\lib\libgtest.a

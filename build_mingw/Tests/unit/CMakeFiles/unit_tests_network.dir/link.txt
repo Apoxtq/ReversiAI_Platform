@@ -1,3 +1,0 @@
-D:\Dev\Scoop\apps\cmake\current\bin\cmake.exe -E rm -f CMakeFiles\unit_tests_network.dir/objects.a
-D:\Dev\Compilers\MinGW\12.2.0\bin\ar.exe qc CMakeFiles\unit_tests_network.dir/objects.a @CMakeFiles\unit_tests_network.dir\objects1.rsp
-D:\Dev\Compilers\MinGW\12.2.0\bin\c++.exe -Wl,--whole-archive CMakeFiles\unit_tests_network.dir/objects.a -Wl,--no-whole-archive -o unit_tests_network.exe -Wl,--out-implib,libunit_tests_network.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\unit_tests_network.dir\linkLibs.rsp
