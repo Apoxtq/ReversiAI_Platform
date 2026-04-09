@@ -12,6 +12,15 @@ lib/
 # Debug and experiment test files
 tests/debug/
 tests/experiments/
+tests/performance/debug_minimax_test.cpp
+
+# Backup and temporary files
+*.cpp.new
+*.cpp.bak
+*_clean.cpp
+
+# Validation test files
+src/ValidationTest.cpp
 
 # Qt Creator
 *.pro.user
