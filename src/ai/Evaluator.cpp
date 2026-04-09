@@ -4,14 +4,14 @@
 
 /**
  * @file Evaluator.cpp
- * @brief 评估函数实现
+ * @brief Evaluation function implementation
  *
- * 将Reversi(Java)的评估算法转换为C++ BitBoard实现
+ * Converts Reversi(Java) evaluation algorithm to C++ BitBoard implementation
  */
 
 namespace Reversi {
 
-// StaticEvaluator 实现
+// StaticEvaluator Implementation
 
 int StaticEvaluator::evaluate(const BitBoard& board, PlayerColor player) const {
     int mobility = evaluateMobility(board, player);
@@ -19,7 +19,7 @@ int StaticEvaluator::evaluate(const BitBoard& board, PlayerColor player) const {
     int corners = evaluateCorners(board, player);
     int position = evaluatePositionWeights(board, player);
 
-    // 权重分配基于Reversi(Java)的经典公式: 2*mob + sc + 1000*evalCorner
+    // Weights based on Reversi(Java) classic formula: 2*mob + sc + 1000*evalCorner
     return MOBILITY_WEIGHT * mobility +
            DISC_DIFF_WEIGHT * discDiff +
            CORNER_WEIGHT * corners +
@@ -27,19 +27,19 @@ int StaticEvaluator::evaluate(const BitBoard& board, PlayerColor player) const {
 }
 
 int StaticEvaluator::evaluateDiscDifference(const BitBoard& board, PlayerColor player) const {
-    // 参考: StaticEvaluator.evalDiscDiff()
+    // Reference: StaticEvaluator.evalDiscDiff()
     int myStones = board.getScore(player);
     PlayerColor opponent = (player == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
     int opStones = board.getScore(opponent);
 
     if (myStones + opStones == 0) return 0;
 
-    // 归一化到-100到100的范围
+    // Normalize to range [-100, 100]
     return 100 * (myStones - opStones) / (myStones + opStones);
 }
 
 int StaticEvaluator::evaluateMobility(const BitBoard& board, PlayerColor player) const {
-    // 参考: StaticEvaluator.evalMobility()
+    // Reference: StaticEvaluator.evalMobility()
     uint64_t myMoves = board.getValidMoves(player);
     PlayerColor opponent = (player == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
     uint64_t opMoves = board.getValidMoves(opponent);
@@ -47,23 +47,23 @@ int StaticEvaluator::evaluateMobility(const BitBoard& board, PlayerColor player)
     int myMoveCount = POPCOUNT64(myMoves);
     int opMoveCount = POPCOUNT64(opMoves);
 
-    // 避免除零错误
+    // Avoid division by zero
     int totalMoves = myMoveCount + opMoveCount;
     if (totalMoves == 0) return 0;
 
-    // 归一化到-100到100的范围
+    // Normalize to range [-100, 100]
     return 100 * (myMoveCount - opMoveCount) / totalMoves;
 }
 
 int StaticEvaluator::evaluateCorners(const BitBoard& board, PlayerColor player) const {
-    // 参考: StaticEvaluator.evalCorner()
+    // Reference: StaticEvaluator.evalCorner()
     PlayerColor opponent = (player == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
 
-    // 检查四个角落 (0,0), (0,7), (7,0), (7,7)
+    // Check four corners: (0,0), (0,7), (7,0), (7,7)
     int myCorners = 0;
     int opCorners = 0;
 
-    // 角落位置的位掩码
+    // Bit masks for corner positions
     const uint64_t cornerMasks[4] = {
         (1ULL << 0),    // (0,0)
         (1ULL << 7),    // (0,7)
@@ -71,9 +71,13 @@ int StaticEvaluator::evaluateCorners(const BitBoard& board, PlayerColor player) 
         (1ULL << 63)    // (7,7)
     };
 
+    // Get correct player/opponent bits from player's perspective
+    uint64_t myBits = (player == PlayerColor::Black) ? board.getPlayerBits() : board.getOpponentBits();
+    uint64_t opBits = (player == PlayerColor::Black) ? board.getOpponentBits() : board.getPlayerBits();
+
     for (uint64_t mask : cornerMasks) {
-        if (board.getPlayerBits() & mask) myCorners++;
-        if (board.getOpponentBits() & mask) opCorners++;
+        if (myBits & mask) myCorners++;
+        if (opBits & mask) opCorners++;
     }
 
     int totalCorners = myCorners + opCorners;
@@ -83,12 +87,13 @@ int StaticEvaluator::evaluateCorners(const BitBoard& board, PlayerColor player) 
 }
 
 int StaticEvaluator::evaluatePositionWeights(const BitBoard& board, PlayerColor player) const {
-    // 参考: StaticEvaluator.evalBoardMap()
+    // Reference: StaticEvaluator.evalBoardMap()
     int score = 0;
-    uint64_t playerBits = board.getPlayerBits();
-    uint64_t opponentBits = board.getOpponentBits();
+    // Get correct player/opponent bits from player's perspective
+    uint64_t playerBits = (player == PlayerColor::Black) ? board.getPlayerBits() : board.getOpponentBits();
+    uint64_t opponentBits = (player == PlayerColor::Black) ? board.getOpponentBits() : board.getPlayerBits();
 
-    // 遍历每个位置
+    // Iterate over each position
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
             int pos = row * 8 + col;
@@ -105,47 +110,47 @@ int StaticEvaluator::evaluatePositionWeights(const BitBoard& board, PlayerColor 
     return score;
 }
 
-// DynamicEvaluator 实现
+// DynamicEvaluator Implementation
 
 void DynamicEvaluator::setGamePhase(double phase) {
-    game_phase_ = std::max(0.0, std::min(2.0, phase));  // 限制在0-2范围
+    game_phase_ = std::max(0.0, std::min(2.0, phase));  // Clamp to [0, 2] range
 }
 
 int DynamicEvaluator::evaluate(const BitBoard& board, PlayerColor player) const {
-    // 基础静态评估
+    // Base static evaluation
     int baseScore = static_evaluator_.evaluate(board, player);
 
-    // 根据游戏阶段调整权重
-    // 开局: 强调位置和移动性
-    // 中局: 平衡各项因素
-    // 残局: 强调棋子数量
+    // Adjust weights based on game phase
+    // Opening: emphasize position and mobility
+    // Mid-game: balance all factors
+    // End-game: emphasize disc count
 
     double positionWeight = 1.0;
     double mobilityWeight = 1.0;
     double cornerWeight = 1.0;
 
     if (game_phase_ < 1.0) {
-        // 开局阶段
+        // Opening phase
         positionWeight = 1.5;
         mobilityWeight = 1.2;
     } else if (game_phase_ < 2.0) {
-        // 中局阶段
+        // Mid-game phase
         positionWeight = 1.0;
         mobilityWeight = 1.0;
     } else {
-        // 残局阶段
+        // End-game phase
         positionWeight = 0.5;
         mobilityWeight = 0.3;
         cornerWeight = 0.7;
     }
 
-    // 这里可以进一步细化评估逻辑
-    // 目前返回基础分数，将来可以扩展为多组件评估
+    // Further refinements can be added here
+    // Currently returns base score; extensible to multi-component evaluation
 
     return baseScore;
 }
 
-// EvaluatorFactory 实现
+// EvaluatorFactory Implementation
 
 std::unique_ptr<Evaluator> EvaluatorFactory::createStaticEvaluator() {
     return std::make_unique<StaticEvaluator>();

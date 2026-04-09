@@ -74,6 +74,22 @@
      <string>2</string>
     </property>
    </widget>
+   <widget class="QLabel" name="whiteLabel">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>200</y>
+      <width>100</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 20pt &quot;Adobe 黑体 Std R&quot;;</string>
+    </property>
+    <property name="text">
+     <string>White</string>
+    </property>
+   </widget>
    <widget class="QLabel" name="turnLabel">
     <property name="geometry">
      <rect>

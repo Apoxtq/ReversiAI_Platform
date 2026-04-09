@@ -1,9 +1,6 @@
 /**
  * @file KillerTable.cpp
- * @brief Killer Moves 实现
- *
- * @see KillerTable.h
- * 参考: Egaroucid/src/engine/move_ordering.hpp
+ * @brief Killer Moves implementation
  */
 
 #include "ai/KillerTable.h"
@@ -17,23 +14,18 @@ KillerTable::KillerTable() {
 }
 
 void KillerTable::addKiller(int depth, int move, int score) {
-    // 边界检查
     if (depth < 0 || depth >= MAX_DEPTH || move < 0 || move >= 64) {
         return;
     }
 
-    // 检查是否已存在
     int existingIdx = findExistingIndex(depth, move);
     if (existingIdx >= 0) {
-        // 已存在，增加分数
         killers_[depth][existingIdx].score += score;
         return;
     }
 
-    // 找到最低分数位置
     int lowestIdx = findLowestScoreIndex(depth);
 
-    // 只有当新分数更高时才替换
     if (score > killers_[depth][lowestIdx].score) {
         killers_[depth][lowestIdx] = KillerMove(move, score, depth);
     }
@@ -46,14 +38,12 @@ std::vector<int> KillerTable::getKillers(int depth) const {
         return result;
     }
 
-    // 收集有效的杀手走法
     for (int i = 0; i < MAX_KILLER_COUNT; ++i) {
         if (killers_[depth][i].isValid()) {
             result.push_back(killers_[depth][i].move);
         }
     }
 
-    // 按分数降序排序
     std::sort(result.begin(), result.end(), [this, depth](int a, int b) {
         return getKillerScore(depth, a) > getKillerScore(depth, b);
     });
@@ -96,7 +86,6 @@ void KillerTable::clear() {
 }
 
 void KillerTable::decay(double factor) {
-    // 防止factor超出有效范围
     if (factor < 0.0 || factor > 1.0) {
         factor = 0.99;
     }
@@ -105,7 +94,6 @@ void KillerTable::decay(double factor) {
         for (int i = 0; i < MAX_KILLER_COUNT; ++i) {
             if (killers_[d][i].isValid()) {
                 killers_[d][i].score = static_cast<int>(killers_[d][i].score * factor);
-                // 如果分数太低，清除
                 if (killers_[d][i].score <= 0) {
                     killers_[d][i] = KillerMove();
                 }

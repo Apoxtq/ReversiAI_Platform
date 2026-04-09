@@ -180,7 +180,7 @@ signals:
 private slots:
     /**
      * @brief Send discovery broadcast
-     * 
+     *
      * Reference: Egaroucid heartbeat pattern (ggs.hpp 554-556)
      */
     void sendBroadcast();
@@ -191,6 +191,11 @@ private slots:
     void onDatagramReceived();
 
     /**
+     * @brief Handle incoming datagrams on loopback socket
+     */
+    void onLoopbackDatagramReceived();
+
+    /**
      * @brief Handle broadcast timeout
      */
     void onBroadcastTimeout();
@@ -198,7 +203,8 @@ private slots:
 private:
     // ==================== Sockets ====================
     QUdpSocket* broadcastSocket_;      ///< For sending broadcasts
-    QUdpSocket* listenSocket_;         ///< For receiving broadcasts
+    QUdpSocket* listenSocket_;          ///< For receiving broadcasts (binds 0.0.0.0)
+    QUdpSocket* loopbackSocket_;        ///< For receiving loopback broadcasts (binds 127.0.0.1)
 
     // ==================== Timers ====================
     QTimer* discoveryTimer_;          ///< Discovery interval timer
@@ -208,7 +214,8 @@ private:
     QString playerName_;              ///< Our player name
     QString roomName_;                ///< Our room name
     quint16 broadcastPort_;           ///< Port to broadcast on
-    quint16 listenPort_;              ///< Port to listen on
+    quint16 listenPort_;              ///< Port to listen on (UDP discovery)
+    quint16 gamePort_;                ///< TCP game port for incoming connections
     QString gameVersion_;             ///< Game version
     bool isDiscovering_;              ///< Discovery state
     bool isBroadcasting_;             ///< Broadcasting state

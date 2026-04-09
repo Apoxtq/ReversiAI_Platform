@@ -1,12 +1,13 @@
 /**
- *.h
- * @ @file HistoryTablebrief History Heuristic (历史启发) 实现
+ * @file HistoryTable.h
+ * @brief History Heuristic implementation
  *
- * 记录每个走法在历史上导致剪枝的次数，用于全局走法排序
+ * Records how often each move caused cutoffs in the search tree,
+ * used for global move ordering.
  *
- * 参考: Egaroucid/src/engine/move_ordering.hpp
- * 参考: edax-reversi/src/play.c
- * v0.7.0 - AI算法优化版
+ * Reference: Egaroucid/src/engine/move_ordering.hpp
+ *           edax-reversi/src/play.c
+ * v0.7.0 - AI algorithm optimization version
  */
 
 #pragma once
@@ -19,95 +20,95 @@
 namespace Reversi {
 
 /**
- * @brief History Table (历史启发表)
+ * @brief History Table
  *
- * 记录每个走法在历史上导致剪枝的次数，用于全局走法排序
+ * Records how often each move caused beta cutoffs in the search history,
+ * used for global move ordering.
  *
- * 设计要点:
- * - 64x64 矩阵存储所有可能的走法
- * - 每次Beta剪枝时增加历史得分
- * - 搜索前进行衰减处理
- * - 结合位置和目标格进行索引
+ * Design highlights:
+ * - 64x64 matrix storing all possible moves
+ * - Score increases each time a move causes cutoff
+ * - Decay applied before each search to prevent stale data
+ * - Indexed by from/to position
  */
 class HistoryTable {
 public:
-    static constexpr int NUM_SQUARES = 64;    ///< 棋盘格子数
-    static constexpr int MAX_HISTORY_SCORE = 1000000;  ///< 最大历史分数
-    static constexpr double DEFAULT_DECAY = 0.99;  ///< 默认衰减因子
+    static constexpr int NUM_SQUARES = 64;       ///< Number of board squares
+    static constexpr int MAX_HISTORY_SCORE = 1000000;  ///< Maximum history score
+    static constexpr double DEFAULT_DECAY = 0.99;  ///< Default decay factor
 
 public:
     /**
-     * @brief 构造函数
+     * @brief Constructor
      */
     HistoryTable();
 
     /**
-     * @brief 增加走法历史得分
+     * @brief Add history score for a move
      *
-     * 当一个走法导致剪枝时调用，增加其历史得分
-     * 使用深度加权：越深的搜索历史越重要
+     * Called when a move causes cutoff, increases its history score.
+     * Uses depth weighting: deeper search = more important history.
      *
-     * @param from 起始位置 (0-63)
-     * @param to 目标位置 (0-63)
-     * @param depth 搜索深度
-     * @param isCutoff 是否导致剪枝 (默认true)
+     * @param from Start position (0-63)
+     * @param to Target position (0-63)
+     * @param depth Search depth
+     * @param isCutoff Whether this caused cutoff (default true)
      */
     void addHistory(int from, int to, int depth, bool isCutoff = true);
 
     /**
-     * @brief 获取走法历史得分
-     * @param from 起始位置
-     * @param to 目标位置
-     * @return 历史得分
+     * @brief Get history score for a move
+     * @param from Start position
+     * @param to Target position
+     * @return History score
      */
     int getHistoryScore(int from, int to) const;
 
     /**
-     * @brief 获取排序后的走法列表
-     * @param moves 原始走法列表 (格式: from * 64 + to)
-     * @return 排序后的走法列表
+     * @brief Get sorted move list
+     * @param moves Original move list (format: from * 64 + to)
+     * @return Sorted move list
      */
     std::vector<int> getSortedMoves(const std::vector<int>& moves) const;
 
     /**
-     * @brief 清空历史表
+     * @brief Clear history table
      */
     void clear();
 
     /**
-     * @brief 衰减历史得分
-     * 防止历史数据过时
-     * @param factor 衰减因子 (0.0-1.0)
+     * @brief Decay all history scores
+     * Prevents stale history data from dominating
+     * @param factor Decay factor (0.0-1.0)
      */
     void decay(double factor = DEFAULT_DECAY);
 
     /**
-     * @brief 获取统计信息
+     * @brief Get statistics
      */
     struct Statistics {
-        int maxScore;           ///< 最高历史分数
-        int minScore;           ///< 最低非零分数
-        int totalEntries;       ///< 非零条目数
-        double averageScore;    ///< 平均分数
+        int maxScore;           ///< Maximum history score
+        int minScore;           ///< Minimum non-zero score
+        int totalEntries;       ///< Number of non-zero entries
+        double averageScore;    ///< Average score
     };
     Statistics getStatistics() const;
 
     /**
-     * @brief 规范化所有历史分数
-     * 防止分数溢出
+     * @brief Normalize all history scores
+     * Prevents score overflow
      */
     void normalize();
 
 private:
     /**
-     * @brief 检查位置是否有效
-     * @param pos 位置 (0-63)
-     * @return true表示有效
+     * @brief Check if position is valid
+     * @param pos Position (0-63)
+     * @return true if valid
      */
     bool isValidPosition(int pos) const;
 
-    // History矩阵: [from][to] = 历史得分
-    // history_[from][to] 表示从from到to的走法历史得分
+    // History matrix: [from][to] = history score
     std::array<std::array<int, NUM_SQUARES>, NUM_SQUARES> history_;
 };
 

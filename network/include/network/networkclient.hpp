@@ -102,7 +102,7 @@ public:
      * 
      * Reference: Egaroucid ggs.hpp ggs_send_message() (line 197-203)
      */
-    bool sendMessage(const Message& message);
+    virtual bool sendMessage(const Message& message);
 
     /**
      * @brief Send a move message
@@ -198,6 +198,21 @@ signals:
      */
     void heartbeatReceived();
 
+    /**
+     * @brief Emitted when a chat message is received
+     * @param sender Sender name
+     * @param message Message content
+     */
+    void chatMessageReceived(const QString& sender, const QString& message);
+
+    /**
+     * @brief Emitted when a player is ready
+     * @param playerName Player name from payload
+     * @param sender Sender name from message header
+     * @param timestamp Message timestamp
+     */
+    void playerReadyReceived(const QString& playerName, const QString& sender, qint64 timestamp);
+
     // State signals
     /**
      * @brief Emitted when connection state changes
@@ -252,17 +267,17 @@ private slots:
      */
     void onHeartbeatTimeout();
 
-private:
+protected:
     // ==================== Core Socket ====================
     QTcpSocket* socket_;              ///< TCP socket (replaces SOCKET)
 
     // ==================== State Management ====================
     ConnectionState state_;           ///< Current connection state
-    QTimer* reconnectTimer_;          ///< Auto-reconnect timer
+    QTimer* reconnectTimer_;        ///< Auto-reconnect timer
 
     // ==================== Message Handling ====================
-    QByteArray receiveBuffer_;        ///< Receive buffer (reference: ggs.hpp server_reply[20000])
-    uint32_t messageSize_;            ///< Expected message size (0 = header not read)
+    QByteArray receiveBuffer_;       ///< Receive buffer (reference: ggs.hpp server_reply[20000])
+    uint32_t messageSize_;           ///< Expected message size (0 = header not read)
     static constexpr int MAX_MESSAGE_SIZE = 65536;  ///< Max message size
 
     // ==================== Send Queue ====================
@@ -312,6 +327,7 @@ private:
      * @brief Emit appropriate signal based on message type
      * @param message Message to dispatch
      */
+protected:
     void dispatchMessage(const Message& message);
 
     /**
@@ -404,14 +420,35 @@ signals:
     void clientDisconnected();
 
 private slots:
-    /**
-     * @brief Handle new connection
-     */
     void onNewConnection();
+    void onClientReadyRead();
+    void onClientDisconnected();
 
 private:
-    QTcpServer* server_;              ///< TCP server for hosting
-    quint16 listeningPort_;          ///< Port we're listening on
+    void processReceiveBuffer();
+
+public:
+    /**
+     * @brief Send message to client (overrides NetworkClient::sendMessage)
+     * @param message Message to send
+     * @return true if sent successfully
+     */
+    virtual bool sendMessage(const Message& message) override;
+
+    /**
+     * @brief Send move directly via client socket (host mode)
+     * @param row Row (0-7)
+     * @param col Column (0-7)
+     * @param player Player color
+     * @param moveNumber Move number
+     * @return true if sent successfully
+     */
+    bool sendMove(int row, int col, const QString& player, int moveNumber);
+
+private:
+    QTcpServer* server_;
+    quint16 listeningPort_;
+    QTcpSocket* clientSocket_;
 };
 
 } // namespace Network

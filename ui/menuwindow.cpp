@@ -3,22 +3,21 @@
 #include "ui/PvPWindow.h"
 #include "ui/NetworkLobbyWindow.h"
 #include "ui/NetworkGameWindow.h"
+#include "ui/AIvsAIWindow.h"
+#include "ui/AIWatchWindow.h"
 #include "ui_menuwindow.h"
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QMessageBox>
 #include <QDebug>
 
-// 前向声明
-namespace Reversi { class AIvsAIWindow; }
-
 MenuWindow::MenuWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MenuWindow) {
     ui->setupUi(this);
-    setFixedSize(450, 480);
+    setFixedSize(450, 530);
 
-    // 设置标题样式
+    // Title style
     ui->titleLabel->setStyleSheet(
         "QLabel {"
         "    color: #2c3e50;"
@@ -26,7 +25,7 @@ MenuWindow::MenuWindow(QWidget* parent)
         "}"
     );
 
-    // 设置副标题样式
+    // Subtitle style
     ui->subtitleLabel->setStyleSheet(
         "QLabel {"
         "    color: #7f8c8d;"
@@ -34,7 +33,7 @@ MenuWindow::MenuWindow(QWidget* parent)
         "}"
     );
 
-    // 设置版本标签样式
+    // Version label style
     if (ui->versionLabel) {
         ui->versionLabel->setStyleSheet(
             "QLabel {"
@@ -44,7 +43,7 @@ MenuWindow::MenuWindow(QWidget* parent)
         );
     }
 
-    // 设置 PvE 按钮样式
+    // PvE button style
     ui->pveButton->setStyleSheet(
         "QPushButton {"
         "    background-color: #4CAF50;"
@@ -60,7 +59,7 @@ MenuWindow::MenuWindow(QWidget* parent)
         "}"
     );
 
-    // 设置 PvP 按钮样式
+    // PvP button style
     ui->pvpButton->setStyleSheet(
         "QPushButton {"
         "    background-color: #2196F3;"
@@ -76,38 +75,7 @@ MenuWindow::MenuWindow(QWidget* parent)
         "}"
     );
 
-    // 动态添加AI研究模式按钮
-    QPushButton* aiResearchButton = new QPushButton(tr("AI Research Mode"), this);
-    aiResearchButton->setObjectName("aiResearchButton");
-    aiResearchButton->setStyleSheet(
-        "QPushButton {"
-        "    background-color: #9b59b6;"
-        "    color: white;"
-        "    border-radius: 8px;"
-        "    padding: 10px;"
-        "    font-weight: bold;"
-        "}"
-        "QPushButton:hover {"
-        "    background-color: #8e44ad;"
-        "}"
-        "QPushButton:pressed {"
-        "    background-color: #7d3c98;"
-        "}"
-    );
-
-    // 将按钮添加到垂直布局中（位于networkButton之后）
-    QVBoxLayout* mainLayout = qobject_cast<QVBoxLayout*>(ui->verticalLayout);
-    if (mainLayout) {
-        int networkIndex = mainLayout->indexOf(ui->networkButton);
-        if (networkIndex >= 0) {
-            mainLayout->insertWidget(networkIndex + 1, aiResearchButton);
-        }
-    }
-
     setupConnections();
-
-    // 连接AI研究按钮
-    connect(aiResearchButton, &QPushButton::clicked, this, &MenuWindow::onAIResearchButtonClicked);
 }
 
 MenuWindow::~MenuWindow() {
@@ -119,8 +87,12 @@ void MenuWindow::setupConnections() {
             this, &MenuWindow::onPvEButtonClicked);
     connect(ui->pvpButton, &QPushButton::clicked,
             this, &MenuWindow::onPvPButtonClicked);
+    connect(ui->aiVsAiButton, &QPushButton::clicked,
+            this, &MenuWindow::onAiVsAiButtonClicked);
     connect(ui->networkButton, &QPushButton::clicked,
             this, &MenuWindow::onNetworkButtonClicked);
+    connect(ui->benchmarkButton, &QPushButton::clicked,
+            this, &MenuWindow::onBenchmarkButtonClicked);
 }
 
 void MenuWindow::onPvEButtonClicked() {
@@ -152,6 +124,38 @@ void MenuWindow::onPvPButtonClicked() {
     });
 
     pvpWindow->show();
+    this->hide();
+}
+
+void MenuWindow::onAiVsAiButtonClicked() {
+    qDebug() << "MenuWindow: Opening Watch AI Battle";
+
+    // 直接打开 Watch Single Battle 窗口
+    Reversi::AIWatchWindow* watchWindow = new Reversi::AIWatchWindow(this);
+    watchWindow->setAttribute(Qt::WA_DeleteOnClose);
+
+    connect(watchWindow, &Reversi::AIWatchWindow::backToMenu, this, [this, watchWindow]() {
+        watchWindow->close();
+        this->show();
+    });
+
+    watchWindow->show();
+    this->hide();
+}
+
+void MenuWindow::onBenchmarkButtonClicked() {
+    qDebug() << "MenuWindow: Opening Benchmark Suite";
+
+    // 打开 AI Research Mode (Benchmark)
+    Reversi::AIvsAIWindow* aiWindow = new Reversi::AIvsAIWindow(this);
+    aiWindow->setAttribute(Qt::WA_DeleteOnClose);
+
+    connect(aiWindow, &Reversi::AIvsAIWindow::backToMenu, this, [this, aiWindow]() {
+        aiWindow->close();
+        this->show();
+    });
+
+    aiWindow->show();
     this->hide();
 }
 

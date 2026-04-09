@@ -108,10 +108,17 @@ add_executable(ReversiAI_Platform_Console
 # Include directories
 target_include_directories(ReversiAI_Platform_Console PRIVATE include ai)
 
+# Validation Test executable
+add_executable(ValidationTest
+    src/ValidationTest.cpp
+)
+target_include_directories(ValidationTest PRIVATE include ai src)
+target_link_libraries(ValidationTest PRIVATE ai_lib research_lib)
+
 # Core library: compile central sources once and link where needed
 add_library(core_lib STATIC
-    src/core/BitBoard.cpp
     src/Board.cpp
+    src/core/BitBoard.cpp
 )
 target_include_directories(core_lib PUBLIC include include/core)
 target_compile_features(core_lib PUBLIC cxx_std_17)
@@ -143,14 +150,20 @@ if(Qt6_FOUND)
         src/research/PositionSuite.cpp
         src/research/BattleEngine.cpp
         src/research/Statistics.cpp
-        src/research/GameRecord.cpp         # v0.9.0: 对局记录系统
-        src/research/BitboardBenchmark.cpp  # v0.8.0: Bitboard性能测试
-        src/research/AIBenchmark.cpp       # v0.8.0: AI性能测试
-        src/research/DataExporter.cpp      # v0.8.0: 数据导出
+        src/research/GameRecord.cpp         # v0.9.0: Game record system
+        src/research/BitboardBenchmark.cpp  # v0.8.0: Bitboard performance test
+        src/research/AIBenchmark.cpp       # v0.8.0: AI performance test
+        src/research/DataExporter.cpp      # v0.8.0: Data export
+        src/research/RuntimeEstimator.cpp  # v1.0.3: Runtime estimation
+        src/research/ValidationSuite.cpp   # v1.0.3: Validation suite
     )
     target_include_directories(research_lib PUBLIC include include/research)
     target_compile_features(research_lib PUBLIC cxx_std_17)
     target_link_libraries(research_lib PUBLIC ai_lib Qt6::Core)
+    # 禁用 /permissive- 以避免 std::chrono 命名空间问题 (Qt 6.x MSVC 兼容性问题)
+    if(MSVC)
+        target_compile_options(research_lib PRIVATE /permissive-:no-)
+    endif()
 else()
     add_library(research_lib STATIC
         src/research/PositionSuite.cpp
@@ -159,10 +172,16 @@ else()
         src/research/BitboardBenchmark.cpp
         src/research/AIBenchmark.cpp
         src/research/DataExporter.cpp
+        src/research/RuntimeEstimator.cpp  # v1.0.3: Runtime estimation
+        src/research/ValidationSuite.cpp   # v1.0.3: Validation suite
     )
     target_include_directories(research_lib PUBLIC include include/research)
     target_compile_features(research_lib PUBLIC cxx_std_17)
     target_link_libraries(research_lib PUBLIC ai_lib)
+    # 禁用 /permissive- 以避免 std::chrono 命名空间问题
+    if(MSVC)
+        target_compile_options(research_lib PRIVATE /permissive-:no-)
+    endif()
 endif()
 
 # Network library: compile network components for LAN multiplayer (v0.5.0)
@@ -209,8 +228,10 @@ if(Qt6_FOUND)
         src/ui/StatisticsManager.cpp
         src/ui/NetworkLobbyWindow.cpp
         src/ui/NetworkGameWindow.cpp
-        src/ui/AIvsAIWindow.cpp            # v0.6.0: AI对战窗口
-        # v0.9.0: 可视化增强
+        src/ui/AIvsAIWindow.cpp            # v0.6.0: AI battle window
+        src/ui/AIvsAISelectWindow.cpp      # v1.0.3: AI mode selection window
+        src/ui/AIWatchWindow.cpp           # v1.0.3: AI watch single battle window
+        # v0.9.0: Visualization enhancements
         src/ui/SearchTreeWidget.cpp
         src/ui/SearchStatisticsPanel.cpp
         src/ui/BoardHeatmap.cpp
@@ -250,8 +271,10 @@ if(BUILD_QT_GUI)
             include/ui/NetworkLobbyWindow.h
             include/ui/NetworkGameWindow.h
             include/ui/StatisticsManager.h
-            include/ui/AIvsAIWindow.h         # v0.6.0: AI对战窗口
-            # v0.9.0: 可视化增强
+            include/ui/AIvsAIWindow.h         # v0.6.0: AI battle window
+            include/ui/AIvsAISelectWindow.h    # v1.0.3: AI mode selection
+            include/ui/AIWatchWindow.h         # v1.0.3: AI watch single battle
+            # v0.9.0: Visualization enhancements
             include/ui/SearchTreeWidget.h
             include/ui/SearchStatisticsPanel.h
             include/ui/BoardHeatmap.h
@@ -276,14 +299,15 @@ if(BUILD_QT_GUI)
         main.cpp
         ui/mainwindow.cpp
         ui/menuwindow.cpp
-        ui/MenuWindowAIResearch.cpp
-        ui/MenuWindowReplayAnalysis.cpp   # v0.9.0: 复盘分析按钮
+        ui/MenuWindowReplayAnalysis.cpp   # v0.9.0: Replay analysis
         ui/pvewindow.cpp
         ui/pvpwindow.cpp
         src/ui/networklobbywindow.cpp
         src/ui/networkgamewindow.cpp
-        src/ui/AIvsAIWindow.cpp          # v0.6.0: AI对战窗口
-        # v0.9.0: 可视化增强
+        src/ui/AIvsAIWindow.cpp           # v0.6.0: AI battle window
+        src/ui/AIvsAISelectWindow.cpp     # v1.0.3: AI mode selection
+        src/ui/AIWatchWindow.cpp          # v1.0.3: AI watch single battle
+        # v0.9.0: Visualization enhancements
         src/ui/SearchTreeWidget.cpp
         src/ui/SearchStatisticsPanel.cpp
         src/ui/BoardHeatmap.cpp

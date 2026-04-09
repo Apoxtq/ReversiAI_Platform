@@ -410,8 +410,10 @@ std::vector<BitBoard> BitboardBenchmark::getTestPositions() {
     positions.push_back(BitBoard(p2, o2));
 
     // 3. 中局 - 更多棋子
-    uint64_t p3 = p2 | (1ULL << 18) | (1ULL << 10);
-    uint64_t o3 = o2 | (1ULL << 17) | (1ULL << 11);
+    // 修复: o2 初始包含 bit 10，与 p3 中的 bit 10 冲突
+    // 重新分配: p3 新增 bit 11，o3 新增 bit 12 (均不与初始 bits {10,19,26,27,35} 冲突)
+    uint64_t p3 = p2 | (1ULL << 18) | (1ULL << 11);
+    uint64_t o3 = o2 | (1ULL << 17) | (1ULL << 12);
     std::cout << "  Position 3: p3=0x" << std::hex << p3 << ", o3=0x" << o3 << ", overlap=" << ((p3 & o3) ? "YES" : "no") << std::dec << std::endl;
     positions.push_back(BitBoard(p3, o3));
 

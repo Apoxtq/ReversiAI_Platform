@@ -3,7 +3,7 @@
 
 /**
  * @file RandomAI.cpp
- * @brief 随机AI实现
+ * @brief Random AI implementation
  */
 
 namespace Reversi {
@@ -14,18 +14,15 @@ Move RandomAI::findBestMove(const Board& board, const SearchLimits& limits) {
     auto validMoves = board.getValidMoves();
 
     if (validMoves.empty()) {
-        // 没有有效移动，返回跳过
         return Move::pass();
     }
 
-    // 从有效移动中随机选择一个
     std::uniform_int_distribution<size_t> dist(0, validMoves.size() - 1);
     size_t randomIndex = dist(rng_);
 
-    // 更新统计信息
-    stats_.nodesExplored = 1;  // 只探索了一个"选择"
-    stats_.evaluationCount = 0;  // 不需要评估
-    stats_.avgBranching = validMoves.size();
+    stats_.nodesExplored = 1;
+    stats_.evaluationCount = 0;
+    stats_.avgBranching = static_cast<double>(validMoves.size());
 
     return validMoves[randomIndex];
 }
@@ -45,13 +42,21 @@ std::string RandomAI::getConfigDescription() const {
 
 void RandomAI::reset() {
     stats_ = AIStats{};
-    rng_.seed(seed_);  // 重新初始化随机数生成器
+    rng_.seed(seed_);
 }
 
 bool RandomAI::supportsFeature(const std::string& feature) const {
-    if (feature == "deterministic") return true;  // 给定种子时是确定性的
-    if (feature == "fast") return true;           // 执行很快
+    if (feature == "deterministic") return true;
+    if (feature == "fast") return true;
     return AIStrategy::supportsFeature(feature);
+}
+
+void RandomAI::setColor(PlayerColor color) {
+    (void)color;
+}
+
+PlayerColor RandomAI::getColor() const {
+    return PlayerColor::Black;
 }
 
 void RandomAI::setSeed(unsigned int seed) {

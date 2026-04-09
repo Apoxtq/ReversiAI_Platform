@@ -36,7 +36,7 @@ TEST_F(BattleEngineTest, PlaySingleGame) {
     SearchLimits limits;
     limits.maxDepth = 2;
 
-    GameResult result = BattleEngine::playSingleGame(
+    SingleGameResult result = BattleEngine::playSingleGame(
         *ai1_, *ai2_,
         PlayerColor::Black,
         limits, limits
@@ -60,7 +60,7 @@ TEST_F(BattleEngineTest, PlayMultipleGames) {
     int black_wins = 0, white_wins = 0, draws = 0;
 
     for (int i = 0; i < 10; ++i) {
-        GameResult result = BattleEngine::playSingleGame(
+        SingleGameResult result = BattleEngine::playSingleGame(
             *ai1_, *ai2_,
             PlayerColor::Black,
             limits, limits
@@ -113,7 +113,7 @@ TEST_F(BattleEngineTest, BattleStatsCalculation) {
 
     // 手动添加一些游戏结果
     for (int i = 0; i < 60; ++i) {
-        GameResult game;
+        SingleGameResult game;
         game.game_number = i + 1;
         game.winner = PlayerColor::Black;
         game.black_score = 40 + (i % 10);
@@ -128,7 +128,8 @@ TEST_F(BattleEngineTest, BattleStatsCalculation) {
     // 验证计算
     EXPECT_DOUBLE_EQ(stats.win_rate1, 0.6);
     EXPECT_DOUBLE_EQ(stats.win_rate2, 0.3);
-    EXPECT_DOUBLE_EQ(stats.avg_margin, 16.0);
+    // avg_margin = sum of (black_score - white_score) / total_games = 960/100 = 9.6
+    EXPECT_NEAR(stats.avg_margin, 9.6, 0.001);
 }
 
 // ============================================================================

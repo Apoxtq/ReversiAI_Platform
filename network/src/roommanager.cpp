@@ -11,6 +11,7 @@
 */
 
 #include "network/roommanager.hpp"
+#include "network/message.hpp"
 #include <QDebug>
 #include <QRandomGenerator>
 
@@ -122,27 +123,34 @@ bool RoomManager::joinRoom(const QString& roomId, const QString& playerName,
 {
     Q_UNUSED(playerColor)
     
+    qDebug() << "RoomManager::joinRoom called with roomId:" << roomId << "playerName:" << playerName;
+    
     if (!rooms_.contains(roomId)) {
+        qWarning() << "joinRoom failed: Room not found" << roomId;
         emit error("Room not found:" + roomId);
         return false;
     }
     
     GameRoom& room = rooms_[roomId];
+    qDebug() << "Room found, current state:" << static_cast<int>(room.state) << "players:" << room.players.size();
     
     // Check room state
     if (room.state != RoomState::WAITING && room.state != RoomState::READY) {
+        qWarning() << "joinRoom failed: Room state is" << static_cast<int>(room.state) << "(not WAITING or READY)";
         emit error("Cannot join room in state:" + QString::number(static_cast<int>(room.state)));
         return false;
     }
     
     // Check if room is full
     if (isRoomFull(room)) {
+        qWarning() << "joinRoom failed: Room is full" << room.players.size() << "players";
         emit error("Room is full");
         return false;
     }
     
     // Check if player already in room
     if (room.players.contains(playerName)) {
+        qWarning() << "joinRoom failed: Player" << playerName << "already in room";
         emit error("Player already in room");
         return false;
     }
@@ -190,6 +198,54 @@ GameRoom* RoomManager::getRoom(const QString& roomId)
         return &rooms_[roomId];
     }
     return nullptr;
+}
+
+GameRoom* RoomManager::getRoomByHost(const QHostAddress& address, quint16 port)
+{
+    for (auto it = rooms_.begin(); it != rooms_.end(); ++it) {
+        if (it.value().hostAddress == address && it.value().hostPort == port) {
+            return &it.value();
+        }
+    }
+    return nullptr;
+}
+
+bool RoomManager::addDiscoveredHost(const DiscoveredHost& host)
+{
+    // Check if already exists (by host address + port)
+    if (getRoomByHost(host.address, host.port)) {
+        qDebug() << "Discovered host already tracked:" << host.playerName << "@" << host.address.toString() << ":" << host.port;
+        return true; // Already tracked
+    }
+
+    GameRoom room;
+    room.roomId = QString("disc_%1_%2").arg(host.address.toString()).arg(host.port);
+    room.roomName = host.roomName.isEmpty() ? QString("%1's Room").arg(host.playerName) : host.roomName;
+    room.hostName = host.playerName;
+    room.state = RoomState::WAITING;
+    room.gameVersion = host.gameVersion;
+    room.createTime = QDateTime::currentMSecsSinceEpoch();
+    room.lastActivityTime = room.createTime;
+    // NOTE: Do NOT add host to players list - this is a discovered room for others to join
+    // The host is not actually in this room from the client's perspective
+    room.hostAddress = host.address;
+    room.hostPort = host.port;
+
+    qDebug() << "Adding new discovered host as room:";
+    qDebug() << "  roomId:" << room.roomId;
+    qDebug() << "  roomName:" << room.roomName;
+    qDebug() << "  hostName:" << room.hostName;
+    qDebug() << "  hostAddress:" << room.hostAddress.toString();
+    qDebug() << "  hostPort:" << room.hostPort;
+    qDebug() << "  isJoinable:" << room.isJoinable();
+
+    rooms_[room.roomId] = room;
+    emit roomCreated(room);
+    emit roomListChanged();
+
+    qInfo() << "Added discovered host as room:" << room.roomName
+            << "@" << host.address.toString() << ":" << host.port;
+    return true;
 }
 
 // ==================== Room Query ====================

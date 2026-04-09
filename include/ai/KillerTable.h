@@ -1,11 +1,12 @@
 /**
  * @file KillerTable.h
- * @brief Killer Moves (杀手走法) 实现
+ * @brief Killer Moves implementation
  *
- * 记录在搜索树中导致Beta剪枝的走法，在相同深度搜索时优先尝试这些走法
+ * Records moves that caused beta cutoffs in the search tree.
+ * These moves are tried first at the same depth.
  *
- * 参考: Egaroucid/src/engine/move_ordering.hpp
- * v0.7.0 - AI算法优化版
+ * Reference: Egaroucid/src/engine/move_ordering.hpp
+ * v0.7.0 - AI algorithm optimization version
  */
 
 #pragma once
@@ -17,14 +18,14 @@
 namespace Reversi {
 
 /**
- * @brief Killer Move结构
+ * @brief Killer Move structure
  *
- * 记录导致剪枝的走法信息
+ * Records information about a move that caused cutoff
  */
 struct KillerMove {
-    int move;          ///< 走法位置 (0-63)
-    int score;         ///< 杀手系数 (导致剪枝的次数)
-    int depth;         ///< 搜索深度
+    int move;          ///< Move position (0-63)
+    int score;         ///< Killer coefficient (cutoff count)
+    int depth;         ///< Search depth
 
     KillerMove() : move(-1), score(0), depth(0) {}
     KillerMove(int m, int s, int d) : move(m), score(s), depth(d) {}
@@ -33,96 +34,96 @@ struct KillerMove {
 };
 
 /**
- * @brief Killer Table (杀手走法表)
+ * @brief Killer Table
  *
- * 每个深度维护多个最佳杀手走法，用于走法排序
+ * Maintains best killer moves for each search depth.
  *
- * 设计要点:
- * - 每个深度维护2个最佳杀手走法 (MAX_KILLER_COUNT)
- * - 使用计数机制避免同一走法重复添加
- * - 深度迭代时保留上一层的杀手信息
+ * Design highlights:
+ * - Each depth maintains MAX_KILLER_COUNT best killer moves
+ * - Uses count mechanism to avoid duplicate entries
+ * - Killer info from previous layer preserved during iterative deepening
  */
 class KillerTable {
 public:
-    static constexpr int MAX_KILLER_COUNT = 2;  ///< 每个深度最多杀手走法数
-    static constexpr int MAX_DEPTH = 64;         ///< 最大搜索深度
-    static constexpr int INITIAL_SCORE = 1;      ///< 初始分数
+    static constexpr int MAX_KILLER_COUNT = 2;  ///< Max killer moves per depth
+    static constexpr int MAX_DEPTH = 64;         ///< Max search depth
+    static constexpr int INITIAL_SCORE = 1;      ///< Initial score
 
 public:
     /**
-     * @brief 构造函数
+     * @brief Constructor
      */
     KillerTable();
 
     /**
-     * @brief 添加杀手走法
-     * @param depth 搜索深度
-     * @param move 走法位置
-     * @param score 杀手系数 (默认1)
+     * @brief Add killer move
+     * @param depth Search depth
+     * @param move Move position
+     * @param score Killer coefficient (default 1)
      */
     void addKiller(int depth, int move, int score = INITIAL_SCORE);
 
     /**
-     * @brief 获取深度的杀手走法
-     * @param depth 搜索深度
-     * @return 杀手走法向量
+     * @brief Get killer moves for a depth
+     * @param depth Search depth
+     * @return Vector of killer moves
      */
     std::vector<int> getKillers(int depth) const;
 
     /**
-     * @brief 判断是否为杀手走法
-     * @param depth 搜索深度
-     * @param move 走法位置
-     * @return true表示是杀手走法
+     * @brief Check if a move is a killer
+     * @param depth Search depth
+     * @param move Move position
+     * @return true if killer move
      */
     bool isKiller(int depth, int move) const;
 
     /**
-     * @brief 获取杀手走法分数
-     * @param depth 搜索深度
-     * @param move 走法位置
-     * @return 杀手分数 (0表示不是杀手走法)
+     * @brief Get killer score for a move
+     * @param depth Search depth
+     * @param move Move position
+     * @return Killer score (0 if not a killer move)
      */
     int getKillerScore(int depth, int move) const;
 
     /**
-     * @brief 清空表
+     * @brief Clear the table
      */
     void clear();
 
     /**
-     * @brief 衰减所有杀手分数
-     * 在长期搜索中使用，防止历史数据过时
-     * @param factor 衰减因子 (0.0-1.0)
+     * @brief Decay all killer scores
+     * Prevents stale data from dominating long searches
+     * @param factor Decay factor (0.0-1.0)
      */
     void decay(double factor = 0.99);
 
     /**
-     * @brief 获取统计信息
+     * @brief Get statistics
      */
     struct Statistics {
-        int totalKillers;       ///< 总杀手走法数
-        int depthDistribution[MAX_DEPTH];  ///< 每层杀手数
+        int totalKillers;       ///< Total killer moves
+        int depthDistribution[MAX_DEPTH];  ///< Killer count per depth
     };
     Statistics getStatistics() const;
 
 private:
     /**
-     * @brief 找到最低分数的位置
-     * @param depth 搜索深度
-     * @return 最低分数位置的索引
+     * @brief Find index with lowest score
+     * @param depth Search depth
+     * @return Index of lowest score position
      */
     int findLowestScoreIndex(int depth) const;
 
     /**
-     * @brief 检查走法是否已存在
-     * @param depth 搜索深度
-     * @param move 走法位置
-     * @return 存在的索引，-1表示不存在
+     * @brief Check if move already exists
+     * @param depth Search depth
+     * @param move Move position
+     * @return Existing index, -1 if not found
      */
     int findExistingIndex(int depth, int move) const;
 
-    // 杀手走法表: [depth][count]
+    // Killer table: [depth][count]
     std::array<std::array<KillerMove, MAX_KILLER_COUNT>, MAX_DEPTH> killers_;
 };
 

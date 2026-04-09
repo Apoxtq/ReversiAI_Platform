@@ -9,6 +9,8 @@
 #include "../ai/AIStrategy.h"
 #include "../Board.h"
 #include "Statistics.h"
+#include "BenchmarkTargets.h"
+#include "PositionSuite.h"
 
 /**
  * @file BattleEngine.h
@@ -61,7 +63,7 @@ struct BattleConfig {
 /**
  * @brief 单场对战结果
  */
-struct GameResult {
+struct SingleGameResult {
     int game_number;           ///< 对局编号
     PlayerColor winner;        ///< 胜者
     int black_score;           ///< 黑棋最终棋子数
@@ -133,7 +135,7 @@ struct BattleStats {
     bool significant = false;
 
     // 对局详情
-    std::vector<GameResult> games;
+    std::vector<SingleGameResult> games;
 
     /**
      * @brief 计算统计信息
@@ -146,15 +148,51 @@ struct BattleStats {
     std::pair<double, double> getWinRateCI1() const;
 
     /**
-     * @brief 转换为字符串摘要
+     * @brief Convert to summary string
      */
     std::string toString() const;
+
+    // ===== Pass/Fail Checking Methods =====
+
+    /**
+     * @brief Check if win rate meets target
+     * @param target_winrate Target win rate (0.0 to 1.0)
+     * @return true if win_rate1 >= target
+     */
+    bool checkVsTarget(double target_winrate) const {
+        return win_rate1 >= target_winrate;
+    }
+
+    /**
+     * @brief Get Pass/Fail status for win rate target
+     * @param target Target win rate (0.0 to 1.0)
+     * @return "PASS" or "FAIL"
+     */
+    std::string getPassFailStatus(double target) const {
+        return checkVsTarget(target) ? "PASS" : "FAIL";
+    }
+
+    /**
+     * @brief Check if result is statistically significant
+     * @return true if p_value < 0.05
+     */
+    bool isStatisticallySignificant() const {
+        return p_value < BenchmarkTargets::P_VALUE_THRESHOLD;
+    }
+
+    /**
+     * @brief Get Pass/Fail status for statistical significance
+     * @return "PASS" or "FAIL"
+     */
+    std::string getSignificanceStatus() const {
+        return isStatisticallySignificant() ? "PASS" : "FAIL";
+    }
 };
 
 /**
  * @brief 对战进度回调
  */
-using BattleProgressCallback = std::function<void(int current, int total, const GameResult& result)>;
+using BattleProgressCallback = std::function<void(int current, int total, const SingleGameResult& result)>;
 
 /**
  * @brief Head-to-Head对战引擎
@@ -187,7 +225,7 @@ public:
      * @param limits2 搜索限制2
      * @return 对局结果
      */
-    static GameResult playSingleGame(
+    static SingleGameResult playSingleGame(
         AIStrategy& player1,
         AIStrategy& player2,
         PlayerColor first_player,
@@ -267,6 +305,48 @@ public:
      */
     static uint64_t getRandomSeed();
 
+    // ===== Position Suite Integration =====
+
+    /**
+     * @brief Play a single game from a specific position
+     *
+     * @param position Test position to start from
+     * @param player1 AI strategy 1
+     * @param player2 AI strategy 2
+     * @param limits1 Search limits for player 1
+     * @param limits2 Search limits for player 2
+     * @return Game result
+     */
+    static SingleGameResult playFromPosition(
+        const TestPosition& position,
+        AIStrategy& player1,
+        AIStrategy& player2,
+        const SearchLimits& limits1,
+        const SearchLimits& limits2
+    );
+
+    /**
+     * @brief Run battle on position suite
+     *
+     * @param positions Position suite to test
+     * @param config Battle configuration
+     * @param progress_callback Progress callback
+     * @return Battle statistics
+     */
+    static BattleStats runSuiteBattle(
+        const std::vector<TestPosition>& positions,
+        const BattleConfig& config,
+        BattleProgressCallback progress_callback = nullptr
+    );
+
+    /**
+     * @brief Get position suite by type
+     *
+     * @param type Suite type (0=Standard64, 1=Opening, 2=Midgame, 3=Endgame)
+     * @return Position suite
+     */
+    static std::vector<TestPosition> getSuiteByType(int type);
+
 private:
     static uint64_t global_seed_;
     static std::mt19937_64 rng_;
@@ -274,7 +354,7 @@ private:
     /**
      * @brief 执行实际的对局 (内部)
      */
-    static GameResult playGameInternal(
+    static SingleGameResult playGameInternal(
         AIStrategy& p1,
         AIStrategy& p2,
         PlayerColor first,
@@ -285,13 +365,13 @@ private:
     /**
      * @brief 更新统计信息
      */
-    static void updateStats(BattleStats& stats, const GameResult& result,
+    static void updateStats(BattleStats& stats, const SingleGameResult& result,
                             bool player1_first);
 
     /**
      * @brief 并行对战工作函数
      */
-    static std::vector<GameResult> runParallelBattle(const BattleConfig& config);
+    static std::vector<SingleGameResult> runParallelBattle(const BattleConfig& config);
 };
 
 /**

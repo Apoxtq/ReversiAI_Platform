@@ -136,6 +136,21 @@ public:
      */
     bool roomExists(const QString& roomId) const;
 
+    /**
+     * @brief Add a discovered host as a joinable room
+     * @param host Discovered host information
+     * @return true if added or already exists
+     */
+    bool addDiscoveredHost(const DiscoveredHost& host);
+
+    /**
+     * @brief Get room by host address and port
+     * @param address Host address
+     * @param port Host port
+     * @return Room pointer or nullptr
+     */
+    GameRoom* getRoomByHost(const QHostAddress& address, quint16 port);
+
     // ==================== Room State ====================
 
     /**

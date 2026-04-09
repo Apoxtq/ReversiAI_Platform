@@ -7,15 +7,15 @@
 
 /**
  * @file ZobristHash.h
- * @brief Zobrist哈希生成器
+ * @brief Zobrist Hash Generator
  *
- * 使用Egaroucid风格的Zobrist哈希方案：
- * - 4个player hash数组 (按位置和棋子数)
- * - 支持64x4位置编码
- * - 高质量随机数生成
+ * Uses Egaroucid-style Zobrist hashing scheme:
+ * - 4 player hash arrays (by position and disc count)
+ * - Supports 64x4 position encoding
+ * - High-quality random number generation
  *
- * 参考: Egaroucid/src/engine/hash.hpp
- *       edax-reversi/src/hash.h
+ * Reference: Egaroucid/src/engine/hash.hpp
+ *            edax-reversi/src/hash.h
  *
  * @author AI Assistant
  * @date 2026
@@ -25,181 +25,180 @@
 namespace Reversi {
 
 /**
- * @brief Zobrist哈希生成器类
+ * @brief Zobrist Hash Generator class
  *
- * 为棋盘状态生成唯一哈希值，用于：
- * - 转置表 (Transposition Table)
- * - 网络同步验证
- * - 位置缓存
+ * Generates unique hash values for board states, used for:
+ * - Transposition Table
+ * - Network sync verification
+ * - Position caching
  *
- * 实现特点:
- * - 使用4个数组，每个65536个条目 (Egaroucid风格)
- * - 每个条目32位哈希值
- * - 可配置的哈希精度级别
- * - 支持从文件加载预计算的哈希值
+ * Implementation features:
+ * - Uses 4 arrays of 65536 entries each (Egaroucid style)
+ * - Each entry is a 32-bit hash value
+ * - Configurable hash precision level
+ * - Supports loading precomputed hashes from file
  */
 class ZobristHash {
 public:
     /**
-     * @brief 哈希精度级别常量
+     * @brief Hash precision level constants
      *
-     * level决定哈希表的条目数量: 2^level
-     * 25 = 33,554,432 条目 (约32MB for 32-bit hash)
+     * Level determines table entry count: 2^level
+     * 25 = 33,554,432 entries (~32MB for 32-bit hash)
      */
     static constexpr int DEFAULT_HASH_LEVEL = 25;
     static constexpr int MIN_HASH_LEVEL = 20;
     static constexpr int MAX_HASH_LEVEL = 30;
 
     /**
-     * @brief 哈希数组大小
+     * @brief Hash array size
      */
     static constexpr int HASH_RAND_SIZE = 65536;
     static constexpr int N_PLAYER_HASH = 4;
 
     /**
-     * @brief 初始化哈希表
+     * @brief Initialize hash table
      *
-     * 使用高质量随机数生成器初始化哈希数组
+     * Initializes hash arrays using high-quality RNG.
      *
-     * @param hash_level 哈希精度级别 (default: 25)
-     * @param seed 随机种子 (default: 基于硬件)
+     * @param hash_level Hash precision level (default: 25)
+     * @param seed Random seed (default: hardware-based)
      */
     static void init(int hash_level = DEFAULT_HASH_LEVEL, uint64_t seed = 0);
 
     /**
-     * @brief 检查是否已初始化
-     * @return true 如果已初始化
+     * @brief Check if initialized
+     * @return true if initialized
      */
     static bool isInitialized();
 
     /**
-     * @brief 生成棋盘哈希值 (完整哈希)
+     * @brief Compute board hash (full hash)
      *
-     * 计算包含双方棋子的完整棋盘哈希
+     * Computes full board hash including both players.
      *
-     * @param player_bits 黑棋位图
-     * @param opponent_bits 白棋位图
-     * @return 32位哈希值
+     * @param player_bits Black player bitboard
+     * @param opponent_bits White player bitboard
+     * @return 32-bit hash value
      *
-     * @complexity O(1) - 位运算优化
+     * @complexity O(1) - optimized bit operations
      */
     static uint32_t computeHash(uint64_t player_bits, uint64_t opponent_bits);
 
     /**
-     * @brief 生成玩家哈希值
+     * @brief Compute player hash
      *
-     * 仅计算当前玩家棋子的哈希
-     * 用于快速位置识别
+     * Computes hash for current player pieces only.
+     * Used for fast position identification.
      *
-     * @param player_bits 当前玩家的位图
-     * @param player_index 玩家索引 (0=黑, 1=白, 基于棋子数)
-     * @return 32位哈希值
+     * @param player_bits Current player bitboard
+     * @param player_index Player index (0=black, 1=white, based on disc count)
+     * @return 32-bit hash value
      */
     static uint32_t computePlayerHash(uint64_t player_bits, int player_index);
 
     /**
-     * @brief 获取单格哈希值
+     * @brief Get single square hash
      *
-     * @param square 格子索引 (0-63)
-     * @param is_player true=玩家棋子, false=对手棋子
-     * @return 哈希值
+     * @param square Square index (0-63)
+     * @param is_player true=player piece, false=opponent piece
+     * @return Hash value
      */
     static uint32_t getSquareHash(int square, bool is_player);
 
     /**
-     * @brief 获取玩家索引
+     * @brief Get player index
      *
-     * 根据棋子数量确定玩家在哈希数组中的索引
+     * Determines player index in hash array based on disc count.
      *
-     * @param stone_count 棋子数量
-     * @return 索引 (0-3)
+     * @param stone_count Disc count
+     * @return Index (0-3)
      */
     static int getPlayerIndex(int stone_count);
 
     /**
-     * @brief 获取当前哈希级别
-     * @return 哈希级别
+     * @brief Get current hash level
+     * @return Hash level
      */
     static int getHashLevel();
 
     /**
-     * @brief 关闭并清理内存
+     * @brief Shutdown and cleanup memory
      */
     static void shutdown();
 
     /**
-     * @brief 哈希表大小 (条目数)
+     * @brief Hash table size (number of entries)
      */
     static size_t getHashSize();
 
     /**
-     * @brief 哈希表大小 (字节)
+     * @brief Hash table size (bytes)
      */
     static size_t getHashMemory();
 
 private:
-    // 静态成员变量
+    // Static member variables
     static std::array<std::array<uint32_t, HASH_RAND_SIZE>, N_PLAYER_HASH> hash_player_;
     static std::array<std::array<uint32_t, HASH_RAND_SIZE>, N_PLAYER_HASH> hash_opponent_;
     static bool initialized_;
     static int hash_level_;
 
-    // Mersenne Twister随机数生成器
+    // Mersenne Twister RNG
     static std::mt19937_64 rng_;
 
     /**
-     * @brief 生成高质量随机数
+     * @brief Generate high-quality random number
      *
-     * 使用Mersenne Twister生成均匀分布的随机数
+     * Uses Mersenne Twister for uniformly distributed random numbers.
      *
-     * @return 32位随机数
+     * @return 32-bit random number
      */
     static uint32_t generateRandom();
 
     /**
-     * @brief 验证随机数质量
+     * @brief Validate random number quality
      *
-     * 检查随机数的位分布是否符合要求
+     * Checks if random number bit distribution meets requirements.
      *
-     * @param value 要检查的值
-     * @param hash_level 哈希级别
-     * @return true 如果通过验证
+     * @param value Value to check
+     * @param hash_level Hash level
+     * @return true if validation passes
      */
     static bool validateRandom(uint32_t value, int hash_level);
 };
 
-// 便捷函数
+// Convenience functions
 
 /**
- * @brief 计算棋盘位置的索引
+ * @brief Convert board position to index
  *
- * 将(row, col)转换为0-63的索引
+ * Converts (row, col) to 0-63 index.
  *
- * @param row 行 (0-7)
- * @param col 列 (0-7)
- * @return 索引 (0-63)
+ * @param row Row (0-7)
+ * @param col Column (0-7)
+ * @return Index (0-63)
  */
 inline constexpr int positionToIndex(int row, int col) {
     return row * 8 + col;
 }
 
 /**
- * @brief 从索引获取行
- * @param index 索引 (0-63)
- * @return 行 (0-7)
+ * @brief Get row from index
+ * @param index Index (0-63)
+ * @return Row (0-7)
  */
 inline constexpr int indexToRow(int index) {
     return index / 8;
 }
 
 /**
- * @brief 从索引获取列
- * @param index 索引 (0-63)
- * @return 列 (0-7)
+ * @brief Get column from index
+ * @param index Index (0-63)
+ * @return Column (0-7)
  */
 inline constexpr int indexToCol(int index) {
     return index % 8;
 }
 
 } // namespace Reversi
-

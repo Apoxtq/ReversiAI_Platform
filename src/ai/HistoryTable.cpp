@@ -1,10 +1,6 @@
 /**
  * @file HistoryTable.cpp
- * @brief History Heuristic 实现
- *
- * @see HistoryTable.h
- * 参考: Egaroucid/src/engine/move_ordering.hpp
- * 参考: edax-reversi/src/play.c
+ * @brief History Heuristic implementation
  */
 
 #include "ai/HistoryTable.h"
@@ -19,23 +15,18 @@ HistoryTable::HistoryTable() {
 }
 
 void HistoryTable::addHistory(int from, int to, int depth, bool isCutoff) {
-    // 边界检查
     if (!isValidPosition(from) || !isValidPosition(to)) {
         return;
     }
 
     if (!isCutoff) {
-        return;  // 只有导致剪枝的走法才记录
+        return;
     }
 
-    // 深度加权：越深的搜索历史越重要
-    // 使用depth * depth作为权重
     int weight = depth * depth;
     history_[from][to] += weight;
 
-    // 防止溢出
     if (history_[from][to] > MAX_HISTORY_SCORE) {
-        // 严重溢出时减半
         normalize();
     }
 }
@@ -48,7 +39,6 @@ int HistoryTable::getHistoryScore(int from, int to) const {
 }
 
 std::vector<int> HistoryTable::getSortedMoves(const std::vector<int>& moves) const {
-    // 创建带分数的副本
     std::vector<std::pair<int, int>> scoredMoves;
     scoredMoves.reserve(moves.size());
 
@@ -59,13 +49,11 @@ std::vector<int> HistoryTable::getSortedMoves(const std::vector<int>& moves) con
         scoredMoves.emplace_back(move, score);
     }
 
-    // 按历史分数降序排序
     std::sort(scoredMoves.begin(), scoredMoves.end(),
         [](const std::pair<int, int>& a, const std::pair<int, int>& b) {
             return a.second > b.second;
         });
 
-    // 提取排序后的走法
     std::vector<int> result;
     result.reserve(moves.size());
     for (const auto& pair : scoredMoves) {
@@ -84,7 +72,6 @@ void HistoryTable::clear() {
 }
 
 void HistoryTable::decay(double factor) {
-    // 防止factor超出有效范围
     if (factor < 0.0 || factor > 1.0) {
         factor = DEFAULT_DECAY;
     }
@@ -93,7 +80,6 @@ void HistoryTable::decay(double factor) {
         for (int to = 0; to < NUM_SQUARES; ++to) {
             if (history_[from][to] > 0) {
                 history_[from][to] = static_cast<int>(history_[from][to] * factor);
-                // 如果分数太低，清零
                 if (history_[from][to] <= 0) {
                     history_[from][to] = 0;
                 }
@@ -132,7 +118,6 @@ HistoryTable::Statistics HistoryTable::getStatistics() const {
 }
 
 void HistoryTable::normalize() {
-    // 如果最高分超过最大值，进行缩放
     int currentMax = 0;
     for (int from = 0; from < NUM_SQUARES; ++from) {
         for (int to = 0; to < NUM_SQUARES; ++to) {
@@ -148,7 +133,6 @@ void HistoryTable::normalize() {
             }
         }
     } else if (currentMax > MAX_HISTORY_SCORE / 2) {
-        // 即使没有溢出，如果超过一半也进行衰减
         double scale = 0.5;
         for (int from = 0; from < NUM_SQUARES; ++from) {
             for (int to = 0; to < NUM_SQUARES; ++to) {

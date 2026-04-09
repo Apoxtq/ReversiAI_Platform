@@ -1,30 +1,37 @@
 #include "ai/MinimaxAI.h"
+#include "ai/Evaluator.h"
 #include "Board.h"
+#include "ai/TranspositionTable.h"
 #include <algorithm>
 #include <limits>
 #include <iostream>
 
 /**
  * @file MinimaxAI.cpp
- * @brief Minimax算法实现
+ * @brief Minimax algorithm implementation with Alpha-Beta pruning
  *
- * 将Reversi(Java)的Minimax算法转换为C++ BitBoard实现
+ * Converts Reversi(Java) Minimax algorithm to C++ BitBoard implementation
  */
 
 namespace Reversi {
 
 MinimaxAI::MinimaxAI(MinimaxConfig config, std::unique_ptr<Evaluator> evaluator)
-    : config_(config),
-      evaluator_(evaluator ? std::move(evaluator) : EvaluatorFactory::createStaticEvaluator()) {
-    // v0.6.0: 初始化转置表
+    : config_(config), color_(PlayerColor::Black) {
+    // Create evaluator in constructor body to avoid UB in member initializer list
+    if (evaluator) {
+        evaluator_ = std::move(evaluator);
+    } else {
+        evaluator_ = std::make_unique<StaticEvaluator>();
+    }
+    // v0.6.0: Initialize transposition table
     initTranspositionTable();
 
-    // v0.7.0: 初始化走法排序器
+    // v0.7.0: Initialize move orderer
     if (config_.useMoveOrdering) {
         MoveOrdererConfig moConfig;
         moConfig.useKillerMoves = config_.useKillerMoves;
         moConfig.useHistoryHeuristic = config_.useHistoryHeuristic;
-        moveOrderer_ = std::make_unique<MoveOrderer>(moConfig, EvaluatorFactory::createStaticEvaluator());
+        moveOrderer_ = std::make_unique<MoveOrderer>(moConfig, std::make_unique<StaticEvaluator>());
         std::cout << "[MinimaxAI] Move orderer initialized (Killer: "
                   << (config_.useKillerMoves ? "ON" : "OFF")
                   << ", History: " << (config_.useHistoryHeuristic ? "ON" : "OFF") << ")" << std::endl;
@@ -40,12 +47,12 @@ void MinimaxAI::initTranspositionTable() {
 }
 
 Move MinimaxAI::findBestMove(const Board& board, const SearchLimits& limits) {
-    // v0.6.0: 初始化转置表（如果尚未初始化）
+    // v0.6.0: Initialize transposition table if not yet initialized
     if (!tt_ && config_.useTranspositionTable) {
         initTranspositionTable();
     }
 
-    // v0.7.0: 初始化走法排序器（如果尚未初始化）
+    // v0.7.0: Initialize move orderer if not yet initialized
     if (!moveOrderer_ && config_.useMoveOrdering) {
         MoveOrdererConfig moConfig;
         moConfig.useKillerMoves = config_.useKillerMoves;
@@ -53,7 +60,7 @@ Move MinimaxAI::findBestMove(const Board& board, const SearchLimits& limits) {
         moveOrderer_ = std::make_unique<MoveOrderer>(moConfig, EvaluatorFactory::createStaticEvaluator());
     }
 
-    // 重置统计信息
+    // Reset statistics
     stats_ = AIStats{};
     config_.nodesExplored = 0;
     config_.cutoffs = 0;
@@ -64,109 +71,132 @@ Move MinimaxAI::findBestMove(const Board& board, const SearchLimits& limits) {
     bestScore_ = std::numeric_limits<int>::min();
     lastCompletedDepth_ = 0;
 
+    // Get AI color (set externally, or default to current player)
+    PlayerColor originalPlayer = color_;
+
     searchStartTime_ = std::chrono::steady_clock::now();
 
-    // v0.7.0: 在每次搜索前执行走法排序器衰减
+    // v0.7.0: Decay move orderer before each search
     if (moveOrderer_) {
         moveOrderer_->decay();
         moveOrderer_->resetStatistics();
     }
 
-    // 获取有效移动
+    // Get valid moves
     auto validMoves = board.getValidMoves();
     if (validMoves.empty()) {
-        return Move::pass();  // 无有效移动，跳过回合
+        return Move::pass();  // No valid moves, skip turn
     }
 
-    // 确定搜索深度
+    // Determine search depth
     int searchDepth = std::min(config_.maxDepth, limits.maxDepth.value_or(config_.maxDepth));
 
     if (config_.useIterativeDeepening) {
-        // 迭代深化搜索
+        // Iterative deepening search
         for (int depth = 1; depth <= searchDepth; ++depth) {
             if (shouldStop(limits, searchStartTime_)) {
                 break;
             }
 
-            // 在当前深度搜索
-            int alpha = std::numeric_limits<int>::min();
+            // Search at current depth - use negamax to ensure score consistency
+            int alpha = -std::numeric_limits<int>::max();
             int beta = std::numeric_limits<int>::max();
 
-            minimaxAlphaBeta(board, board.getCurrentTurn(), depth, true, alpha, beta, limits);
+            minimaxAlphaBeta(board, depth, depth, alpha, beta, limits, originalPlayer);
             lastCompletedDepth_ = depth;
         }
     } else {
-        // 固定深度搜索
-        int alpha = std::numeric_limits<int>::min();
+        // Fixed-depth search
+        int alpha = -std::numeric_limits<int>::max();
         int beta = std::numeric_limits<int>::max();
 
-        minimaxAlphaBeta(board, board.getCurrentTurn(), searchDepth, true, alpha, beta, limits);
+        minimaxAlphaBeta(board, searchDepth, searchDepth, alpha, beta, limits, originalPlayer);
         lastCompletedDepth_ = searchDepth;
     }
 
-    // 更新统计信息
+    // Update statistics
     auto endTime = std::chrono::steady_clock::now();
     stats_.timeUsed = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - searchStartTime_);
     stats_.nodesExplored = config_.nodesExplored;
-    stats_.evaluationCount = config_.nodesExplored;  // 简化处理
-    stats_.avgBranching = validMoves.size();  // 简化计算
+    stats_.evaluationCount = config_.nodesExplored;
+    stats_.avgBranching = validMoves.size();
 
-    return bestMove_.isValid() ? bestMove_ : validMoves[0];  // 返回最佳移动或第一个有效移动
+    return bestMove_.isValid() ? bestMove_ : validMoves[0];
 }
 
-int MinimaxAI::minimaxAlphaBeta(const Board& board, PlayerColor currentPlayer, int depth,
-                               bool isMaximizing, int alpha, int beta, const SearchLimits& limits) {
+int MinimaxAI::minimaxAlphaBeta(const Board& board, int depth, int maxSearchDepth,
+                               int alpha, int beta, const SearchLimits& limits,
+                               PlayerColor originalPlayer) {
     config_.nodesExplored++;
 
-    // v0.6.0: 转置表查找
+    // In Negamax, we always evaluate from current player's perspective, then negate
+    PlayerColor currentPlayer = board.getCurrentTurn();
+
+    // v0.6.0: Transposition table lookup
     if (tt_ && config_.useTranspositionTable) {
         uint32_t hash = ZobristHash::computeHash(
             board.getBitBoard().getPlayerBits(),
             board.getBitBoard().getOpponentBits()
         );
-        int storedAlpha = alpha, storedBeta = beta, storedScore = 0;
+        int storedScore = 0;
         Move storedMove;
-        if (tt_->probe(hash, depth, storedAlpha, storedBeta, storedScore, storedMove)) {
+        if (tt_->probe(hash, depth, storedScore, storedMove)) {
             config_.ttHits++;
-            // 根据转置表条目的类型更新alpha/beta
-            if (storedAlpha >= beta) return storedBeta;  // 下界 >= beta，剪枝
-            if (storedBeta <= alpha) return storedAlpha;  // 上界 <= alpha，剪枝
+            TTEntryType entryType = tt_->getEntryType(hash, depth);
+
+            if (entryType == TTEntryType::EXACT) {
+                if (storedScore >= alpha && storedScore <= beta) {
+                    return storedScore;
+                }
+            } else if (entryType == TTEntryType::LOWER) {
+                if (storedScore >= beta) {
+                    return beta;
+                }
+                if (storedScore > alpha) {
+                    alpha = storedScore;
+                }
+            } else if (entryType == TTEntryType::UPPER) {
+                if (storedScore <= alpha) {
+                    return alpha;
+                }
+                if (storedScore < beta) {
+                    beta = storedScore;
+                }
+            }
         }
     }
 
-    // 检查是否应该终止搜索（时间或深度限制）
+    // Check if search should terminate (time or depth limit)
     if (shouldStop(limits, searchStartTime_) || depth == 0) {
-        // 到达叶子节点，使用评估函数
         return evaluator_->evaluate(board.getBitBoard(), currentPlayer);
     }
 
-    // 检查游戏是否结束
+    // Check if game is over
     if (board.isGameOver()) {
         auto winner = board.getWinner();
         if (!winner.has_value()) {
-            return 0;  // 平局
+            return 0;
         }
-        // 根据获胜者返回分数
-        int score = (winner.value() == currentPlayer) ? 10000 : -10000;
-        // 根据剩余棋子数调整分数
-        int discDiff = board.getBitBoard().getScore(currentPlayer) -
-                      board.getBitBoard().getScore(currentPlayer == PlayerColor::Black ? PlayerColor::White : PlayerColor::Black);
-        return score + discDiff;
+        bool currentPlayerWon = (winner.value() == currentPlayer);
+        int baseScore = currentPlayerWon ? 10000 : -10000;
+        int myDiscs = board.getBitBoard().getScore(currentPlayer);
+        PlayerColor opponent = (currentPlayer == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
+        int opDiscs = board.getBitBoard().getScore(opponent);
+        return baseScore + (myDiscs - opDiscs);
     }
 
     auto validMoves = board.getValidMoves();
 
-    // v0.7.0: 使用走法排序器对走法进行排序
+    // v0.7.0: Use move orderer to sort moves
     Move pvMove;
     if (tt_ && config_.useTranspositionTable) {
-        // 从转置表获取PV走法
         uint32_t hash = ZobristHash::computeHash(
             board.getBitBoard().getPlayerBits(),
             board.getBitBoard().getOpponentBits()
         );
         Move ttMove;
-        int dummy1, dummy2, dummy3;
-        if (tt_->probe(hash, depth, dummy1, dummy2, dummy3, ttMove)) {
+        int dummyScore;
+        if (tt_->probe(hash, depth, dummyScore, ttMove)) {
             pvMove = ttMove;
         }
     }
@@ -175,79 +205,62 @@ int MinimaxAI::minimaxAlphaBeta(const Board& board, PlayerColor currentPlayer, i
         validMoves = moveOrderer_->orderMoves(board, depth, validMoves, pvMove, Move());
     }
 
-    // 处理无有效移动的情况（跳过回合）
+    // Handle no valid moves (pass turn)
     if (validMoves.empty()) {
-        Board newBoard = board;  // 复制棋盘
-        Move passMove = Move::pass();
-        newBoard.makeMove(passMove);  // 执行跳过
-
-        // 递归搜索，但切换玩家
-        return minimaxAlphaBeta(newBoard, currentPlayer, depth - 1, !isMaximizing, alpha, beta, limits);
+        Board newBoard = board;
+        newBoard.makeMove(Move::pass());
+        return -minimaxAlphaBeta(newBoard, depth - 1, maxSearchDepth, -beta, -alpha, limits, currentPlayer);
     }
 
-    int bestScore = isMaximizing ? std::numeric_limits<int>::min() : std::numeric_limits<int>::max();
+    int bestScore = std::numeric_limits<int>::min();
+    Move localBestMove;
 
     for (const auto& move : validMoves) {
         if (shouldStop(limits, searchStartTime_)) {
-            break;  // 时间不足，停止搜索
+            break;
         }
 
-        // 创建新棋盘状态
-        Board newBoard = board;  // 复制棋盘
-        bool moveSuccess = newBoard.makeMove(move);
-
-        if (!moveSuccess) {
-            continue;  // 移动失败，跳过
+        Board newBoard = board;
+        if (!newBoard.makeMove(move)) {
+            continue;
         }
 
-        // 递归搜索
-        int score = minimaxAlphaBeta(newBoard, currentPlayer, depth - 1, !isMaximizing, alpha, beta, limits);
+        // Negamax: negate recursive score
+        int score = -minimaxAlphaBeta(newBoard, depth - 1, maxSearchDepth, -beta, -alpha, limits, currentPlayer);
 
-        if (isMaximizing) {
-            if (score > bestScore) {
-                bestScore = score;
-                if (depth == config_.maxDepth) {  // 根节点
-                    bestMove_ = move;
-                    bestScore_ = score;
-                }
+        if (score > bestScore) {
+            bestScore = score;
+            localBestMove = move;
+            // Only update bestMove_ at root node
+            if (depth == maxSearchDepth) {
+                bestMove_ = move;
+                bestScore_ = score;
             }
-            alpha = std::max(alpha, bestScore);
-            if (beta <= alpha) {
-                config_.cutoffs++;  // Beta剪枝
-                // v0.7.0: 记录Killer/History
-                if (moveOrderer_ && config_.useMoveOrdering) {
-                    int from = 0;  // 简化：使用固定值
-                    int to = move.row * 8 + move.col;
-                    moveOrderer_->recordCutoff(from, to, depth, true);
-                }
-                break;
+        }
+
+        // Alpha-Beta pruning
+        if (bestScore > alpha) {
+            alpha = bestScore;
+        }
+        if (alpha >= beta) {
+            config_.cutoffs++;
+            // v0.7.0: Record Killer/History
+            if (moveOrderer_ && config_.useMoveOrdering) {
+                int from = 0;
+                int to = move.row * 8 + move.col;
+                moveOrderer_->recordCutoff(from, to, depth, true);
             }
-        } else {
-            if (score < bestScore) {
-                bestScore = score;
-            }
-            beta = std::min(beta, bestScore);
-            if (beta <= alpha) {
-                config_.cutoffs++;  // Alpha剪枝
-                // v0.7.0: 记录Killer/History
-                if (moveOrderer_ && config_.useMoveOrdering) {
-                    int from = 0;  // 简化：使用固定值
-                    int to = move.row * 8 + move.col;
-                    moveOrderer_->recordCutoff(from, to, depth, true);
-                }
-                break;
-            }
+            break;
         }
     }
 
-    // v0.6.0: 存储结果到转置表
+    // v0.6.0: Store result in transposition table
     if (tt_ && config_.useTranspositionTable) {
         uint32_t hash = ZobristHash::computeHash(
             board.getBitBoard().getPlayerBits(),
             board.getBitBoard().getOpponentBits()
         );
-        Move bestMoveForTT = isMaximizing ? bestMove_ : Move();
-        tt_->store(hash, depth, bestScore, alpha, beta, bestMoveForTT);
+        tt_->store(hash, depth, bestScore, alpha, beta, localBestMove);
     }
 
     return bestScore;
@@ -255,7 +268,6 @@ int MinimaxAI::minimaxAlphaBeta(const Board& board, PlayerColor currentPlayer, i
 
 bool MinimaxAI::shouldStop(const SearchLimits& limits,
                           std::chrono::steady_clock::time_point startTime) const {
-    // 检查时间限制
     if (limits.timeLimit.has_value()) {
         auto currentTime = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
@@ -264,7 +276,6 @@ bool MinimaxAI::shouldStop(const SearchLimits& limits,
         }
     }
 
-    // 检查节点限制
     if (limits.maxNodes.has_value() && config_.nodesExplored >= limits.maxNodes.value()) {
         return true;
     }
@@ -294,12 +305,10 @@ std::string MinimaxAI::getDescription() const {
         desc += " and iterative deepening";
     }
 
-    // v0.6.0: 转置表描述
     if (config_.useTranspositionTable) {
         desc += ", transposition table (" + std::to_string(config_.transpositionTableSizeMB) + " MB)";
     }
 
-    // v0.7.0: Killer/History描述
     if (config_.useMoveOrdering) {
         desc += ", move ordering";
         if (config_.useKillerMoves) desc += " (Killer)";
@@ -318,7 +327,6 @@ std::string MinimaxAI::getConfigDescription() const {
     configStr += std::string("Iterative Deepening: ") + (config_.useIterativeDeepening ? "Yes" : "No") + ", ";
     configStr += std::string("Transposition Table: ") + (config_.useTranspositionTable ? "Yes" : "No") + " ("
                 + std::to_string(config_.transpositionTableSizeMB) + " MB), ";
-    // v0.7.0: Killer/History配置
     configStr += std::string("Move Ordering: ") + (config_.useMoveOrdering ? "Yes" : "No") + " (";
     configStr += "Killer: " + std::string(config_.useKillerMoves ? "On" : "Off") + ", ";
     configStr += "History: " + std::string(config_.useHistoryHeuristic ? "On" : "Off") + "), ";
@@ -337,7 +345,12 @@ void MinimaxAI::reset() {
     bestScore_ = std::numeric_limits<int>::min();
     lastCompletedDepth_ = 0;
 
-    // v0.7.0: 重置走法排序器
+    // v0.6.0: Clear transposition table
+    if (tt_) {
+        tt_->clear();
+    }
+
+    // v0.7.0: Reset move orderer
     if (moveOrderer_) {
         moveOrderer_->clear();
         moveOrderer_->resetStatistics();

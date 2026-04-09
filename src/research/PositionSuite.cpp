@@ -153,15 +153,15 @@ std::vector<TestPosition> PositionSuite::getEndgame() {
     return endgame;
 }
 
-std::vector<TestPosition> PositionSuite::getByPhase(GamePhase phase) {
+std::vector<TestPosition> PositionSuite::getByPhase(BenchmarkPhase phase) {
     switch (phase) {
-        case GamePhase::OPENING:
+        case BenchmarkPhase::OPENING:
             return getOpening();
-        case GamePhase::MIDGAME:
+        case BenchmarkPhase::MIDGAME:
             return getMidgame();
-        case GamePhase::ENDGAME:
+        case BenchmarkPhase::ENDGAME:
             return getEndgame();
-        case GamePhase::ALL:
+        case BenchmarkPhase::ALL:
         default:
             return getStandard64();
     }
@@ -291,12 +291,12 @@ int PositionSuite::getMoveCount(const BitBoard& board) {
     return total - 4;  // 初始4子不算回合
 }
 
-GamePhase PositionSuite::getGamePhase(const BitBoard& board) {
+BenchmarkPhase PositionSuite::getBenchmarkPhase(const BitBoard& board) {
     int moves = getMoveCount(board);
 
-    if (moves <= 20) return GamePhase::OPENING;
-    if (moves <= 40) return GamePhase::MIDGAME;
-    return GamePhase::ENDGAME;
+    if (moves <= 20) return BenchmarkPhase::OPENING;
+    if (moves <= 40) return BenchmarkPhase::MIDGAME;
+    return BenchmarkPhase::ENDGAME;
 }
 
 // ============================================================================

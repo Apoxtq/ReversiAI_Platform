@@ -13,36 +13,36 @@
 
 /**
  * @file AIStrategy.h
- * @brief AI策略统一接口
+ * @brief AI Strategy unified interface
  *
- * 定义统一的AI算法接口，实现策略模式
- * 支持多种AI算法的统一管理和切换
+ * Defines unified AI algorithm interface, implementing the Strategy pattern.
+ * Supports unified management and switching of multiple AI algorithms.
  */
 
 namespace Reversi {
 
 /**
  * @enum Difficulty
- * @brief AI难度等级
+ * @brief AI difficulty level
  */
 enum class Difficulty {
-    EASY,      ///< 简单难度
-    MEDIUM,    ///< 中等难度
-    HARD,      ///< 困难难度
-    CUSTOM     ///< 自定义配置
+    EASY,      ///< Easy difficulty
+    MEDIUM,    ///< Medium difficulty
+    HARD,      ///< Hard difficulty
+    CUSTOM     ///< Custom configuration
 };
 
 /**
  * @struct SearchLimits
- * @brief 搜索限制参数
+ * @brief Search constraint parameters
  */
 struct SearchLimits {
-    std::optional<int> maxDepth;                    ///< 最大搜索深度
-    std::optional<std::chrono::milliseconds> timeLimit;  ///< 时间限制
-    std::optional<long long> maxNodes;             ///< 最大搜索节点数
+    std::optional<int> maxDepth;                    ///< Maximum search depth
+    std::optional<std::chrono::milliseconds> timeLimit;  ///< Time limit
+    std::optional<long long> maxNodes;             ///< Maximum search nodes
 
     /**
-     * @brief 创建默认搜索限制
+     * @brief Create default search limits
      */
     static SearchLimits createDefault() {
         SearchLimits limits;
@@ -55,18 +55,18 @@ struct SearchLimits {
 
 /**
  * @struct AIStats
- * @brief AI算法性能统计
+ * @brief AI algorithm performance statistics
  */
 struct AIStats {
-    long long nodesExplored = 0;      ///< 探索的节点数
-    std::chrono::milliseconds timeUsed = std::chrono::milliseconds(0);  ///< 使用的总时间
-    double avgBranching = 0.0;        ///< 平均分支因子
-    long long evaluationCount = 0;    ///< 评估函数调用次数
-    int cutoffs = 0;                  ///< 剪枝次数
-    int depthReached = 0;             ///< 达到的最大深度
+    long long nodesExplored = 0;      ///< Number of nodes explored
+    std::chrono::milliseconds timeUsed = std::chrono::milliseconds(0);  ///< Total time used
+    double avgBranching = 0.0;        ///< Average branching factor
+    long long evaluationCount = 0;    ///< Evaluation function call count
+    int cutoffs = 0;                  ///< Cutoff count
+    int depthReached = 0;             ///< Maximum depth reached
 
     /**
-     * @brief 重置统计信息
+     * @brief Reset statistics
      */
     void reset() {
         nodesExplored = 0;
@@ -78,12 +78,12 @@ struct AIStats {
     }
 
     /**
-     * @brief 合并统计信息
+     * @brief Merge statistics
      */
     AIStats& operator+=(const AIStats& other) {
         nodesExplored += other.nodesExplored;
         timeUsed += other.timeUsed;
-        avgBranching = (avgBranching + other.avgBranching) / 2.0;  // 简单平均
+        avgBranching = (avgBranching + other.avgBranching) / 2.0;
         evaluationCount += other.evaluationCount;
         cutoffs += other.cutoffs;
         depthReached = (depthReached > other.depthReached) ? depthReached : other.depthReached;
@@ -93,130 +93,142 @@ struct AIStats {
 
 /**
  * @class AIStrategy
- * @brief AI策略抽象基类
+ * @brief AI Strategy abstract base class
  *
- * 定义统一的AI算法接口，实现策略模式
- * 所有AI算法都继承此类，提供统一的接口
+ * Defines unified AI algorithm interface, implementing the Strategy pattern.
+ * All AI algorithms inherit from this class, providing a unified interface.
  */
 class AIStrategy {
 public:
     virtual ~AIStrategy() = default;
 
     /**
-     * @brief 寻找最佳移动
+     * @brief Find best move
      *
-     * @param board 当前棋盘状态
-     * @param limits 搜索限制参数
-     * @return 最佳移动决策
+     * @param board Current board state
+     * @param limits Search constraint parameters
+     * @return Best move decision
      */
     virtual Move findBestMove(const Board& board, const SearchLimits& limits) = 0;
 
     /**
-     * @brief 获取AI算法名称
+     * @brief Get AI algorithm name
      *
-     * @return 算法名称字符串
+     * @return Algorithm name string
      */
     virtual std::string getName() const = 0;
 
     /**
-     * @brief 获取AI算法描述
+     * @brief Get AI algorithm description
      *
-     * @return 算法描述字符串
+     * @return Algorithm description string
      */
     virtual std::string getDescription() const = 0;
 
     /**
-     * @brief 获取难度等级
+     * @brief Get difficulty level
      *
-     * @return 难度等级
+     * @return Difficulty level
      */
     virtual Difficulty getDifficulty() const = 0;
 
     /**
-     * @brief 获取性能统计信息
+     * @brief Get performance statistics
      *
-     * @return 最新的性能统计
+     * @return Latest performance statistics
      */
     virtual AIStats getStats() const = 0;
 
     /**
-     * @brief 获取当前配置描述
+     * @brief Get current configuration description
      *
-     * @return 配置描述字符串
+     * @return Configuration description string
      */
     virtual std::string getConfigDescription() const = 0;
 
     /**
-     * @brief 重置内部状态
+     * @brief Reset internal state
      *
-     * 用于清理缓存、统计信息等
+     * Used for clearing caches, statistics, etc.
      */
     virtual void reset() = 0;
 
     /**
-     * @brief 检查算法是否支持特定功能
+     * @brief Set AI player color (for correct evaluation perspective)
+     * @param color AI player color (black or white)
+     */
+    virtual void setColor(PlayerColor color) {}
+
+    /**
+     * @brief Get AI player color
+     * @return AI color
+     */
+    virtual PlayerColor getColor() const { return PlayerColor::Black; }
+
+    /**
+     * @brief Check if algorithm supports a specific feature
      */
     virtual bool supportsFeature(const std::string& feature) const {
-        return false;  // 默认不支持
+        return false;
     }
 };
 
 /**
  * @class AIStrategyFactory
- * @brief AI策略工厂类
+ * @brief AI Strategy factory class
  *
- * 提供创建各种AI策略的工厂方法
+ * Provides factory methods for creating various AI strategies.
  */
 class AIStrategyFactory {
 public:
     /**
-     * @brief 创建Minimax AI
+     * @brief Create Minimax AI
      *
-     * @param difficulty 难度等级
-     * @return Minimax AI实例
+     * @param difficulty Difficulty level
+     * @return Minimax AI instance
      */
     static std::unique_ptr<AIStrategy> createMinimaxAI(Difficulty difficulty = Difficulty::MEDIUM);
 
     /**
-     * @brief 创建MCTS AI
+     * @brief Create MCTS AI
      *
-     * @param difficulty 难度等级
-     * @return MCTS AI实例
+     * @param difficulty Difficulty level
+     * @return MCTS AI instance
      */
     static std::unique_ptr<AIStrategy> createMCTSAI(Difficulty difficulty = Difficulty::MEDIUM);
 
     /**
-     * @brief 创建随机AI（用于测试）
+     * @brief Create Random AI (for testing)
      *
-     * @return 随机AI实例
+     * @return Random AI instance
      */
     static std::unique_ptr<AIStrategy> createRandomAI();
 
     /**
-     * @brief 获取支持的AI算法列表
+     * @brief Get list of supported AI algorithms
      *
-     * @return AI算法名称列表
+     * @return AI algorithm name list
      */
     static std::vector<std::string> getAvailableAlgorithms();
 
     /**
-     * @brief 根据名称创建AI实例
+     * @brief Create AI instance by name
      *
-     * @param name AI算法名称
-     * @param difficulty 难度等级
-     * @return AI实例，如果名称无效返回nullptr
+     * @param name AI algorithm name
+     * @param difficulty Difficulty level
+     * @return AI instance, nullptr if name is invalid
      */
     static std::unique_ptr<AIStrategy> createByName(const std::string& name,
                                                    Difficulty difficulty = Difficulty::MEDIUM);
 };
 
 /**
- * @brief 难度等级转换为字符串
+ * @brief Convert difficulty level to string
  */
 std::string difficultyToString(Difficulty difficulty);
 
 /**
- * @brief 字符串转换为难度等级
+ * @brief Convert string to difficulty level
  */
 Difficulty stringToDifficulty(const std::string& str);
 

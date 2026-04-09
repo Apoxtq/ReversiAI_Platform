@@ -10,171 +10,171 @@
 
 /**
  * @file AIBattle.h
- * @brief AI对战系统
+ * @brief AI battle system
  *
- * 实现AI算法之间的自动对战，用于性能比较和基准测试
- * 支持GUI环境下的异步对战和进度回调
+ * Automatic AI vs AI battles for performance comparison and benchmarking.
+ * Supports async battles with progress callbacks in GUI environment.
  */
 
 namespace Reversi {
 
 /**
  * @struct BattleResult
- * @brief 单局对战结果
+ * @brief Single game result
  */
 struct BattleResult {
-    PlayerColor winner = PlayerColor::Black;  ///< 获胜者
-    bool isDraw = false;                       ///< 是否平局
-    int totalMoves = 0;                        ///< 总移动数
-    std::chrono::milliseconds duration;        ///< 对战持续时间
+    PlayerColor winner = PlayerColor::Black;  ///< Winner
+    bool isDraw = false;                       ///< Whether draw
+    int totalMoves = 0;                        ///< Total moves
+    std::chrono::milliseconds duration;        ///< Game duration
 
-    // AI统计信息
-    AIStats blackAIStats;                      ///< 黑方AI统计
-    AIStats whiteAIStats;                      ///< 白方AI统计
+    // AI statistics
+    AIStats blackAIStats;                      ///< Black AI statistics
+    AIStats whiteAIStats;                      ///< White AI statistics
 
-    // 移动历史
-    std::vector<Move> moveHistory;             ///< 移动历史记录
+    // Move history
+    std::vector<Move> moveHistory;             ///< Move history record
 };
 
 /**
  * @struct TournamentResult
- * @brief 锦标赛结果
+ * @brief Tournament result
  */
 struct TournamentResult {
-    std::string blackAIName;                   ///< 黑方AI名称
-    std::string whiteAIName;                   ///< 白方AI名称
+    std::string blackAIName;                   ///< Black AI name
+    std::string whiteAIName;                   ///< White AI name
 
-    int totalGames = 0;                        ///< 总对战局数
-    int blackWins = 0;                         ///< 黑方获胜局数
-    int whiteWins = 0;                         ///< 白方获胜局数
-    int draws = 0;                             ///< 平局局数
+    int totalGames = 0;                        ///< Total games
+    int blackWins = 0;                         ///< Black wins
+    int whiteWins = 0;                         ///< White wins
+    int draws = 0;                             ///< Draws
 
-    double blackWinRate = 0.0;                 ///< 黑方胜率
-    double whiteWinRate = 0.0;                 ///< 白方胜率
-    double drawRate = 0.0;                     ///< 平局率
+    double blackWinRate = 0.0;                 ///< Black win rate
+    double whiteWinRate = 0.0;                 ///< White win rate
+    double drawRate = 0.0;                     ///< Draw rate
 
-    std::chrono::milliseconds totalDuration;   ///< 总耗时
+    std::chrono::milliseconds totalDuration;   ///< Total duration
 
-    // 平均统计
-    AIStats avgBlackStats;                     ///< 黑方平均统计
-    AIStats avgWhiteStats;                     ///< 白方平均统计
+    // Average statistics
+    AIStats avgBlackStats;                     ///< Black average stats
+    AIStats avgWhiteStats;                     ///< White average stats
 
-    // 所有单局结果
-    std::vector<BattleResult> gameResults;     ///< 所有对战结果
+    // All individual game results
+    std::vector<BattleResult> gameResults;     ///< All game results
 };
 
 /**
  * @class AIBattle
- * @brief AI对战管理器
+ * @brief AI battle manager
  *
- * 管理AI算法之间的自动对战，支持：
- * - 单局对战
- * - 批量锦标赛
- * - 进度回调（适合GUI环境）
- * - 线程安全
+ * Manages automatic AI vs AI battles:
+ * - Single game battles
+ * - Batch tournaments
+ * - Progress callbacks (for GUI updates)
+ * - Thread safety
  */
 class AIBattle {
 public:
     /**
-     * @brief 对战进度回调函数类型
-     * @param current 当前完成的局数
-     * @param total 总局数
-     * @param result 当前局的结果
+     * @brief Progress callback function type
+     * @param current Current completed games
+     * @param total Total games
+     * @param result Current game result
      */
     using ProgressCallback = std::function<void(int current, int total, const BattleResult& result)>;
 
     /**
-     * @brief 构造函数
-     * @param blackAI 黑方AI
-     * @param whiteAI 白方AI
+     * @brief Constructor
+     * @param blackAI Black player AI
+     * @param whiteAI White player AI
      */
     AIBattle(std::unique_ptr<AIStrategy> blackAI, std::unique_ptr<AIStrategy> whiteAI);
 
     /**
-     * @brief 执行单局对战
-     * @param searchLimits 搜索限制
-     * @return 对战结果
+     * @brief Execute single game
+     * @param searchLimits Search limits
+     * @return Game result
      */
     BattleResult playSingleGame(const SearchLimits& searchLimits = SearchLimits::createDefault());
 
     /**
-     * @brief 执行锦标赛（多局对战）
-     * @param numGames 对战局数
-     * @param searchLimits 搜索限制
-     * @param progressCallback 进度回调函数（可选，用于GUI更新）
-     * @return 锦标赛结果
+     * @brief Execute tournament (multiple games)
+     * @param numGames Number of games
+     * @param searchLimits Search limits
+     * @param progressCallback Progress callback (optional, for GUI updates)
+     * @return Tournament result
      */
     TournamentResult playTournament(int numGames,
                                    const SearchLimits& searchLimits = SearchLimits::createDefault(),
                                    ProgressCallback progressCallback = nullptr);
 
     /**
-     * @brief 获取黑方AI名称
+     * @brief Get black AI name
      */
     std::string getBlackAIName() const;
 
     /**
-     * @brief 获取白方AI名称
+     * @brief Get white AI name
      */
     std::string getWhiteAIName() const;
 
     /**
-     * @brief 获取黑方AI描述
+     * @brief Get black AI description
      */
     std::string getBlackAIDescription() const;
 
     /**
-     * @brief 获取白方AI描述
+     * @brief Get white AI description
      */
     std::string getWhiteAIDescription() const;
 
     /**
-     * @brief 设置随机种子（用于重现实验）
-     * @param seed 随机种子
+     * @brief Set random seed (for reproducibility)
+     * @param seed Random seed
      */
     void setRandomSeed(unsigned int seed);
 
 private:
     /**
-     * @brief 执行一局完整的对战
-     * @param searchLimits 搜索限制
-     * @return 对战结果
+     * @brief Execute one complete game
+     * @param searchLimits Search limits
+     * @return Game result
      */
     BattleResult executeGame(const SearchLimits& searchLimits);
 
     /**
-     * @brief 处理单个移动
-     * @param board 当前棋盘
-     * @param currentPlayer 当前玩家
-     * @param ai AI算法
-     * @param searchLimits 搜索限制
-     * @param moveHistory 移动历史（用于记录）
-     * @param aiStats AI统计信息（用于累积）
-     * @return 是否成功执行移动
+     * @brief Process single move
+     * @param board Current board
+     * @param currentPlayer Current player
+     * @param ai AI algorithm
+     * @param searchLimits Search limits
+     * @param moveHistory Move history (for recording)
+     * @param aiStats AI statistics (for accumulation)
+     * @return Whether move executed successfully
      */
     bool executeMove(Board& board, PlayerColor currentPlayer, AIStrategy& ai,
                     const SearchLimits& searchLimits, std::vector<Move>& moveHistory,
                     AIStats& aiStats);
 
-    // AI算法
+    // AI algorithms
     std::unique_ptr<AIStrategy> blackAI_;
     std::unique_ptr<AIStrategy> whiteAI_;
 
-    // 随机数生成器（用于可能的随机性控制）
+    // Random number generator (for possible randomness control)
     unsigned int randomSeed_ = 42;
 };
 
 /**
  * @class AIBenchmark
- * @brief AI性能基准测试
+ * @brief AI performance benchmark
  *
- * 提供标准化的性能测试和比较功能
- * 参考: Egaroucid的benchmark系统
+ * Provides standardized performance tests and comparison
+ * Reference: Egaroucid benchmark system
  */
 class AIBenchmark {
 public:
     /**
-     * @brief 基准测试结果
+     * @brief Benchmark result
      */
     struct BenchmarkResult {
         std::string aiName;
@@ -182,23 +182,23 @@ public:
         std::chrono::milliseconds avgTimePerMove;
         double avgNodesExplored = 0.0;
         double avgBranchingFactor = 0.0;
-        double winRate = 0.0;  // 对抗随机AI的胜率
+        double winRate = 0.0;  // Win rate against random AI
     };
 
     /**
-     * @brief 执行AI性能基准测试
-     * @param ai 要测试的AI
-     * @param testGames 测试局数
-     * @return 基准测试结果
+     * @brief Run AI performance benchmark
+     * @param ai AI to test
+     * @param testGames Number of test games
+     * @return Benchmark result
      */
     static BenchmarkResult runBenchmark(std::unique_ptr<AIStrategy> ai, int testGames = 10);
 
     /**
-     * @brief 比较两个AI算法
-     * @param ai1 第一个AI
-     * @param ai2 第二个AI
-     * @param numGames 比较局数
-     * @return 比较结果
+     * @brief Compare two AI algorithms
+     * @param ai1 First AI
+     * @param ai2 Second AI
+     * @param numGames Number of comparison games
+     * @return Comparison result
      */
     static TournamentResult compareAIs(std::unique_ptr<AIStrategy> ai1,
                                       std::unique_ptr<AIStrategy> ai2,

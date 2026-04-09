@@ -1,15 +1,16 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include "core/BitBoard.h"
 
 /**
  * @file Evaluator.h
- * @brief 评估函数接口和实现
+ * @brief Evaluation function interface and implementation
  *
- * 基于Reversi(Java)的评估函数设计，转换为C++实现
- * 参考: Reversi(Java)/src/player/ai/Evaluator.java
- *       Reversi(Java)/src/player/ai/StaticEvaluator.java
+ * Based on Reversi(Java) evaluator design, converted to C++ implementation.
+ * Reference: Reversi(Java)/src/player/ai/Evaluator.java
+ *           Reversi(Java)/src/player/ai/StaticEvaluator.java
  */
 
 namespace Reversi {
@@ -17,36 +18,36 @@ namespace Reversi {
 class Evaluator;
 
 /**
- * @brief 评估函数接口
+ * @brief Evaluation function interface
  *
- * 参考Reversi(Java)的Evaluator接口设计
+ * Based on Reversi(Java) Evaluator interface design.
  */
 class Evaluator {
 public:
     virtual ~Evaluator() = default;
 
     /**
-     * @brief 评估棋盘状态
+     * @brief Evaluate board state
      *
-     * @param board 当前棋盘状态
-     * @param player 评估的玩家 (1或2，对应PlayerColor)
-     * @return 评估分数，越高表示对该玩家越有利
+     * @param board Current board state
+     * @param player Player to evaluate (1 or 2, corresponding to PlayerColor)
+     * @return Evaluation score, higher is better for the player
      *
-     * 参考: Evaluator.eval(int[][] board, int player)
+     * Reference: Evaluator.eval(int[][] board, int player)
      */
     virtual int evaluate(const BitBoard& board, PlayerColor player) const = 0;
 
     /**
-     * @brief 获取评估器名称
+     * @brief Get evaluator name
      */
     virtual std::string getName() const = 0;
 };
 
 /**
- * @brief 静态权重评估器
+ * @brief Static weight evaluator
  *
- * 基于Reversi(Java)的StaticEvaluator实现
- * 综合评估: 移动性(2倍权重) + 棋子差异 + 角落控制(1000倍权重)
+ * Based on Reversi(Java) StaticEvaluator implementation.
+ * Combines: mobility (2x) + disc difference + corner control (1000x).
  */
 class StaticEvaluator : public Evaluator {
 public:
@@ -56,34 +57,34 @@ public:
 
 private:
     /**
-     * @brief 评估棋子数量差异
+     * @brief Evaluate disc count difference
      *
-     * 参考: StaticEvaluator.evalDiscDiff()
+     * Reference: StaticEvaluator.evalDiscDiff()
      */
     int evaluateDiscDifference(const BitBoard& board, PlayerColor player) const;
 
     /**
-     * @brief 评估移动性
+     * @brief Evaluate mobility
      *
-     * 参考: StaticEvaluator.evalMobility()
+     * Reference: StaticEvaluator.evalMobility()
      */
     int evaluateMobility(const BitBoard& board, PlayerColor player) const;
 
     /**
-     * @brief 评估角落控制
+     * @brief Evaluate corner control
      *
-     * 参考: StaticEvaluator.evalCorner()
+     * Reference: StaticEvaluator.evalCorner()
      */
     int evaluateCorners(const BitBoard& board, PlayerColor player) const;
 
     /**
-     * @brief 评估位置权重
+     * @brief Evaluate position weights
      *
-     * 参考: StaticEvaluator.evalBoardMap()
+     * Reference: StaticEvaluator.evalBoardMap()
      */
     int evaluatePositionWeights(const BitBoard& board, PlayerColor player) const;
 
-    // 位置权重表 - 基于Reversi(Java)的经典权重
+    // Position weight table - based on Reversi(Java) classic weights
     static constexpr int POSITION_WEIGHTS[8][8] = {
         {200 , -100, 100,  50,  50, 100, -100,  200},
         {-100, -200, -50, -50, -50, -50, -200, -100},
@@ -95,7 +96,7 @@ private:
         {200 , -100, 100,  50,  50, 100, -100,  200}
     };
 
-    // 权重因子 - 基于Reversi(Java)的权重分配
+    // Weight factors - based on Reversi(Java) weight allocation
     static constexpr int MOBILITY_WEIGHT = 2;
     static constexpr int DISC_DIFF_WEIGHT = 1;
     static constexpr int CORNER_WEIGHT = 1000;
@@ -103,16 +104,16 @@ private:
 };
 
 /**
- * @brief 动态评估器
+ * @brief Dynamic evaluator
  *
- * 基于Reversi(Java)的RealtimeEvaluator概念
- * 可以根据游戏阶段动态调整权重
+ * Based on Reversi(Java) RealtimeEvaluator concept.
+ * Dynamically adjusts weights based on game phase.
  */
 class DynamicEvaluator : public Evaluator {
 public:
     /**
-     * @brief 设置游戏阶段
-     * @param phase 0.0=开局, 1.0=中局, 2.0=残局
+     * @brief Set game phase
+     * @param phase 0.0=opening, 1.0=mid-game, 2.0=end-game
      */
     void setGamePhase(double phase);
 
@@ -120,12 +121,12 @@ public:
     std::string getName() const override { return "DynamicEvaluator"; }
 
 private:
-    double game_phase_ = 0.0;  // 游戏阶段
-    mutable StaticEvaluator static_evaluator_;  // 基础评估器
+    double game_phase_ = 0.0;
+    mutable StaticEvaluator static_evaluator_;  // Base evaluator
 };
 
 /**
- * @brief 评估器工厂
+ * @brief Evaluator factory
  */
 class EvaluatorFactory {
 public:

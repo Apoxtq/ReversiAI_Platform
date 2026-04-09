@@ -25,6 +25,7 @@
 #include <memory>
 
 #include "network/networkclient.hpp"
+#include "network/networkdiscovery.hpp"
 #include "network/gamesynchronizer.hpp"
 #include "network/reconnectionmanager.hpp"
 #include "ui/GameController.h"
@@ -120,6 +121,7 @@ private slots:
     void onUndoClicked();
     void onBackToMenuClicked();
     void onGameStarted(Reversi::GameMode mode, Reversi::PlayerColor humanColor);
+    void onOpponentJoined(const QHostAddress& address, quint16 port);
     void onPhaseChanged(Reversi::GamePhase phase);
     void onTurnChanged(Reversi::PlayerColor player);
     void onMoveMade(int row, int col, Reversi::PlayerColor player);
@@ -137,6 +139,7 @@ private slots:
     void onMaxAttemptsReached();
     void onMoveReceived(int row, int col, const QString& player);
     void onGameStateReceived(const Network::GameStateMessage& state);
+    void onPlayerReadyReceived(const QString& playerName, const QString& sender, qint64 timestamp);
 
     // Chat slots
     void onSendChatMessage();
@@ -160,6 +163,7 @@ private:
     QLabel* opponentNameLabel_;
     QLabel* latencyLabel_;
     QLCDNumber* latencyLCD_;
+    QLabel* playerColorLabel_;  ///< Shows local player's color (Black/White)
     
     // Chat
     QTextEdit* chatDisplay_;
@@ -171,11 +175,18 @@ private:
     QPushButton* undoButton_;
     QPushButton* backButton_;
     
+    // Score display (under board)
+    QLabel* blackScoreLabel_;
+    QLabel* whiteScoreLabel_;
+    QLabel* turnIndicator_;  ///< Shows whose turn it is (e.g. "Black's Turn")
+    
     // ==================== Game Controller ====================
     std::unique_ptr<Reversi::GameController> gameController_;
 
     // ==================== Network ====================
     Network::NetworkClient* networkClient_;
+    Network::NetworkHost* networkHost_;
+    Network::NetworkDiscovery* discovery_;
     Network::GameSynchronizer* synchronizer_;
     Network::ReconnectionManager* reconnector_;
     
@@ -185,6 +196,17 @@ private:
     bool isHost_;
     bool isReconnecting_;
     int currentLatency_;
+    Reversi::PlayerColor localPlayerColor_;  // 本地玩家的棋子颜色
+    
+    // 玩家准备状态
+    bool localPlayerReady_;    // 本地玩家是否已准备
+    bool opponentReady_;       // 对手是否已准备
+    bool gameStarted_;         // 游戏是否已开始
+    bool isClosing_;          // 防止 closeEvent 递归调用
+    
+    // 回声检测：跟踪最后发送的消息时间戳
+    qint64 lastSentTimestamp_;  // 最后发送消息的时间戳（用于检测回声）
+    qint64 lastReceivedTimestamp_; // 最后收到消息的时间戳（用于检测回声）
     
     // ==================== Timers ====================
     QTimer* latencyUpdateTimer_;
@@ -249,9 +271,19 @@ private:
     void applyRemoteMove(int row, int col, const QString& player);
 
     /**
+     * @brief Check if both players are ready and start the game
+     */
+    void checkAndStartGame();
+
+    /**
      * @brief Load game resources
      */
     void loadResources();
+    
+    /**
+     * @brief Update score display (black/white piece counts)
+     */
+    void updateScoreDisplay();
 };
 
 #endif // NETWORK_GAME_WINDOW_HPP

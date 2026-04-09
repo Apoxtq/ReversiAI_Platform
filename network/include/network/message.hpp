@@ -46,6 +46,7 @@ enum class MessageType {
     GAME_END,            ///< Game session ended
     MOVE_MADE,           ///< Player made a move
     GAME_STATE_UPDATE,   ///< Full board state sync
+    PLAYER_READY,        ///< Player is ready to start
 
     // Room System (P2)
     CREATE_ROOM,         ///< Create a game room
@@ -271,7 +272,7 @@ struct MoveMessage {
  * Reference: Egaroucid ggs.hpp GGS_Board structure
  */
 struct GameStateMessage {
-    QVector<QVector<int>> board;      ///< 8x8 board (0=empty, 1=black, 2=white)
+    QVector<QVector<int>> board;  ///< 8x8 board (0=empty, 1=black, 2=white)
     QString currentPlayer;             ///< Current player to move
     int blackCount;                   ///< Black disc count
     int whiteCount;                   ///< White disc count
@@ -550,7 +551,26 @@ struct DiscoveredHost {
         DiscoveredHost host;
         host.playerName = json["playerName"].toString();
         host.roomName = json["roomName"].toString();
-        host.address = sender;
+        
+        // Fix: Convert IPv4-mapped IPv6 address (::ffff:x.x.x.x) to plain IPv4
+        // This fixes the issue where clients cannot connect to servers on Windows
+        // because the sender address is an IPv4-mapped IPv6 address but the server
+        // is listening on IPv4 only (0.0.0.0)
+        QHostAddress resolvedAddress = sender;
+        if (sender.protocol() == QAbstractSocket::IPv6Protocol && sender.isLoopback()) {
+            // If it's a loopback address in IPv6 form (::ffff:127.0.0.1), convert to 127.0.0.1
+            resolvedAddress = QHostAddress::LocalHost;
+        } else if (sender.protocol() == QAbstractSocket::IPv6Protocol) {
+            // Check if it's an IPv4-mapped IPv6 address (::ffff:x.x.x.x)
+            QString addrStr = sender.toString();
+            if (addrStr.startsWith("::ffff:")) {
+                // Extract the IPv4 part and convert
+                QString ipv4Part = addrStr.mid(7); // Remove "::ffff:" prefix
+                resolvedAddress = QHostAddress(ipv4Part);
+            }
+        }
+        host.address = resolvedAddress;
+        
         host.port = static_cast<quint16>(json["port"].toInt(0));
         host.gameVersion = json["gameVersion"].toString();
         host.discoveredTime = json["timestamp"].toVariant().toULongLong();

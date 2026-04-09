@@ -10,14 +10,14 @@ QT_END_NAMESPACE
 
 /**
  * @class MenuWindow
- * @brief 目录界面 - 游戏模式选择
+ * @brief Main menu window - game mode selection
  *
- * 功能:
- * - 显示游戏标题
- * - 提供人机对战 (PvE)、双人对战 (PvP) 和网络对战 (PvN) 入口
- * - 提供AI研究模式入口
- * - 提供对局复盘分析入口
- * - 点击按钮后打开对应游戏窗口
+ * Features:
+ * - Display game title
+ * - Provide entries for Player vs AI (PvE), Local 2P (PvP), and Network (PvN)
+ * - Provide Watch AI Battle entry
+ * - Provide Benchmark Suite entry
+ * - Open corresponding game window when button is clicked
  */
 class MenuWindow : public QMainWindow {
     Q_OBJECT
@@ -27,18 +27,18 @@ public:
     ~MenuWindow() override;
 
 signals:
-    void startPvEGame();      // 开始人机对战
-    void startPvPGame();      // 开始双人对战
-    void startPvNGame();      // 开始网络对战
-    void startAIResearch();   // 开始AI研究模式
-    void startReplayAnalysis(); // v0.9.0: 开始复盘分析
+    void startPvEGame();          // Start Player vs AI game
+    void startPvPGame();          // Start Local 2P game
+    void startPvNGame();          // Start Network game
+    void startReplayAnalysis();    // v0.9.0: Start replay analysis
 
 private slots:
     void onPvEButtonClicked();
     void onPvPButtonClicked();
-    void onNetworkButtonClicked();  // 网络对战按钮
-    void onAIResearchButtonClicked();  // AI研究模式按钮
-    void onReplayAnalysisButtonClicked();  // v0.9.0: 复盘分析按钮
+    void onAiVsAiButtonClicked();        // Watch AI Battle button
+    void onNetworkButtonClicked();        // Network button
+    void onBenchmarkButtonClicked();     // Benchmark Suite button
+    void onReplayAnalysisButtonClicked(); // v0.9.0: Replay analysis button
 
 private:
     Ui::MenuWindow* ui;

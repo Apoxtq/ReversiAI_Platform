@@ -19,16 +19,19 @@ NetworkDiscovery::NetworkDiscovery(QObject* parent)
     : QObject(parent)
     , broadcastSocket_(nullptr)
     , listenSocket_(nullptr)
+    , loopbackSocket_(nullptr)
     , discoveryTimer_(nullptr)
     , broadcastTimer_(nullptr)
     , broadcastPort_(0)
     , listenPort_(0)
+    , gamePort_(0)
     , isDiscovering_(false)
     , isBroadcasting_(false)
 {
     // Create sockets (reference: Custom UDP implementation)
     broadcastSocket_ = new QUdpSocket(this);
     listenSocket_ = new QUdpSocket(this);
+    loopbackSocket_ = new QUdpSocket(this);
     
     // Create timers
     discoveryTimer_ = new QTimer(this);
@@ -38,9 +41,12 @@ NetworkDiscovery::NetworkDiscovery(QObject* parent)
     broadcastTimer_->setSingleShot(false);
     
     // Connect signals
-    connect(discoveryTimer_, &QTimer::timeout, this, &NetworkDiscovery::sendBroadcast);
-    connect(broadcastTimer_, &QTimer::timeout, this, &NetworkDiscovery::onBroadcastTimeout);
+    // broadcastTimer_ fires sendBroadcast() in hosting (broadcasting) mode
+    connect(broadcastTimer_, &QTimer::timeout, this, &NetworkDiscovery::sendBroadcast);
+    // listenSocket_ fires when a discovery datagram arrives from the LAN
     connect(listenSocket_, &QUdpSocket::readyRead, this, &NetworkDiscovery::onDatagramReceived);
+    // loopbackSocket_ fires when a discovery datagram arrives from the same machine
+    connect(loopbackSocket_, &QUdpSocket::readyRead, this, &NetworkDiscovery::onLoopbackDatagramReceived);
     
     // Initialize with defaults
     playerName_ = "Player";
@@ -61,47 +67,39 @@ NetworkDiscovery::~NetworkDiscovery()
 void NetworkDiscovery::startDiscovery()
 {
     // Reference: Egaroucid ggs.hpp discovery pattern
+    // Discovery = receive-only mode (listening for other hosts' broadcasts)
+    // Do NOT broadcast from here — only the hosting side broadcasts
     if (isDiscovering_) {
         return;
     }
-    
+
     if (!initializeSockets()) {
         emit discoveryError("Failed to initialize discovery sockets");
         return;
     }
-    
-    // Start listening
+
+    // Start listening on 0.0.0.0 (all interfaces)
     if (!listenSocket_->bind(QHostAddress::Any, listenPort_, QUdpSocket::ShareAddress)) {
         emit discoveryError(QString("Failed to bind to port %1").arg(listenPort_));
         return;
     }
-    
-    // Join multicast group for better discovery
-    // This allows receiving broadcasts from other subnets
-    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
-    for (const QNetworkInterface& interface : interfaces) {
-        if (interface.flags() & QNetworkInterface::IsUp &&
-            interface.flags() & QNetworkInterface::IsRunning &&
-            !(interface.flags() & QNetworkInterface::IsLoopBack)) {
-            
-            for (const QNetworkAddressEntry& entry : interface.addressEntries()) {
-                if (entry.ip().protocol() == QAbstractSocket::IPv4Protocol) {
-                    // Try to join multicast group (optional)
-                    // listenSocket_->joinMulticastGroup(QHostAddress("224.0.0.1"), interface);
-                }
-            }
-        }
+
+    // Also bind loopback interface for same-machine discovery
+    // On Windows, QHostAddress::Broadcast does not reach 127.0.0.1, so we need
+    // a separate socket bound to 127.0.0.1 to receive loopback broadcasts
+    if (!loopbackSocket_->bind(QHostAddress::LocalHost, listenPort_, QUdpSocket::ShareAddress)) {
+        qWarning() << "Failed to bind loopback socket to port" << listenPort_
+                   << "- same-machine discovery may not work";
+    } else {
+        qInfo() << "Loopback discovery listening on 127.0.0.1:" << listenPort_;
     }
-    
+
     isDiscovering_ = true;
     clearHosts();
-    
-    // Send initial broadcast
-    sendBroadcast();
-    
+
     // Start discovery timer (reference: Egaroucid heartbeat interval)
     discoveryTimer_->start(DISCOVERY_INTERVAL);
-    
+
     emit discoveryStarted();
     qInfo() << "Network discovery started on port" << listenPort_;
 }
@@ -114,7 +112,10 @@ void NetworkDiscovery::stopDiscovery()
     
     discoveryTimer_->stop();
     listenSocket_->close();
-    
+    if (loopbackSocket_) {
+        loopbackSocket_->close();
+    }
+
     isDiscovering_ = false;
     emit discoveryStopped();
     qInfo() << "Network discovery stopped";
@@ -127,33 +128,37 @@ void NetworkDiscovery::startBroadcasting(quint16 port)
     if (isBroadcasting_) {
         return;
     }
-    
+
     if (!initializeSockets()) {
         emit discoveryError("Failed to initialize broadcasting sockets");
         return;
     }
-    
-    broadcastPort_ = port;
-    
+
+    // port = TCP game port for incoming connections (goes in JSON)
+    gamePort_ = port;
+    // broadcastPort_ = UDP destination port (must match where receivers listen)
+    // Both receiver sockets (0.0.0.0 and 127.0.0.1) are bound to listenPort_ (45455)
+    broadcastPort_ = listenPort_;
+
     // Bind socket for broadcasting
     if (!broadcastSocket_->bind(QHostAddress::Any, 0, QUdpSocket::ShareAddress)) {
         emit discoveryError("Failed to bind broadcast socket");
         return;
     }
-    
-    // Enable broadcast
+
     // Enable broadcast (32 = BroadcastSocketOption in Qt5/6)
     broadcastSocket_->setSocketOption(static_cast<QAbstractSocket::SocketOption>(32), 1);
-    
+
     isBroadcasting_ = true;
-    
+
     // Send initial broadcast
     sendBroadcast();
-    
+
     // Start broadcast timer
     broadcastTimer_->start(BROADCAST_INTERVAL);
-    
-    qInfo() << "Broadcasting started on port" << broadcastPort_;
+
+    qInfo() << "Broadcasting started (TCP game port:" << gamePort_
+            << "UDP broadcast to:" << broadcastPort_ << ")";
 }
 
 void NetworkDiscovery::stopBroadcasting()
@@ -221,7 +226,8 @@ QJsonObject NetworkDiscovery::createDiscoveryMessage(const QString& type)
     msg["type"] = type;
     msg["playerName"] = playerName_;
     msg["roomName"] = roomName_;
-    msg["port"] = static_cast<int>(listenPort_);
+    // gamePort_ = TCP listen port (for incoming game connections)
+    msg["port"] = static_cast<int>(gamePort_);
     msg["version"] = gameVersion_;
     msg["timestamp"] = static_cast<qint64>(QDateTime::currentMSecsSinceEpoch());
     return msg;
@@ -230,43 +236,77 @@ QJsonObject NetworkDiscovery::createDiscoveryMessage(const QString& type)
 void NetworkDiscovery::sendBroadcast()
 {
     // Reference: Egaroucid ggs.hpp line 554-556 (heartbeat pattern)
-    
+
     QJsonObject msg = createDiscoveryMessage("HELLO");
     QByteArray data = QJsonDocument(msg).toJson();
-    
-    // Send to broadcast address
+
+    qInfo() << "[BROADCAST] isBroadcasting=" << isBroadcasting_
+            << "socket=" << broadcastSocket_->state()
+            << "dest=255.255.255.255:" << broadcastPort_;
+
+    // Send to broadcast address (for other machines on the network)
     qint64 bytesWritten = broadcastSocket_->writeDatagram(
-        data, 
-        QHostAddress::Broadcast, 
+        data,
+        QHostAddress::Broadcast,
         broadcastPort_
     );
-    
+
     if (bytesWritten < 0) {
-        qWarning() << "Broadcast failed:" << broadcastSocket_->errorString();
-    } else {
-        emit broadcastReceived(QHostAddress::Broadcast);
+        qWarning() << "[BROADCAST] Failed:" << broadcastSocket_->errorString();
+    }
+
+    // Also send to loopback address (127.0.0.1) for same-machine discovery
+    // QHostAddress::Broadcast does not reach loopback on Windows, so we send directly
+    qint64 loopbackWritten = broadcastSocket_->writeDatagram(
+        data,
+        QHostAddress::LocalHost,
+        broadcastPort_
+    );
+
+    if (loopbackWritten < 0) {
+        qWarning() << "[BROADCAST] Loopback failed:" << broadcastSocket_->errorString();
     }
 }
 
 void NetworkDiscovery::onDatagramReceived()
 {
     // Reference: Egaroucid ggs.hpp receive pattern (line 205-217)
-    
     while (listenSocket_->hasPendingDatagrams()) {
         QNetworkDatagram datagram = listenSocket_->receiveDatagram();
         QByteArray data = datagram.data();
         QHostAddress sender = datagram.senderAddress();
-        quint16 senderPort = datagram.senderPort();
-        
+
         // Parse JSON
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(data, &error);
-        
+
         if (error.error != QJsonParseError::NoError) {
             qWarning() << "Failed to parse discovery message:" << error.errorString();
             continue;
         }
-        
+
+        QJsonObject json = doc.object();
+        processDiscoveryMessage(json, sender);
+    }
+}
+
+void NetworkDiscovery::onLoopbackDatagramReceived()
+{
+    // Handle incoming datagrams on the loopback socket (127.0.0.1)
+    // This is identical to onDatagramReceived but reads from loopbackSocket_
+    while (loopbackSocket_ && loopbackSocket_->hasPendingDatagrams()) {
+        QNetworkDatagram datagram = loopbackSocket_->receiveDatagram();
+        QByteArray data = datagram.data();
+        QHostAddress sender = datagram.senderAddress();
+
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(data, &error);
+
+        if (error.error != QJsonParseError::NoError) {
+            qWarning() << "Failed to parse loopback discovery message:" << error.errorString();
+            continue;
+        }
+
         QJsonObject json = doc.object();
         processDiscoveryMessage(json, sender);
     }
@@ -307,7 +347,10 @@ void NetworkDiscovery::processDiscoveryMessage(const QJsonObject& json, const QH
 bool NetworkDiscovery::isHostKnown(const DiscoveredHost& host) const
 {
     for (const DiscoveredHost& h : hosts_) {
-        if (h.address == host.address && h.port == host.port) {
+        // Match by playerName + TCP game port (port is unique per host process)
+        // This deduplicates when the same broadcast arrives via LAN + loopback
+        // with different sender addresses (::ffff:x.x.x.x vs 127.0.0.1)
+        if (h.playerName == host.playerName && h.port == host.port) {
             return true;
         }
     }
@@ -317,8 +360,12 @@ bool NetworkDiscovery::isHostKnown(const DiscoveredHost& host) const
 void NetworkDiscovery::updateHostTimestamp(DiscoveredHost& host)
 {
     for (int i = 0; i < hosts_.size(); ++i) {
-        if (hosts_[i].address == host.address && hosts_[i].port == host.port) {
+        if (hosts_[i].playerName == host.playerName && hosts_[i].port == host.port) {
             hosts_[i].discoveredTime = host.discoveredTime;
+            // Prefer loopback address for same-machine connections
+            if (host.address == QHostAddress::LocalHost) {
+                hosts_[i].address = host.address;
+            }
             break;
         }
     }

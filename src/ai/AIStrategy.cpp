@@ -6,12 +6,10 @@
 
 /**
  * @file AIStrategy.cpp
- * @brief AI策略基础实现
+ * @brief AI Strategy base implementation
  */
 
 namespace Reversi {
-
-// 工具函数实现
 
 std::string difficultyToString(Difficulty difficulty) {
     switch (difficulty) {
@@ -32,10 +30,8 @@ Difficulty stringToDifficulty(const std::string& str) {
     if (lower == "hard") return Difficulty::HARD;
     if (lower == "custom") return Difficulty::CUSTOM;
 
-    return Difficulty::MEDIUM;  // 默认中等难度
+    return Difficulty::MEDIUM;
 }
-
-// AIStrategyFactory 实现
 
 std::unique_ptr<AIStrategy> AIStrategyFactory::createMinimaxAI(Difficulty difficulty) {
     MinimaxConfig config;
@@ -58,7 +54,6 @@ std::unique_ptr<AIStrategy> AIStrategyFactory::createMinimaxAI(Difficulty diffic
             config.timeLimit = std::chrono::milliseconds(8000);
             break;
         case Difficulty::CUSTOM:
-            // 使用默认配置
             break;
     }
 
@@ -82,7 +77,6 @@ std::unique_ptr<AIStrategy> AIStrategyFactory::createMCTSAI(Difficulty difficult
             config.time_limit = std::chrono::milliseconds(8000);
             break;
         case Difficulty::CUSTOM:
-            // 使用默认配置
             break;
     }
 

@@ -1,11 +1,11 @@
 #include "Board.h"
+#include <algorithm>
 #include <stdexcept>
 #include <vector>
 
-// 跨平台位操作支持
+// Cross-platform bit operation support
 #if defined(_MSC_VER)
     #include <intrin.h>
-    // MSVC内联函数实现CTZ (Count Trailing Zeros)
     inline int CTZ64(uint64_t x) {
         unsigned long index;
         _BitScanForward64(&index, x);
@@ -29,22 +29,21 @@ bool Board::makeMove(const Move& move) {
     }
 
     if (move.is_pass) {
-        // 只有在没有合法移动时才允许跳过
-        uint64_t moves = bitboard_.getValidMoves(current_turn_);
-        if (moves != 0) return false;
+        // Only allow pass when no valid moves exist
+        uint64_t valid = bitboard_.getValidMoves(current_turn_);
+        if (valid != 0) return false;
         current_turn_ = (current_turn_ == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
         move_count_++;
         return true;
     }
 
-    // coordinateToBit helper removed; compute bit directly
     uint64_t move_bit = 1ULL << (move.row * 8 + move.col);
     uint64_t valid_moves = bitboard_.getValidMoves(current_turn_);
     if (!(valid_moves & move_bit)) {
         return false;
     }
 
-    // 保存历史以便悔棋
+    // Save history for undo
     history_.push_back(bitboard_);
 
     bool ok = bitboard_.makeMove(move.row, move.col, current_turn_);
@@ -52,8 +51,8 @@ bool Board::makeMove(const Move& move) {
         current_turn_ = (current_turn_ == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
         move_count_++;
     } else {
-        // 不应该出现：如果 move 在 valid_moves 中，则 makeMove 应成功
-        // 还原历史
+        // Should not happen: if move is in valid_moves, makeMove should succeed
+        // Restore history
         bitboard_ = history_.back();
         history_.pop_back();
     }
@@ -92,7 +91,7 @@ std::optional<PlayerColor> Board::getWinner() const {
 }
 
 int Board::at(int row, int col) const {
-    // 将行列转换为位索引 (0-63)
+    // Convert row/col to bit index (0-63)
     int pos = row * 8 + col;
     uint64_t blackMask = bitboard_.getPlayerBits();
     uint64_t whiteMask = bitboard_.getOpponentBits();
@@ -100,11 +99,11 @@ int Board::at(int row, int col) const {
     uint64_t posMask = (uint64_t)1 << pos;
 
     if (blackMask & posMask) {
-        return 2;  // 黑棋
+        return 2;  // Black
     } else if (whiteMask & posMask) {
-        return 1;  // 白棋
+        return 1;  // White
     }
-    return 0;  // 空位
+    return 0;  // Empty
 }
 
 void Board::syncFrom(const std::vector<std::vector<int>>& state,
@@ -133,6 +132,15 @@ void Board::setCell(int row, int col, int value) {
     }
 }
 
+void Board::swapColors() {
+    // Swap player_pieces_ and opponent_pieces_
+    uint64_t player_bits = bitboard_.getPlayerBits();
+    uint64_t opponent_bits = bitboard_.getOpponentBits();
+    // Swap internal bitmaps directly
+    bitboard_.setPlayerBits(opponent_bits);
+    bitboard_.setOpponentBits(player_bits);
+    // Flip turn
+    current_turn_ = (current_turn_ == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black;
+}
+
 } // namespace Reversi
-
-

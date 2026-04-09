@@ -1,12 +1,26 @@
+// 使用 Windows 原生计时避免 MSVC 兼容性问题
+#define NOMINMAX
+#include <windows.h>
+#undef max  // 确保 std::max 可用
+
 #include "research/AIBenchmark.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <random>
+#include <chrono>
 #include "../ai/MinimaxAI.h"
+#include "../ai/MCTSAI.h"
 #include "../ai/RandomAI.h"
+#include "../ai/AIStrategy.h"
+#include "../Board.h"
 
 namespace Reversi {
+
+// 跨平台高精度计时辅助函数
+inline double getTimeMs() {
+    return static_cast<double>(GetTickCount64());
+}
 
 // ============================================================================
 // AISearchBenchmark 实现
@@ -94,7 +108,7 @@ AISearchBenchmarkResult AISearchBenchmark::benchmarkMinimax(
     // 使用默认Board (标准开局)
     Board board;
 
-    // 设置搜索限制 - 使用正确的API
+    // 设置搜索限制
     SearchLimits limits;
     limits.maxDepth = depth;
     limits.timeLimit = std::chrono::milliseconds(time_limit_ms);
@@ -109,47 +123,43 @@ AISearchBenchmarkResult AISearchBenchmark::benchmarkMinimax(
         // 重置AI
         ai.reset();
 
-        // 开始搜索
-        auto start = std::chrono::high_resolution_clock::now();
+        // 计时
+        double start_time = getTimeMs();
 
-        // 执行搜索 - 使用findBestMove
+        // 执行搜索
         Move best_move = ai.findBestMove(board, limits);
 
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        double end_time = getTimeMs();
+        double elapsed = end_time - start_time;
 
-        total_time += duration.count() / 1000.0;
+        total_time += elapsed;
 
-        // 从AI获取实际搜索的节点数
-        auto stats = ai.getStats();
+        // 获取统计
+        AIStats stats = ai.getStats();
         total_nodes += stats.nodesExplored;
     }
 
     result.time_ms = total_time;
     result.nodes_searched = total_nodes;
 
-    // 计算吞吐量
-    if (total_time > 0) {
-        result.nps = result.nodes_searched / total_time;
-        result.throughput = result.nps / 1000000.0;  // M nodes/sec
-    } else {
-        result.nps = 0;
-        result.throughput = 0;
+    // 计算吞吐量 - 使用临时变量避免MSVC问题
+    double nps_value = 0.0;
+    if (total_time > 0.0) {
+        nps_value = static_cast<double>(result.nodes_searched) / total_time;
     }
-
+    result.nps = nps_value;
+    result.throughput = nps_value / 1000000.0;
     result.unit = "M nodes/sec";
 
     // 验收标准
+    bool test_passed = true;
+    std::string msg = "Test completed";
     if (depth >= 6) {
-        result.passed = result.throughput >= TARGET_MINIMAX6_NPS;
-        result.message = result.passed ? "Meets target" : "Below target";
-    } else if (depth >= 4) {
-        result.passed = true;
-        result.message = "Test completed";
-    } else {
-        result.passed = true;
-        result.message = "Test completed";
+        test_passed = (result.throughput >= TARGET_MINIMAX6_NPS);
+        msg = test_passed ? "Meets target" : "Below target";
     }
+    result.passed = test_passed;
+    result.message = msg;
 
     return result;
 }
@@ -192,15 +202,15 @@ AISearchBenchmarkResult AISearchBenchmark::benchmarkMCTS(
         // 重置AI
         ai.reset();
 
-        auto start = std::chrono::high_resolution_clock::now();
+        double start_time = getTimeMs();
 
         // 执行MCTS搜索
         Move best_move = ai.findBestMove(board, limits);
 
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        double end_time = getTimeMs();
+        double elapsed = end_time - start_time;
 
-        total_time += duration.count() / 1000.0;
+        total_time += elapsed;
         total_sims += simulations;
     }
 

@@ -8,7 +8,7 @@
 
 #include "core/BitBoard.h"
 #include "Board.h"
-#include "ai/Evaluator.h"
+#include "ai/AIStrategy.h"
 #include "ai/MCTSAI.h"
 #include "ai/MinimaxAI.h"
 
@@ -17,7 +17,6 @@ using namespace Reversi;
 int main() {
     std::cout << "=== MCTS vs Minimax Sequential Test ===" << std::endl;
     
-    // 创建AI一次
     MCTSConfig mctsConfig;
     mctsConfig.num_simulations = 50;
     auto mcts = std::make_unique<MCTSAI>(mctsConfig);
@@ -41,12 +40,11 @@ int main() {
         
         while (!board.isGameOver()) {
             if (mctsIsBlack == (board.getCurrentTurn() == PlayerColor::Black)) {
-                // MCTS先搜索
-                SearchLimits limits;
-                limits.maxNodes = 50;
-                limits.timeLimit = std::chrono::seconds(1);
+                SearchLimits lim;
+                lim.maxNodes = 50;
+                lim.timeLimit = std::chrono::milliseconds(1000);
                 
-                Move m = mcts->findBestMove(board, limits);
+                Move m = mcts->findBestMove(board, lim);
                 if (m.isValid() && !m.is_pass) {
                     board.makeMove(m);
                 } else {
@@ -54,12 +52,11 @@ int main() {
                     if (!valid.empty()) board.makeMove(valid[0]);
                 }
             } else {
-                // Minimax后搜索
-                SearchLimits limits;
-                limits.maxDepth = 4;
-                limits.timeLimit = std::chrono::seconds(1);
+                SearchLimits lim;
+                lim.maxDepth = 4;
+                lim.timeLimit = std::chrono::milliseconds(1000);
                 
-                Move m = minimax->findBestMove(board, limits);
+                Move m = minimax->findBestMove(board, lim);
                 if (m.isValid() && !m.is_pass) {
                     board.makeMove(m);
                 } else {

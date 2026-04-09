@@ -1,18 +1,19 @@
 /**
  * @file MoveOrderer.h
- * @brief Move Ordering (走法排序器) 实现
+ * @brief Move Ordering implementation
  *
- * 统一管理所有走法排序策略：Killer Moves + History Heuristic
+ * Unified management of all move ordering strategies:
+ * Killer Moves + History Heuristic
  *
- * 排序优先级:
- * 1. PV走法 (Principal Variation) - 已知最佳走法
- * 2. 杀手走法 - 历史导致剪枝的走法
- * 3. 历史启发 - 历史得分高的走法
- * 4. 静态评估 - 评估函数得分
- * 5. 其他 - 按原始顺序
+ * Ordering priority:
+ * 1. PV move (Principal Variation) - known best move
+ * 2. Killer moves - moves that caused cutoffs
+ * 3. History heuristic - moves with high history scores
+ * 4. Static evaluation - evaluator score
+ * 5. Others - original order
  *
- * 参考: Egaroucid/src/engine/move_ordering.hpp
- * v0.7.0 - AI算法优化版
+ * Reference: Egaroucid/src/engine/move_ordering.hpp
+ * v0.7.0 - AI algorithm optimization version
  */
 
 #pragma once
@@ -28,178 +29,178 @@
 namespace Reversi {
 
 /**
- * @brief Move Orderer Configuration (走法排序器配置)
+ * @brief Move Orderer Configuration
  */
 struct MoveOrdererConfig {
-    bool useKillerMoves = true;           ///< 是否使用Killer Moves
-    bool useHistoryHeuristic = true;      ///< 是否使用历史启发
-    bool useMobilityOrdering = true;      ///< 是否使用灵活度排序
-    int killerWeight = 8;                  ///< Killer权重 (基于Egaroucid)
-    int historyWeight = 6;                 ///< History权重 (基于Egaroucid)
-    int mobilityWeight = 35;               ///< 灵活度权重 (基于Egaroucid)
-    double decayFactor = 0.99;             ///< 衰减因子
+    bool useKillerMoves = true;           ///< Whether to use Killer Moves
+    bool useHistoryHeuristic = true;      ///< Whether to use History Heuristic
+    bool useMobilityOrdering = true;       ///< Whether to use mobility ordering
+    int killerWeight = 8;                 ///< Killer weight (based on Egaroucid)
+    int historyWeight = 6;                 ///< History weight (based on Egaroucid)
+    int mobilityWeight = 35;               ///< Mobility weight (based on Egaroucid)
+    double decayFactor = 0.99;             ///< Decay factor
 };
 
 /**
- * @brief Move Orderer (走法排序器)
+ * @brief Move Orderer
  *
- * 统一管理所有走法排序策略
+ * Unified management of all move ordering strategies.
  *
- * 设计要点:
- * - 整合KillerTable和HistoryTable
- * - 支持多种排序策略组合
- * - 提供统计信息
+ * Design highlights:
+ * - Integrates KillerTable and HistoryTable
+ * - Supports combined ordering strategies
+ * - Provides statistics
  */
 class MoveOrderer {
 public:
     /**
-     * @brief 构造函数
-     * @param config 配置
-     * @param evaluator 评估函数
+     * @brief Constructor
+     * @param config Configuration
+     * @param evaluator Evaluator
      */
     explicit MoveOrderer(MoveOrdererConfig config = MoveOrdererConfig(),
                         std::unique_ptr<Evaluator> evaluator = nullptr);
 
     /**
-     * @brief 主排序函数
+     * @brief Main ordering function
      *
-     * 根据当前搜索状态对走法进行排序
+     * Orders moves based on current search state.
      *
-     * @param board 当前棋盘
-     * @param depth 当前搜索深度
-     * @param moves 待排序走法
-     * @param pvMove PV走法 (可选)
-     * @param prevMove 上一手走法 (用于Counter Move)
-     * @return 排序后的走法
+     * @param board Current board
+     * @param depth Current search depth
+     * @param moves Moves to order
+     * @param pvMove PV move (optional)
+     * @param prevMove Previous move (for Counter Move)
+     * @return Ordered moves
      */
     std::vector<Move> orderMoves(const Board& board, int depth,
                                 const std::vector<Move>& moves,
                                 const Move& pvMove = Move(), const Move& prevMove = Move());
 
     /**
-     * @brief 静态排序 (快速排序)
+     * @brief Static ordering (fast)
      *
-     * 只使用Killer和History，不进行深度评估
+     * Uses only Killer and History, no depth evaluation.
      *
-     * @param depth 当前搜索深度
-     * @param moves 待排序走法
-     * @param pvMove PV走法
-     * @param prevMove 上一手走法
-     * @return 排序后的走法
+     * @param depth Current search depth
+     * @param moves Moves to order
+     * @param pvMove PV move
+     * @param prevMove Previous move
+     * @return Ordered moves
      */
     std::vector<Move> orderMovesStatic(int depth,
                                       const std::vector<Move>& moves,
                                       const Move& pvMove = Move(), const Move& prevMove = Move());
 
     /**
-     * @brief 添加Killer走法
-     * 在Beta剪枝后调用
+     * @brief Add Killer move
+     * Called after beta cutoff.
      *
-     * @param depth 搜索深度
-     * @param move 走法
+     * @param depth Search depth
+     * @param move Move
      */
     void addKiller(int depth, int move);
 
     /**
-     * @brief 添加History得分
-     * 在Beta剪枝后调用
+     * @brief Add History score
+     * Called after beta cutoff.
      *
-     * @param from 起始位置
-     * @param to 目标位置
-     * @param depth 搜索深度
+     * @param from Start position
+     * @param to Target position
+     * @param depth Search depth
      */
     void addHistory(int from, int to, int depth);
 
     /**
-     * @brief 记录导致剪枝的走法
-     * 同时更新Killer和History
+     * @brief Record cutoff move
+     * Updates both Killer and History.
      *
-     * @param from 起始位置
-     * @param to 目标位置
-     * @param depth 搜索深度
-     * @param isBetaCutoff 是否是Beta剪枝
+     * @param from Start position
+     * @param to Target position
+     * @param depth Search depth
+     * @param isBetaCutoff Whether beta cutoff occurred
      */
     void recordCutoff(int from, int to, int depth, bool isBetaCutoff = true);
 
     /**
-     * @brief 清空所有排序数据
+     * @brief Clear all ordering data
      */
     void clear();
 
     /**
-     * @brief 执行衰减
-     * 在每次搜索开始前调用，防止历史数据过时
+     * @brief Apply decay
+     * Called before each search to prevent stale data.
      */
     void decay();
 
     /**
-     * @brief 获取配置
+     * @brief Get configuration
      */
     const MoveOrdererConfig& getConfig() const { return config_; }
 
     /**
-     * @brief 设置配置
+     * @brief Set configuration
      */
     void setConfig(const MoveOrdererConfig& config) { config_ = config; }
 
     /**
-     * @brief 获取Killer表
+     * @brief Get Killer table
      */
     const KillerTable& getKillerTable() const { return killerTable_; }
 
     /**
-     * @brief 获取History表
+     * @brief Get History table
      */
     const HistoryTable& getHistoryTable() const { return historyTable_; }
 
     /**
-     * @brief 获取统计数据
+     * @brief Get statistics
      */
     struct Statistics {
-        int killerHits;       ///< Killer命中次数
-        int historyHits;      ///< History命中次数
-        int pvHits;          ///< PV走法命中次数
-        int totalMoves;       ///< 排序的总走法数
-        int movesWithKiller;  ///< 包含Killer走法的次数
-        int movesWithHistory; ///< 包含History走法的次数
+        int killerHits;       ///< Killer hit count
+        int historyHits;      ///< History hit count
+        int pvHits;           ///< PV move hit count
+        int totalMoves;       ///< Total moves ordered
+        int movesWithKiller;  ///< Moves containing killer
+        int movesWithHistory; ///< Moves containing history
     };
     Statistics getStatistics() const;
 
     /**
-     * @brief 重置统计
+     * @brief Reset statistics
      */
     void resetStatistics();
 
 private:
     /**
-     * @brief 计算走法得分
+     * @brief Calculate move score
      *
-     * @param move 走法
-     * @param depth 搜索深度
-     * @param pvMove PV走法
-     * @param prevMove 上一手走法
-     * @return 排序得分
+     * @param move Move
+     * @param depth Search depth
+     * @param pvMove PV move
+     * @param prevMove Previous move
+     * @return Ordering score
      */
     int calculateMoveScore(const Move& move, int depth, const Move& pvMove, const Move& prevMove) const;
 
     /**
-     * @brief 计算灵活度得分
+     * @brief Calculate mobility score
      *
-     * @param board 棋盘
-     * @param move 走法
-     * @return 灵活度得分
+     * @param board Board
+     * @param move Move
+     * @return Mobility score
      */
     int calculateMobilityScore(const Board& board, const Move& move) const;
 
-    // 配置
+    // Configuration
     MoveOrdererConfig config_;
 
-    // 组件
+    // Components
     KillerTable killerTable_;
     HistoryTable historyTable_;
     std::unique_ptr<Evaluator> evaluator_;
 
-    // 统计
+    // Statistics
     mutable Statistics stats_;
 };
 

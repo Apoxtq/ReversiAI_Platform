@@ -9,124 +9,124 @@
 
 /**
  * @file MCTSAI.h
- * @brief MCTS算法AI实现
+ * @brief MCTS AI implementation
  *
- * 基于alpha-zero-general的UCT算法，转换为C++ BitBoard实现
- * 参考: alpha-zero-general/MCTS.py
- *       alpha-zero-general/othello/OthelloGame.py
+ * Based on alpha-zero-general UCT algorithm, adapted for C++ BitBoard
+ * Reference: alpha-zero-general/MCTS.py
+ *             alpha-zero-general/othello/OthelloGame.py
  */
 
 namespace Reversi {
 
 /**
- * @brief MCTS节点结构
+ * @brief MCTS Node structure
  *
- * 表示搜索树中的一个节点
- * 参考: alpha-zero-general/MCTS.py中的树节点概念
+ * Represents a node in the search tree
+ * Reference: alpha-zero-general/MCTS.py tree node concept
  */
 struct MCTSNode {
     /**
-     * @brief 构造函数
-     * @param parent 父节点指针
+     * @brief Constructor
+     * @param parent Parent node pointer
      */
     explicit MCTSNode(MCTSNode* parent = nullptr);
 
-    // 节点统计信息
-    double value_sum = 0.0;        ///< Q值总和 (所有访问的价值的总和)
-    int visit_count = 0;           ///< 访问次数 N(s,a)
-    double prior = 0.0;            ///< 先验概率 P(s,a)
+    // Node statistics
+    double value_sum = 0.0;        ///< Sum of Q values
+    int visit_count = 0;           ///< Visit count N(s,a)
+    double prior = 0.0;            ///< Prior probability P(s,a)
 
-    // 树结构
-    MCTSNode* parent;              ///< 父节点
-    std::vector<std::unique_ptr<MCTSNode>> children;  ///< 子节点
-    std::vector<Move> child_moves;  ///< 对应的移动
+    // Tree structure
+    MCTSNode* parent;              ///< Parent node
+    std::vector<std::unique_ptr<MCTSNode>> children;  ///< Children
+    std::vector<Move> child_moves;  ///< Corresponding moves
 
     /**
-     * @brief 获取价值估计 (Q值)
-     * @return 平均价值
+     * @brief Get value estimate (Q value)
+     * @return Average value
      */
     double getValue() const {
         return visit_count > 0 ? value_sum / visit_count : 0.0;
     }
 
     /**
-     * @brief 检查是否为叶子节点
-     * @return true如果没有子节点
+     * @brief Check if leaf node
+     * @return true if no children
      */
     bool isLeaf() const;
 
     /**
-     * @brief 查找子节点
-     * @param move 移动
-     * @return 子节点指针，如果不存在返回nullptr
+     * @brief Find child node
+     * @param move Move
+     * @return Child node pointer, nullptr if not found
      */
     MCTSNode* findChild(const Move& move);
 
     /**
-     * @brief 添加子节点
-     * @param move 移动
-     * @param node 子节点
+     * @brief Add child node
+     * @param move Move
+     * @param node Child node
      */
     void addChild(Move move, std::unique_ptr<MCTSNode> node);
 
     /**
-     * @brief 获取子节点数量
+     * @brief Get number of children
      */
     size_t getChildCount() const { return children.size(); }
 
     /**
-     * @brief 获取第i个子节点
+     * @brief Get i-th child node
      */
     MCTSNode* getChild(size_t index) { return children[index].get(); }
     const MCTSNode* getChild(size_t index) const { return children[index].get(); }
 
     /**
-     * @brief 获取第i个子移动
+     * @brief Get i-th child move
      */
     const Move& getChildMove(size_t index) const { return child_moves[index]; }
 
     /**
-     * @brief 获取UCT值 (Upper Confidence Bound)
-     * @param c_puct 探索常数
-     * @return UCT值
+     * @brief Get UCT value (Upper Confidence Bound)
+     * @param c_puct Exploration constant
+     * @return UCT value
      *
-     * 公式: Q(s,a) + c_puct * P(s,a) * sqrt(N(s)) / (1 + N(s,a))
-     * 参考: alpha-zero-general/MCTS.py line 112-113
+     * Formula: Q(s,a) + c_puct * P(s,a) * sqrt(N(s)) / (1 + N(s,a))
+     * Reference: alpha-zero-general/MCTS.py line 112-113
      */
     double getUCT(double c_puct) const;
 };
 
 /**
- * @brief MCTS配置参数
+ * @brief MCTS configuration parameters
  */
 struct MCTSConfig {
-    int num_simulations = 1000;    ///< 每次移动的仿真次数
-    double c_puct = 1.0;           ///< 探索常数 (alpha-zero-general默认1.0)
-    bool use_dirichlet_noise = false;  ///< 是否使用Dirichlet噪声
-    double dirichlet_alpha = 0.3;  ///< Dirichlet噪声参数
-    double dirichlet_epsilon = 0.25;  ///< 噪声混合比例
+    int num_simulations = 1000;    ///< Simulations per move
+    double c_puct = 1.0;           ///< Exploration constant (alpha-zero-general default 1.0)
+    bool use_dirichlet_noise = false;  ///< Whether to use Dirichlet noise
+    double dirichlet_alpha = 0.3;  ///< Dirichlet noise parameter
+    double dirichlet_epsilon = 0.25;  ///< Noise mixing ratio
 
-    // 时间控制
+    // Time control
     std::chrono::milliseconds time_limit = std::chrono::milliseconds(3000);
 };
 
 /**
- * @brief MCTS AI实现
+ * @brief MCTS AI implementation
  *
- * 基于alpha-zero-general的UCT算法，适配BitBoard系统
- * 参考: alpha-zero-general/MCTS.py
+ * Based on alpha-zero-general UCT algorithm, adapted for BitBoard system
+ * Reference: alpha-zero-general/MCTS.py
  */
 class MCTSAI : public AIStrategy {
 public:
     /**
-     * @brief 构造函数
-     * @param config MCTS配置
-     * @param evaluator 评估器（用于叶子节点评估）
+     * @brief Constructor
+     * @param config MCTS configuration
+     * @param evaluator Evaluator (for leaf node evaluation)
      */
     explicit MCTSAI(MCTSConfig config = MCTSConfig(),
                    std::unique_ptr<Evaluator> evaluator = nullptr);
 
-    // AIStrategy接口实现
+    // AIStrategy interface
     Move findBestMove(const Board& board, const SearchLimits& limits) override;
     std::string getName() const override { return "MCTSAI"; }
     std::string getDescription() const override;
@@ -137,82 +137,82 @@ public:
     bool supportsFeature(const std::string& feature) const override;
 
     /**
-     * @brief 获取MCTS配置
+     * @brief Get MCTS configuration
      */
     const MCTSConfig& getConfig() const { return config_; }
 
     /**
-     * @brief 设置MCTS配置
+     * @brief Set MCTS configuration
      */
     void setConfig(const MCTSConfig& config) { config_ = config; }
 
 private:
     /**
-     * @brief 执行一次MCTS搜索
-     * @param board 当前棋盘状态
-     * @param limits 搜索限制
+     * @brief Execute single MCTS search
+     * @param board Current board state
+     * @param limits Search limits
      *
-     * 参考: alpha-zero-general/MCTS.py search()方法
+     * Reference: alpha-zero-general/MCTS.py search() method
      */
     void search(const Board& board, const SearchLimits& limits);
 
     /**
-     * @brief 仿真阶段：随机仿真或快速评估
-     * @param board 当前棋盘状态
-     * @param max_depth 最大仿真深度
-     * @return 仿真结果 (-1到1之间)
+     * @brief Simulation phase: random rollout or quick evaluation
+     * @param board Current board state
+     * @param max_depth Maximum simulation depth
+     * @return Simulation result (-1 to 1)
      *
-     * 参考: alpha-zero-general/MCTS.py 随机仿真
+     * Reference: alpha-zero-general/MCTS.py random rollout
      */
     double simulate(const Board& board, int max_depth = 50);
 
     /**
-     * @brief 回传阶段：向上传播结果
-     * @param node 叶子节点
-     * @param value 仿真结果
+     * @brief Backpropagation: propagate result up
+     * @param node Leaf node
+     * @param value Simulation result
      *
-     * 参考: alpha-zero-general/MCTS.py 回传逻辑
+     * Reference: alpha-zero-general/MCTS.py backpropagation
      */
     void backpropagate(MCTSNode* node, double value);
 
     /**
-     * @brief 获取移动的先验概率
-     * @param board 当前棋盘状态
-     * @return 每个移动的概率向量
+     * @brief Get prior probabilities for moves
+     * @param board Current board state
+     * @return Probability vector for each move
      *
-     * 简化版本：所有有效移动概率相等
-     * 未来可以集成神经网络策略
+     * Simplified version: all valid moves equal probability.
+     * Future: integrate neural network policy.
      */
     std::vector<double> getPriorProbabilities(const Board& board);
 
     /**
-     * @brief 添加Dirichlet噪声（用于根节点多样性）
-     * @param priors 先验概率
-     * @return 添加噪声后的概率
+     * @brief Add Dirichlet noise (for root node diversity)
+     * @param priors Prior probabilities
+     * @return Priors with noise added
      *
-     * 参考: alpha-zero-general论文
+     * Reference: alpha-zero-general paper
      */
     std::vector<double> addDirichletNoise(const std::vector<double>& priors);
 
     /**
-     * @brief 生成Dirichlet分布随机数
-     * @param alpha 浓度参数
-     * @param size 向量大小
-     * @return Dirichlet分布样本
+     * @brief Generate Dirichlet distribution random numbers
+     * @param alpha Concentration parameter
+     * @param size Vector size
+     * @return Dirichlet distribution sample
      */
     std::vector<double> sampleDirichlet(double alpha, size_t size);
 
-    // 配置和组件
+    // Configuration and components
     MCTSConfig config_;
     std::unique_ptr<Evaluator> evaluator_;
 
-    // MCTS树
+    // MCTS tree
     std::unique_ptr<MCTSNode> root_;
 
-    // 统计信息
+    // Statistics
     mutable AIStats stats_;
 
-    // 随机数生成器
+    // Random number generators
     std::mt19937 rng_;
     std::uniform_real_distribution<double> uniform_dist_;
 };

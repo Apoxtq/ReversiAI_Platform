@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include "core/BitBoard.h"
+#include "core/GamePhase.h"
 
 /**
  * @file PositionSuite.h
@@ -42,16 +43,6 @@ struct TestPosition {
      * @brief 转换为字符串表示
      */
     std::string toString() const;
-};
-
-/**
- * @brief 游戏阶段枚举
- */
-enum class GamePhase {
-    OPENING,    ///< 开局 (0-20回合)
-    MIDGAME,    ///< 中局 (21-40回合)
-    ENDGAME,    ///< 残局 (41-60回合)
-    ALL         ///< 所有阶段
 };
 
 /**
@@ -106,7 +97,7 @@ public:
      * @param phase 游戏阶段
      * @return 测试位置向量
      */
-    static std::vector<TestPosition> getByPhase(GamePhase phase);
+    static std::vector<TestPosition> getByPhase(BenchmarkPhase phase);
 
     /**
      * @brief 获取所有位置套件
@@ -171,7 +162,7 @@ public:
     /**
      * @brief 确定游戏阶段
      */
-    static GamePhase getGamePhase(const BitBoard& board);
+    static BenchmarkPhase getBenchmarkPhase(const BitBoard& board);
 
 private:
     // 预定义的测试位置数据

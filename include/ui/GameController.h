@@ -102,11 +102,15 @@ public:
      * @param mode 游戏模式
      * @param humanColor 人类玩家颜色
      * @param difficulty AI难度 (PvE/AIvAI模式有效)
+     * @param algorithm AI算法类型 (0=Minimax, 1=MCTS, 2=Random)
+     * @param depth 搜索深度 (2-6)
      *
      * @reference QtReversi/widget.cpp:changeRole() - 角色切换逻辑
      */
     void startNewGame(GameMode mode, PlayerColor humanColor,
-                      Difficulty difficulty = Difficulty::MEDIUM);
+                      Difficulty difficulty = Difficulty::MEDIUM,
+                      int algorithm = 0,
+                      int depth = 4);
 
     /**
      * @brief 重置游戏
@@ -126,6 +130,7 @@ public:
     // ============ 状态查询 ============
 
     const Board& getBoard() const { return *board_; }
+    Board& getBoard() { return *board_; }  ///< Non-const getter for state sync
     GamePhase getCurrentPhase() const { return currentPhase_; }
     GameMode getGameMode() const { return gameMode_; }
     PlayerColor getCurrentPlayer() const { return currentPlayer_; }
@@ -153,6 +158,18 @@ public:
      * @brief 检查位置是否可落子
      */
     bool isValidMove(int row, int col) const;
+
+    /**
+     * @brief 设置当前玩家（用于网络同步）
+     * @param player 要设置的玩家颜色
+     */
+    void setCurrentPlayer(PlayerColor player) { currentPlayer_ = player; }
+
+    /**
+     * @brief 设置游戏阶段（用于网络同步）
+     * @param phase 要设置的阶段
+     */
+    void setGamePhase(GamePhase phase) { currentPhase_ = phase; }
 
 signals:
     // ============ 状态变化信号 ============
@@ -251,6 +268,9 @@ private:
 
     // 悔棋支持 (最多10步)
     std::vector<std::unique_ptr<Board>> moveHistory_;
+
+    // AI 搜索深度
+    int aiDepth_ = 4;
 
     // 禁止拷贝
     Q_DISABLE_COPY(GameController)

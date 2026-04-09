@@ -203,7 +203,12 @@ void NetworkLobbyWindow::stopDiscovery()
 void NetworkLobbyWindow::onHostFound(const Network::DiscoveredHost& host)
 {
     qDebug() << "Host found:" << host.playerName << "@" << host.address.toString();
-    
+
+    // Sync discovered host into RoomManager so it appears in the room table
+    if (roomManager_) {
+        roomManager_->addDiscoveredHost(host);
+    }
+
     updateRoomTable();
     showStatus(tr("Found host: %1").arg(host.playerName));
 }
@@ -211,7 +216,15 @@ void NetworkLobbyWindow::onHostFound(const Network::DiscoveredHost& host)
 void NetworkLobbyWindow::onHostLost(const Network::DiscoveredHost& host)
 {
     qDebug() << "Host lost:" << host.playerName;
-    
+
+    // Remove from RoomManager
+    if (roomManager_) {
+        Network::GameRoom* room = roomManager_->getRoomByHost(host.address, host.port);
+        if (room) {
+            roomManager_->deleteRoom(room->roomId);
+        }
+    }
+
     updateRoomTable();
     showStatus(tr("Host lost: %1").arg(host.playerName));
 }
@@ -293,24 +306,33 @@ void NetworkLobbyWindow::onJoinRoomClicked()
 {
     QString roomId = getSelectedRoomId();
     if (roomId.isEmpty()) {
+        qWarning() << "No room selected for join";
         QMessageBox::warning(this, tr("Error"), tr("Please select a room to join"));
         return;
     }
     
+    qDebug() << "Attempting to join room:" << roomId;
+    
     Network::GameRoom* room = roomManager_->getRoom(roomId);
     if (!room) {
+        qWarning() << "Room not found in manager:" << roomId;
         QMessageBox::warning(this, tr("Error"), tr("Room not found"));
         return;
     }
     
+    qDebug() << "Room found, host:" << room->hostName << "address:" << room->hostAddress.toString() << "port:" << room->hostPort;
+    
     // Update player name
     localPlayerName_ = playerNameEdit_->text();
+    qDebug() << "Joining as player:" << localPlayerName_;
     
     // Join room
     if (roomManager_->joinRoom(roomId, localPlayerName_)) {
+        qDebug() << "Successfully joined room, emitting joinGame signal";
         isHosting_ = false;
         emit joinGame(room->hostAddress, room->hostPort, localPlayerName_);
     } else {
+        qWarning() << "Failed to join room:" << roomId;
         QMessageBox::warning(this, tr("Error"), tr("Failed to join room"));
     }
 }

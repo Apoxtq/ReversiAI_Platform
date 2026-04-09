@@ -3,10 +3,15 @@ build/
 build_mingw/
 build_msvc/
 build_test/
+build_console/
 cmake-build-*/
 out/
 bin/
 lib/
+
+# Debug and experiment test files
+tests/debug/
+tests/experiments/
 
 # Qt Creator
 *.pro.user
