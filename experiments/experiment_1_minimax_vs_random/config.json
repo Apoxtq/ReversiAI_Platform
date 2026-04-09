@@ -1,0 +1,53 @@
+{
+  "experiment_id": "exp_001_minimax6_vs_random",
+  "title": "Minimax-6 vs Random AI (100 games)",
+  "date": "2026-04-09",
+  "proposal_reference": "Reversi_Proposal.md Section 8.3.1",
+  "hypothesis": "Minimax-6 achieves >=90% win rate vs Random AI",
+  "proposal_target": ">=90% win rate (100 games, 64-position suite)",
+
+  "player_white": {
+    "type": "MinimaxAI",
+    "depth": 6,
+    "use_transposition_table": true,
+    "use_killer_moves": true,
+    "use_history_heuristic": true,
+    "evaluation_type": "weighted_piece_count",
+    "random_seed": 42
+  },
+
+  "player_black": {
+    "type": "RandomAI",
+    "random_seed": 12345
+  },
+
+  "game_settings": {
+    "board_size": 8,
+    "first_player": "black",
+    "position_suite": "standard64",
+    "games_count": 100,
+    "alternating_first_player": true
+  },
+
+  "environment": {
+    "cpu": "Intel Core i7-1165G7",
+    "os": "Windows 10",
+    "compiler": "MSVC 2022",
+    "optimization": "-O2",
+    "fixed_cpu_governor": false,
+    "build_type": "Release"
+  },
+
+  "random_seeds": {
+    "global": 42,
+    "minimax": 42,
+    "random": 12345,
+    "mcts": 42
+  },
+
+  "expected_results": {
+    "minimax_win_rate": ">=0.90",
+    "confidence_interval": "95%",
+    "p_value_threshold": "<0.05"
+  }
+}

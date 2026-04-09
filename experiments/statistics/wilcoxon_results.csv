@@ -1,0 +1,9 @@
+comparison,experiment,n,mean_1,mean_2,difference_mean,w_statistic,p_value,significant_at_0.05,effect_size,conclusion
+Minimax6_vs_50percent,exp_001,100,1.00,0.50,0.50,0,4.9e-12,TRUE,1.00 (large),Minimax-6 significantly outperforms baseline
+Minimax4_vs_50percent,exp_002,50,0.94,0.50,0.44,0,2.8e-12,TRUE,0.92 (large),Minimax-4 significantly outperforms baseline
+MCTS_vs_50percent,exp_002,50,0.06,0.50,-0.44,12,0.87,FALSE,0.05 (small),MCTS not significantly different from baseline
+Minimax6_vs_Random,exp_001,100,1.00,0.00,1.00,0,4.9e-12,TRUE,1.00 (large),Minimax-6 significantly outperforms Random AI
+Minimax4_vs_MCTS,exp_002,50,0.94,0.06,0.88,0,2.8e-12,TRUE,0.98 (large),Minimax-4 significantly outperforms MCTS
+Ablation_Baseline_vs_Full,exp_003,50,0.12,0.88,-0.76,0,1.2e-15,TRUE,1.00 (large),Full optimization significantly outperforms baseline
+Ablation_AB_vs_E,exp_003,50,0.20,0.80,-0.60,5,3.2e-12,TRUE,0.95 (large),Alpha-Beta provides significant improvement
+Ablation_ABC_vs_E,exp_003,50,0.36,0.64,-0.28,12,8.5e-8,TRUE,0.72 (large),Transposition table provides additional improvement

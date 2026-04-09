@@ -1,0 +1,23 @@
+statistic,value
+n,100
+mean,1.00
+std,0.00
+median,1.00
+min,1.00
+max,1.00
+q1,1.00
+q3,1.00
+iqr,0.00
+se,0.00
+ci_lower_95,0.963
+ci_upper_95,1.00
+variance,0.00
+skewness,NaN
+kurtosis,NaN
+wilcoxon_statistic,0
+wilcoxon_p_value,4.9e-12
+wilcoxon_significant,TRUE
+z_score,10.0
+effect_size,1.00
+normality_shapiro_wilk_p,NaN
+notes,Perfect win rate (100/100) - Wilcoxon test compares against 50% baseline

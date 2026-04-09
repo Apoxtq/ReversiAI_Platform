@@ -1,0 +1,84 @@
+{
+  "experiment_id": "exp_003_optimization_ablation",
+  "title": "Minimax Optimization Ablation Study",
+  "date": "2026-04-09",
+  "proposal_reference": "Reversi_Proposal.md Section 8.3.1",
+  "purpose": "Quantify contribution of each optimization technique to Minimax performance",
+
+  "ablation_groups": {
+    "A": {
+      "name": "Minimax-6 Baseline",
+      "description": "Minimax-6 without optimizations",
+      "alpha_beta": false,
+      "transposition_table": false,
+      "killer_moves": false,
+      "history_heuristic": false
+    },
+    "B": {
+      "name": "Minimax-6 + Alpha-Beta",
+      "description": "Minimax-6 with alpha-beta pruning only",
+      "alpha_beta": true,
+      "transposition_table": false,
+      "killer_moves": false,
+      "history_heuristic": false
+    },
+    "C": {
+      "name": "Minimax-6 + Alpha-Beta + TT",
+      "description": "Minimax-6 with alpha-beta and transposition table",
+      "alpha_beta": true,
+      "transposition_table": true,
+      "killer_moves": false,
+      "history_heuristic": false
+    },
+    "D": {
+      "name": "Minimax-6 + Alpha-Beta + TT + Killer",
+      "description": "Minimax-6 with alpha-beta, TT, and killer moves",
+      "alpha_beta": true,
+      "transposition_table": true,
+      "killer_moves": true,
+      "history_heuristic": false
+    },
+    "E": {
+      "name": "Minimax-6 Full Optimization",
+      "description": "Minimax-6 with all optimizations (alpha-beta, TT, killer, history)",
+      "alpha_beta": true,
+      "transposition_table": true,
+      "killer_moves": true,
+      "history_heuristic": true
+    }
+  },
+
+  "game_settings": {
+    "board_size": 8,
+    "games_per_matchup": 50,
+    "position_suite": "standard64",
+    "first_player": "alternating"
+  },
+
+  "environment": {
+    "cpu": "Intel Core i7-1165G7",
+    "os": "Windows 10",
+    "compiler": "MSVC 2022",
+    "optimization": "-O2",
+    "build_type": "Release"
+  },
+
+  "random_seed": 42,
+
+  "metrics_collected": [
+    "win_rate",
+    "mean_score",
+    "search_nodes",
+    "search_time_ms",
+    "transposition_table_hit_rate",
+    "alpha_beta_cutoff_rate",
+    "killer_move_effectiveness"
+  ],
+
+  "expected_discoveries": {
+    "alpha_beta_contribution": "50-90% node reduction",
+    "tt_contribution": "10-30% additional efficiency",
+    "killer_contribution": "5-15% additional pruning",
+    "history_contribution": "5-10% move ordering improvement"
+  }
+}

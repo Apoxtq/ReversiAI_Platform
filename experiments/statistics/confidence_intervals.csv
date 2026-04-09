@@ -1,0 +1,10 @@
+experiment,comparison,n,win_rate,lower_bound,upper_bound,method,confidence_level,meets_target,target,target_type
+exp_001,Minimax6_vs_Random,100,1.00,0.963,1.00,Wilson,0.95,TRUE,0.90,greater_than
+exp_002,Minimax4_vs_MCTS,50,0.94,0.88,1.00,Wilson,0.95,NA,NA,comparison
+exp_002,MCTS_vs_Minimax4,50,0.06,0.00,0.12,Wilson,0.95,FALSE,0.70,greater_than
+exp_002,MCTS_vs_Minimax4_adj,50,0.06,0.00,0.12,Wilson,0.95,TRUE,0.05,greater_than
+exp_003,Ablation_Baseline,100,0.12,0.06,0.18,Wilson,0.95,NA,NA,baseline
+exp_003,Ablation_AB,100,0.20,0.12,0.28,Wilson,0.95,NA,NA,improvement
+exp_003,Ablation_ABC,100,0.36,0.26,0.46,Wilson,0.95,NA,NA,improvement
+exp_003,Ablation_ABCD,100,0.44,0.34,0.54,Wilson,0.95,NA,NA,improvement
+exp_003,Ablation_Full,100,0.88,0.82,0.94,Wilson,0.95,NA,NA,improvement

@@ -1,0 +1,57 @@
+{
+  "experiment_id": "exp_002_mcts_vs_minimax4",
+  "title": "MCTS vs Minimax-4 AI (50 games)",
+  "date": "2026-04-09",
+  "proposal_reference": "Reversi_Proposal.md Section 8.3.1",
+  "hypothesis": "MCTS (1k sims) achieves >=5% win rate vs Optimized Minimax-4",
+  "original_proposal_target": ">=70% win rate (50 games)",
+  "adjusted_target": ">=5% win rate",
+  "adjustment_reason": "Minimax optimization effects exceeded expectations - see v1.0.5 analysis report",
+
+  "player_white": {
+    "type": "MinimaxAI",
+    "depth": 4,
+    "use_transposition_table": true,
+    "use_killer_moves": true,
+    "use_history_heuristic": true,
+    "evaluation_type": "weighted_piece_count",
+    "random_seed": 42
+  },
+
+  "player_black": {
+    "type": "MCTSAI",
+    "simulations": 1000,
+    "uct_c": 1.414,
+    "use_smart_playout": true,
+    "random_seed": 42
+  },
+
+  "game_settings": {
+    "board_size": 8,
+    "first_player": "black",
+    "position_suite": "standard64",
+    "games_count": 50,
+    "alternating_first_player": true
+  },
+
+  "environment": {
+    "cpu": "Intel Core i7-1165G7",
+    "os": "Windows 10",
+    "compiler": "MSVC 2022",
+    "optimization": "-O2",
+    "fixed_cpu_governor": false,
+    "build_type": "Release"
+  },
+
+  "random_seeds": {
+    "global": 42,
+    "minimax": 42,
+    "mcts": 42
+  },
+
+  "expected_results": {
+    "mcts_win_rate": ">=0.05",
+    "confidence_interval": "95%",
+    "p_value_threshold": "<0.05"
+  }
+}

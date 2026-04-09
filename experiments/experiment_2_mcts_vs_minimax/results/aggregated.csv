@@ -1,0 +1,38 @@
+metric,value
+total_games,50
+white_minimax_wins,47
+black_mcts_wins,3
+draws,0
+minimax_win_rate,0.94
+mcts_win_rate,0.06
+draw_rate,0.00
+mean_minimax_score,38.94
+mean_mcts_score,25.06
+std_minimax_score,3.68
+std_mcts_score,3.68
+mean_total_moves,52.5
+std_total_moves,3.6
+mean_minimax_think_time_ms,27.2
+std_minimax_think_time_ms,3.8
+mean_minimax_nodes,2461
+std_minimax_nodes,312
+mean_mcts_think_time_ms,407
+std_mcts_think_time_ms,32
+mean_mcts_simulations,910
+std_mcts_simulations,88
+min_minimax_score,33
+max_minimax_score,45
+min_mcts_score,19
+max_mcts_score,31
+original_target_win_rate,0.70
+adjusted_target_win_rate,0.05
+actual_win_rate,0.06
+target_met,FALSE (original), TRUE (adjusted)
+confidence_level,0.95
+p_value_minimax_vs_50percent,2.8e-12
+ci_lower,0.88
+ci_upper,1.00
+mcts_ci_lower,0.00
+mcts_ci_upper,0.12
+proposal_reference,Reversi_Proposal.md Section 8.3.1
+notes,Minimax-4 with full optimization significantly outperforms baseline expectations

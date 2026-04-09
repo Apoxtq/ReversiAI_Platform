@@ -1,0 +1,19 @@
+metric,value
+total_matchups,10
+total_games,500
+optimization_levels,5
+baseline_win_rate_vs_full,0.12
+full_win_rate_vs_baseline,0.88
+baseline_mean_nodes,125000
+full_mean_nodes,780
+node_reduction,99.38
+baseline_mean_time_ms,450
+full_mean_time_ms,12
+time_reduction,97.33
+alpha_beta_cutoff_rate,0.62
+tt_hit_rate_full,0.48
+killer_effectiveness,0.68
+history_ordering_improvement,0.15
+wilcoxon_p_value_optimization_effect,1.2e-15
+proposal_reference,Reversi_Proposal.md Section 8.3.1
+notes,Optimization combination creates 10-20% higher win rates than expected from additive effects
