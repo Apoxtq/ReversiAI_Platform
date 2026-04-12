@@ -228,7 +228,7 @@ private:
     // Board dimensions
     static constexpr int CELL_SIZE = 60;
     static constexpr int BOARD_SIZE = CELL_SIZE * 8;
-    static constexpr int BOARD_OFFSET_X = 50;  // 棋盘左边距，让棋盘居中
+    static constexpr int BOARD_OFFSET_X = 50;  // Board left margin for centering
     static constexpr int BOARD_OFFSET_Y = 30;
 
     // Delay options in milliseconds

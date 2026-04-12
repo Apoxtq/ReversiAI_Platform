@@ -1,12 +1,12 @@
 /**
  * @file GameController.h
- * @brief 游戏状态控制器
+ * @brief Game State Controller
  *
- * 封装游戏状态管理、回合控制、AI集成
- * 基于QtReversi/widget.h的状态设计模式
+ * Encapsulates game state management, turn control, and AI integration
+ * Based on QtReversi/widget.h state design pattern
  *
- * @reference QtReversi/代码/chess/widget.h - 游戏状态定义和信号槽设计
- * @reference Reversi(Java)/src/game/GamePanel.java - manageTurn()回合管理逻辑
+ * @reference QtReversi/代码/chess/widget.h - Game state definition and signal-slot design
+ * @reference Reversi(Java)/src/game/GamePanel.java - manageTurn() turn management logic
  */
 
 #pragma once
@@ -16,11 +16,11 @@
 #include <vector>
 #include <chrono>
 
-// 包含核心类型定义（在Reversi命名空间内）
+// Include core type definitions (within Reversi namespace)
 #include "Board.h"
 #include "ai/AIStrategy.h"
 
-// 前向声明，避免循环引用
+// Forward declaration to avoid circular reference
 namespace Ui {
 class MainWindow;
 }
@@ -35,28 +35,28 @@ class AIStrategy;
 
 /**
  * @enum GameMode
- * @brief 游戏模式
+ * @brief Game mode
  */
 enum class GameMode {
-    PvP,      // 双人对战 (同一台电脑)
-    PvE,      // 人机对战 (人类 vs AI)
-    AIvAI     // AI对战 (AI1 vs AI2)
+    PvP,      // Two-player (same computer)
+    PvE,      // Human vs AI
+    AIvAI     // AI vs AI
 };
 
 /**
  * @enum GamePhase
- * @brief 游戏阶段
+ * @brief Game phase
  */
 enum class GamePhase {
-    Waiting,    // 等待开始
-    HumanTurn,  // 人类玩家回合
-    AITurn,     // AI回合
-    GameOver    // 游戏结束
+    Waiting,    // Waiting to start
+    HumanTurn,  // Human player turn
+    AITurn,     // AI turn
+    GameOver    // Game over
 };
 
 /**
  * @enum GameResult
- * @brief 游戏结果
+ * @brief Game result
  */
 enum class GameResult {
     BlackWins,
@@ -67,17 +67,17 @@ enum class GameResult {
 
 /**
  * @class GameController
- * @brief 游戏控制器 - 封装游戏状态管理
+ * @brief Game Controller - Encapsulates game state management
  *
- * 核心职责：
- * - 管理游戏状态（棋盘、回合、阶段）
- * - 处理玩家操作（人类落子）
- * - 协调AI执行（AI移动、状态显示）
- * - 回合切换逻辑
+ * Core responsibilities:
+ * - Manage game state (board, turn, phase)
+ * - Handle player operations (human moves)
+ * - Coordinate AI execution (AI moves, state display)
+ * - Turn switching logic
  *
- * 信号槽设计参考 QtReversi/widget.cpp:
- * - 使用Qt信号槽机制解耦UI和逻辑
- * - 状态变化时发出信号，由UI更新显示
+ * Signal-slot design reference QtReversi/widget.cpp:
+ * - Uses Qt signal-slot mechanism to decouple UI and logic
+ * - Emits signals on state changes, UI updates display accordingly
  */
 class GameController : public QObject
 {
@@ -85,27 +85,27 @@ class GameController : public QObject
 
 public:
     /**
-     * @brief 构造函数
-     * @param parent 父对象
+     * @brief Constructor
+     * @param parent Parent object
      */
     explicit GameController(QObject* parent = nullptr);
 
     /**
-     * @brief 析构函数
+     * @brief Destructor
      */
     ~GameController() override;
 
-    // ============ 游戏控制 ============
+    // ============ Game Control ============
 
     /**
-     * @brief 开始新游戏
-     * @param mode 游戏模式
-     * @param humanColor 人类玩家颜色
-     * @param difficulty AI难度 (PvE/AIvAI模式有效)
-     * @param algorithm AI算法类型 (0=Minimax, 1=MCTS, 2=Random)
-     * @param depth 搜索深度 (2-6)
+     * @brief Start a new game
+     * @param mode Game mode
+     * @param humanColor Human player color
+     * @param difficulty AI difficulty (effective for PvE/AIvAI mode)
+     * @param algorithm AI algorithm type (0=Minimax, 1=MCTS, 2=Random)
+     * @param depth Search depth (2-6)
      *
-     * @reference QtReversi/widget.cpp:changeRole() - 角色切换逻辑
+     * @reference QtReversi/widget.cpp:changeRole() - Role switching logic
      */
     void startNewGame(GameMode mode, PlayerColor humanColor,
                       Difficulty difficulty = Difficulty::MEDIUM,
@@ -113,21 +113,21 @@ public:
                       int depth = 4);
 
     /**
-     * @brief 重置游戏
+     * @brief Reset game
      */
     void resetGame();
 
     /**
-     * @brief 悔棋
+     * @brief Undo move
      */
     void undoMove();
 
     /**
-     * @brief 是否可以悔棋
+     * @brief Check if undo is possible
      */
     bool canUndo() const;
 
-    // ============ 状态查询 ============
+    // ============ State Query ============
 
     const Board& getBoard() const { return *board_; }
     Board& getBoard() { return *board_; }  ///< Non-const getter for state sync
@@ -137,142 +137,142 @@ public:
     PlayerColor getHumanColor() const { return humanColor_; }
 
     /**
-     * @brief 获取合法移动列表
+     * @brief Get valid moves list
      */
     std::vector<Move> getValidMoves() const;
 
-    // ============ 玩家操作 ============
+    // ============ Player Operations ============
 
     /**
-     * @brief 人类玩家落子
-     * @param row 行 (0-7)
-     * @param col 列 (0-7)
-     * @return 是否落子成功
+     * @brief Human player makes a move
+     * @param row Row (0-7)
+     * @param col Column (0-7)
+     * @return Whether move was successful
      *
-     * @reference QtReversi/widget.cpp:mousePressEvent() - 鼠标点击处理
-     * @reference Reversi(Java)/GamePanel.java:makeHumanMove() - 人类落子逻辑
+     * @reference QtReversi/widget.cpp:mousePressEvent() - Mouse click handling
+     * @reference Reversi(Java)/GamePanel.java:makeHumanMove() - Human move logic
      */
     bool makeHumanMove(int row, int col);
 
     /**
-     * @brief 检查位置是否可落子
+     * @brief Check if position is valid for move
      */
     bool isValidMove(int row, int col) const;
 
     /**
-     * @brief 设置当前玩家（用于网络同步）
-     * @param player 要设置的玩家颜色
+     * @brief Set current player (for network sync)
+     * @param player Player color to set
      */
     void setCurrentPlayer(PlayerColor player) { currentPlayer_ = player; }
 
     /**
-     * @brief 设置游戏阶段（用于网络同步）
-     * @param phase 要设置的阶段
+     * @brief Set game phase (for network sync)
+     * @param phase Phase to set
      */
     void setGamePhase(GamePhase phase) { currentPhase_ = phase; }
 
 signals:
-    // ============ 状态变化信号 ============
+    // ============ State Change Signals ============
 
     /**
-     * @brief 游戏开始信号
+     * @brief Game start signal
      */
     void gameStarted(GameMode mode, PlayerColor humanColor);
 
     /**
-     * @brief 游戏阶段变化信号
+     * @brief Game phase change signal
      */
     void phaseChanged(GamePhase phase);
 
     /**
-     * @brief 回合变化信号
+     * @brief Turn change signal
      */
     void turnChanged(PlayerColor player);
 
     /**
-     * @brief 落子信号
-     * @param row 行
-     * @param col 列
-     * @param player 执行落子的玩家
+     * @brief Move made signal
+     * @param row Row
+     * @param col Column
+     * @param player Player who made the move
      */
     void moveMade(int row, int col, PlayerColor player);
 
     /**
-     * @brief 游戏结束信号
+     * @brief Game end signal
      */
     void gameEnded(GameResult result);
 
-    // ============ AI相关信号 ============
+    // ============ AI-Related Signals ============
 
     /**
-     * @brief AI开始思考信号
+     * @brief AI started thinking signal
      */
     void aiThinkingStarted(const QString& aiName);
 
     /**
-     * @brief AI思考完成信号
+     * @brief AI thinking completed signal
      */
     void aiThinkingFinished(int row, int col);
 
     /**
-     * @brief AI统计更新信号
+     * @brief AI stats update signal
      */
     void aiStatsUpdated(const AIStats& stats);
 
-    // ============ 错误信号 ============
+    // ============ Error Signals ============
 
     /**
-     * @brief 错误发生信号
+     * @brief Error occurred signal
      */
     void errorOccurred(const QString& message);
 
 private slots:
     /**
-     * @brief 执行AI移动
+     * @brief Execute AI move
      */
     void executeAIMove();
 
 private:
-    // ============ 私有方法 ============
+    // ============ Private Methods ============
 
     /**
-     * @brief 切换回合
+     * @brief Switch turn
      *
-     * @reference Reversi(Java)/GamePanel.java:manageTurn() - 回合管理逻辑
+     * @reference Reversi(Java)/GamePanel.java:manageTurn() - Turn management logic
      */
     void switchTurn();
 
     /**
-     * @brief 检查游戏是否结束
+     * @brief Check if game is over
      */
     void checkGameOver();
 
     /**
-     * @brief 保存移动历史（用于悔棋）
+     * @brief Save move history (for undo)
      */
     void saveMoveForUndo();
 
     /**
-     * @brief 发射状态变化信号
+     * @brief Emit state change signals
      */
     void emitStatusSignals();
 
-    // ============ 成员变量 ============
+    // ============ Member Variables ============
 
-    std::unique_ptr<Board> board_;           // 棋盘状态
-    std::unique_ptr<AIStrategy> ai_;         // AI策略 (PvE/AIvAI模式)
-    GameMode gameMode_;                      // 游戏模式
-    GamePhase currentPhase_;                 // 当前阶段
-    PlayerColor currentPlayer_;              // 当前玩家
-    PlayerColor humanColor_;                 // 人类玩家颜色
+    std::unique_ptr<Board> board_;           // Board state
+    std::unique_ptr<AIStrategy> ai_;         // AI strategy (PvE/AIvAI mode)
+    GameMode gameMode_;                      // Game mode
+    GamePhase currentPhase_;                 // Current phase
+    PlayerColor currentPlayer_;              // Current player
+    PlayerColor humanColor_;                 // Human player color
 
-    // 悔棋支持 (最多10步)
+    // Undo support (up to 10 moves)
     std::vector<std::unique_ptr<Board>> moveHistory_;
 
-    // AI 搜索深度
+    // AI search depth
     int aiDepth_ = 4;
 
-    // 禁止拷贝
+    // Disable copy
     Q_DISABLE_COPY(GameController)
 };
 

@@ -1,8 +1,8 @@
 /**
  * @file AIvsAIWindow.cpp
- * @brief AI vs AI 对战窗口实现
+ * @brief AI vs AI battle window implementation
  *
- * 实现AI自动对战的可视化界面
+ * Implements visual interface for AI auto-battle
  */
 
 #include "ui/AIvsAIWindow.h"
@@ -40,22 +40,16 @@ AIvsAIWindow::~AIvsAIWindow() {
 }
 
 void AIvsAIWindow::setupUI() {
-    // 主窗口设置
+    // Main window settings
     centralWidget_ = new QWidget(this);
     setCentralWidget(centralWidget_);
     mainLayout_ = new QVBoxLayout(centralWidget_);
 
-    // 标题
-    QLabel* titleLabel = new QLabel(tr("AI vs AI Benchmark"), this);
-    titleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #2c3e50;");
-    titleLabel->setAlignment(Qt::AlignCenter);
-    mainLayout_->addWidget(titleLabel);
-
-    // 对战配置区域
+    // Battle configuration area
     configGroup_ = new QGroupBox(tr("Battle Configuration"), this);
     configLayout_ = new QGridLayout(configGroup_);
 
-    // AI1选择
+    // AI1 Selection
     configLayout_->addWidget(new QLabel(tr("Player 1 (Black):"), this), 0, 0);
     ai1TypeCombo_ = new QComboBox(this);
     ai1TypeCombo_->addItem("Minimax", 0);
@@ -76,23 +70,23 @@ void AIvsAIWindow::setupUI() {
     depth1Combo_->addItem("4");
     depth1Combo_->addItem("5");
     depth1Combo_->addItem("6");
-    depth1Combo_->setCurrentIndex(2);  // 默认4
+    depth1Combo_->setCurrentIndex(2);  // Default: 4
     configLayout_->addWidget(depth1Combo_, 0, 4);
 
-    // AI2选择
+    // AI2 Selection
     configLayout_->addWidget(new QLabel(tr("Player 2 (White):"), this), 1, 0);
     ai2TypeCombo_ = new QComboBox(this);
     ai2TypeCombo_->addItem("Minimax", 0);
     ai2TypeCombo_->addItem("MCTS", 1);
     ai2TypeCombo_->addItem("Random", 2);
-    ai2TypeCombo_->setCurrentIndex(2);  // 默认Random
+    ai2TypeCombo_->setCurrentIndex(2);  // Default: Random
     configLayout_->addWidget(ai2TypeCombo_, 1, 1);
 
     ai2Combo_ = new QComboBox(this);
     ai2Combo_->addItem("Easy", QVariant::fromValue(Difficulty::EASY));
     ai2Combo_->addItem("Medium", QVariant::fromValue(Difficulty::MEDIUM));
     ai2Combo_->addItem("Hard", QVariant::fromValue(Difficulty::HARD));
-    ai2Combo_->setCurrentIndex(2);  // 默认Hard
+    ai2Combo_->setCurrentIndex(2);  // Default: Hard
     configLayout_->addWidget(ai2Combo_, 1, 2);
 
     configLayout_->addWidget(new QLabel(tr("Depth:"), this), 1, 3);
@@ -102,7 +96,7 @@ void AIvsAIWindow::setupUI() {
     depth2Combo_->addItem("4");
     depth2Combo_->addItem("5");
     depth2Combo_->addItem("6");
-    depth2Combo_->setCurrentIndex(1);  // 默认3
+    depth2Combo_->setCurrentIndex(1);  // Default: 3
     configLayout_->addWidget(depth2Combo_, 1, 4);
 
     // Number of games
@@ -178,13 +172,13 @@ void AIvsAIWindow::setupUI() {
     progressLayout->addWidget(progressLabel_);
     mainLayout_->addLayout(progressLayout);
 
-    // 当前状态显示
+    // Current state display
     currentMoveLabel_ = new QLabel(tr("Ready to start"), this);
     currentMoveLabel_->setAlignment(Qt::AlignCenter);
     currentMoveLabel_->setStyleSheet("font-size: 16px; color: #7f8c8d; padding: 10px;");
     mainLayout_->addWidget(currentMoveLabel_);
 
-    // 控制按钮
+    // Control buttons
     QHBoxLayout* buttonLayout = new QHBoxLayout();
     startButton_ = new QPushButton(tr("Start Battle"), this);
     startButton_->setStyleSheet("background-color: #27ae60; color: white; padding: 10px 30px; font-size: 16px; border-radius: 5px;");
@@ -202,7 +196,7 @@ void AIvsAIWindow::setupUI() {
 
     mainLayout_->addLayout(buttonLayout);
 
-    // 基准测试按钮区域
+    // Benchmark buttons area
     QLabel* benchmarkLabel = new QLabel(tr("Benchmarks:"), this);
     benchmarkLabel->setStyleSheet("font-size: 14px; font-weight: bold; color: #2c3e50;");
     mainLayout_->addWidget(benchmarkLabel);
@@ -277,7 +271,7 @@ void AIvsAIWindow::setupUI() {
 
     mainLayout_->addWidget(statsGroup_);
 
-    // 底部按钮
+    // Bottom buttons
     backButton_ = new QPushButton(tr("Back to Menu"), this);
     backButton_->setStyleSheet("background-color: #95a5a6; color: white; padding: 8px 20px; font-size: 14px; border-radius: 5px;");
     QHBoxLayout* backLayout = new QHBoxLayout();
@@ -286,7 +280,7 @@ void AIvsAIWindow::setupUI() {
     backLayout->addStretch();
     mainLayout_->addLayout(backLayout);
 
-    // 初始化统计表
+    // Initialize statistics table
     clearStats();
 }
 
@@ -370,7 +364,7 @@ void AIvsAIWindow::onStartBattleClicked() {
     battleConfig_.player1_name = battleConfig_.player1->getName();
     battleConfig_.limits1.maxDepth = depth1Combo_->currentText().toInt();
 
-    // Player 2 - 根据选择的算法类型创建
+    // Player 2 - Create based on selected algorithm type
     int ai2Type = ai2TypeCombo_->currentData().toInt();
     Difficulty diff2 = ai2Combo_->currentData().value<Difficulty>();
 
@@ -387,18 +381,18 @@ void AIvsAIWindow::onStartBattleClicked() {
     battleConfig_.player2_name = battleConfig_.player2->getName();
     battleConfig_.limits2.maxDepth = depth2Combo_->currentText().toInt();
 
-    // 创建定时器
+    // Create timer
     updateTimer_ = new QTimer(this);
     connect(updateTimer_, &QTimer::timeout, this, &AIvsAIWindow::updateProgress);
 
-    // 开始对战
+    // Start battle
     isRunning_ = true;
     setControlsEnabled(false);
 
-    // 使用线程方式运行
+    // Use thread-based execution
     progressBar_->setRange(0, battleConfig_.num_games);
 
-    // 显示初始状态
+    // Show initial state
     currentMoveLabel_->setText(tr("Battle in progress: %1 vs %2")
         .arg(QString::fromStdString(battleConfig_.player1_name))
         .arg(QString::fromStdString(battleConfig_.player2_name)));
@@ -446,7 +440,7 @@ void AIvsAIWindow::onExportReportClicked() {
 
     QTextStream out(&file);
 
-    // 写入报告
+    // Write report
     out << "========================================\n";
     out << "       AI Battle Benchmark Report\n";
     out << "========================================\n\n";
@@ -494,8 +488,7 @@ void AIvsAIWindow::onBackClicked() {
 void AIvsAIWindow::updateProgress() {
     if (!isRunning_) return;
 
-    // 获取当前进度 - 由于BattleEngine没有getCurrentGame，通过文件或信号获取
-    // 这里简化为只更新标签
+    // Get current progress - simplified to just update label
     progressLabel_->setText(tr("Battle in progress..."));
 }
 
@@ -506,7 +499,7 @@ void AIvsAIWindow::onBattleCompleted(const BattleStats& stats) {
         updateTimer_->stop();
     }
 
-    // 更新统计
+    // Update statistics
     gamesPlayed_ = stats.total_games;
     gamesWon1_ = stats.player1_wins;
     gamesWon2_ = stats.player2_wins;
@@ -514,16 +507,16 @@ void AIvsAIWindow::onBattleCompleted(const BattleStats& stats) {
     avgMoves_ = stats.avg_moves;
     totalTime_ = std::chrono::milliseconds(static_cast<long long>(stats.avg_duration_ms * gamesPlayed_));
 
-    // 更新UI
+    // Update UI
     updateStatsTable();
     setControlsEnabled(true);
     exportButton_->setEnabled(true);
 
-    // 更新进度条
+    // Update progress bar
     progressBar_->setValue(gamesPlayed_);
     progressLabel_->setText(tr("Completed: %1 games").arg(gamesPlayed_));
 
-    // 更新状态标签
+    // Update status label
     QString result = QString(tr("Battle Complete! %1 vs %2 - %1 won %3 games (%4%)"))
         .arg(QString::fromStdString(battleConfig_.player1_name))
         .arg(QString::fromStdString(battleConfig_.player2_name))
@@ -531,7 +524,7 @@ void AIvsAIWindow::onBattleCompleted(const BattleStats& stats) {
         .arg(gamesPlayed_ > 0 ? QString::number(gamesWon1_ * 100.0 / gamesPlayed_, 'f', 1) : "0");
     currentMoveLabel_->setText(result);
 
-    // 显示详细结果
+    // Show detailed results
     QString detail;
     QTextStream ss(&detail);
     ss << "========================================\n";
@@ -820,7 +813,7 @@ void AIvsAIWindow::onExportValidationClicked() {
 }
 
 void AIvsAIWindow::onRunBitboardBenchmarkClicked() {
-    // 禁用按钮
+    // Disable buttons
     bitboardBenchmarkButton_->setEnabled(false);
     aiBenchmarkButton_->setEnabled(false);
     startButton_->setEnabled(false);
@@ -828,13 +821,13 @@ void AIvsAIWindow::onRunBitboardBenchmarkClicked() {
     progressLabel_->setText(tr("Running Bitboard Benchmark..."));
     currentMoveLabel_->setText(tr("Please wait..."));
 
-    // 在后台运行基准测试
+    // Run benchmark in background
     QThread* thread = QThread::create([this]() {
         BitboardBenchmark benchmark;
         BitboardBenchmark::Config config;
         config.verbose = true;
         config.warmup = true;
-        config.flip_iterations = 1000000;  // 减少迭代次数加快测试
+        config.flip_iterations = 1000000;  // Reduced iterations for faster testing
         config.move_iterations = 100000;
         config.legal_iterations = 100000;
         config.copy_iterations = 100000;
@@ -850,7 +843,7 @@ void AIvsAIWindow::onRunBitboardBenchmarkClicked() {
 }
 
 void AIvsAIWindow::onRunAIBenchmarkClicked() {
-    // 禁用按钮
+    // Disable buttons
     bitboardBenchmarkButton_->setEnabled(false);
     aiBenchmarkButton_->setEnabled(false);
     startButton_->setEnabled(false);
@@ -858,13 +851,13 @@ void AIvsAIWindow::onRunAIBenchmarkClicked() {
     progressLabel_->setText(tr("Running AI Benchmark..."));
     currentMoveLabel_->setText(tr("Please wait (this may take a while)..."));
 
-    // 在后台运行基准测试
+    // Run benchmark in background
     QThread* thread = QThread::create([this]() {
         AISearchBenchmark benchmark;
         AISearchBenchmark::Config config;
         config.verbose = true;
         config.warmup = true;
-        config.time_limit_ms = 2000;  // 减少时间加快测试
+        config.time_limit_ms = 2000;  // Reduced time for faster testing
         benchmark.setConfig(config);
 
         auto results = benchmark.runFullBenchmark();
@@ -876,11 +869,11 @@ void AIvsAIWindow::onRunAIBenchmarkClicked() {
     thread->start();
 }
 
-// Qt元对象调用处理基准测试完成
+// Qt meta-object invocation to handle benchmark completion
 void AIvsAIWindow::onBitboardBenchmarkComplete(const QVariant& results) {
     Q_UNUSED(results);
 
-    // 重新启用按钮
+    // Re-enable buttons
     bitboardBenchmarkButton_->setEnabled(true);
     aiBenchmarkButton_->setEnabled(true);
     startButton_->setEnabled(true);
@@ -888,7 +881,7 @@ void AIvsAIWindow::onBitboardBenchmarkComplete(const QVariant& results) {
     progressLabel_->setText(tr("Bitboard Benchmark Complete"));
     currentMoveLabel_->setText(tr("Check console for detailed results"));
 
-    // 显示完成消息
+    // Show completion message
     QMessageBox::information(this, tr("Benchmark Complete"),
         tr("Bitboard benchmark completed!\n\nCheck the console output for detailed results."));
 }
@@ -896,7 +889,7 @@ void AIvsAIWindow::onBitboardBenchmarkComplete(const QVariant& results) {
 void AIvsAIWindow::onAIBenchmarkComplete(const QVariant& results) {
     Q_UNUSED(results);
 
-    // 重新启用按钮
+    // Re-enable buttons
     bitboardBenchmarkButton_->setEnabled(true);
     aiBenchmarkButton_->setEnabled(true);
     startButton_->setEnabled(true);
@@ -904,7 +897,7 @@ void AIvsAIWindow::onAIBenchmarkComplete(const QVariant& results) {
     progressLabel_->setText(tr("AI Benchmark Complete"));
     currentMoveLabel_->setText(tr("Check console for detailed results"));
 
-    // 显示完成消息
+    // Show completion message
     QMessageBox::information(this, tr("Benchmark Complete"),
         tr("AI benchmark completed!\n\nCheck the console output for detailed results."));
 }

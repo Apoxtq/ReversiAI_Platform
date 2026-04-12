@@ -59,9 +59,10 @@ public:
     /**
      * @brief Start hosting a game
      * @param playerName Host player name
+     * @param roomName Room name for broadcast
      * @param port Listen port
      */
-    void startHosting(const QString& playerName, quint16 port);
+    void startHosting(const QString& playerName, const QString& roomName, quint16 port);
 
     /**
      * @brief Connect to remote host
@@ -145,6 +146,10 @@ private slots:
     void onSendChatMessage();
     void onChatMessageReceived(const QString& sender, const QString& message);
 
+    // Undo slots
+    void onUndoRequestReceived();
+    void onUndoResponseReceived(bool accepted);
+
     // Latency slots
     void onPongReceived(qint64 latency);
     void updateLatencyDisplay();
@@ -196,17 +201,22 @@ private:
     bool isHost_;
     bool isReconnecting_;
     int currentLatency_;
-    Reversi::PlayerColor localPlayerColor_;  // 本地玩家的棋子颜色
+    Reversi::PlayerColor localPlayerColor_;  // Local player's piece color
     
-    // 玩家准备状态
-    bool localPlayerReady_;    // 本地玩家是否已准备
-    bool opponentReady_;       // 对手是否已准备
-    bool gameStarted_;         // 游戏是否已开始
-    bool isClosing_;          // 防止 closeEvent 递归调用
+    // Player ready state
+    bool localPlayerReady_;    // Whether local player is ready
+    bool opponentReady_;       // Whether opponent is ready
+    bool gameStarted_;         // Whether game has started
+    bool isClosing_;          // Prevent closeEvent recursive call
     
-    // 回声检测：跟踪最后发送的消息时间戳
-    qint64 lastSentTimestamp_;  // 最后发送消息的时间戳（用于检测回声）
-    qint64 lastReceivedTimestamp_; // 最后收到消息的时间戳（用于检测回声）
+    // Echo detection: track last sent message timestamp
+    qint64 lastSentTimestamp_;  // Last sent message timestamp (for echo detection)
+    qint64 lastReceivedTimestamp_; // Last received message timestamp (for echo detection)
+
+    // Undo state
+    bool undoPending_;       // true = waiting for opponent's response
+    bool undoInProgress_;    // true = undo is being executed (don't accept new undo requests)
+    Reversi::PlayerColor undoRequesterColor_; // Color of player who requested undo
     
     // ==================== Timers ====================
     QTimer* latencyUpdateTimer_;
@@ -269,6 +279,7 @@ private:
      * @param player Player color
      */
     void applyRemoteMove(int row, int col, const QString& player);
+    void applySyncedBoardState(const Network::GameStateMessage& state);
 
     /**
      * @brief Check if both players are ready and start the game
@@ -284,6 +295,23 @@ private:
      * @brief Update score display (black/white piece counts)
      */
     void updateScoreDisplay();
+
+    /**
+     * @brief Handle local undo execution (called after both sides agree)
+     * @param undoSteps Number of steps to undo (1 or 2)
+     */
+    void executeLocalUndo(int undoSteps);
+
+    /**
+     * @brief Send undo response to opponent
+     * @param accepted Whether to accept the undo request
+     */
+    void respondToUndoRequest(bool accepted);
+
+    /**
+     * @brief Sync current board state to opponent (used after undo)
+     */
+    void syncBoardState();
 };
 
 #endif // NETWORK_GAME_WINDOW_HPP

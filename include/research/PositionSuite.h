@@ -8,14 +8,14 @@
 
 /**
  * @file PositionSuite.h
- * @brief 标准位置测试套件
+ * @brief Standard Position Test Suite
  *
- * 提供可重复的测试位置，用于AI算法基准测试。
+ * Provides reproducible test positions for AI algorithm benchmarking.
  *
- * 来源:
+ * Sources:
  * - WThor 64 Position Suite
  * - FFO (Foundation for Othello) positions
- * - Edax标准测试集
+ * - Edax standard test set
  * - Egaroucid benchmark positions
  *
  * @author AI Assistant

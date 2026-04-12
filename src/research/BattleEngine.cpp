@@ -9,22 +9,22 @@
 #include <cmath>
 namespace Reversi {
 // ============================================================================
-// 静态成员初始化 - 使用确定性种子避免静态初始化顺序问题
+// Static member initialization - use deterministic seed to avoid static initialization order issue
 // ============================================================================
 uint64_t BattleEngine::global_seed_ = 0;
-// 使用固定种子 42 而不是 random_device{}() 来避免静态初始化顺序问题
-// 这确保了多线程环境下的确定性行为
+// Use fixed seed 42 instead of random_device{}() to avoid static initialization order issue
+// This ensures deterministic behavior in multi-threaded environment
 std::mt19937_64 BattleEngine::rng_(42);
 
 // ============================================================================
-// BattleStats 实现
+// BattleStats Implementation
 // ============================================================================
 void BattleStats::calculate() {
     if (total_games == 0) return;
-    // 胜率
+    // Win rate
     win_rate1 = static_cast<double>(player1_wins) / total_games;
     win_rate2 = static_cast<double>(player2_wins) / total_games;
-    // 平均回合数
+    // Average moves
     double total_moves = 0;
     double total_duration = 0;
     double total_score1 = 0;
@@ -43,19 +43,19 @@ void BattleStats::calculate() {
     avg_duration_ms = total_duration / total_games;
     avg_score1 = total_score1 / total_games;
     avg_score2 = total_score2 / total_games;
-    avg_margin = total_margin / total_games;  // 平均每局的净胜分，而不是总平均分之差
+    avg_margin = total_margin / total_games;  // Average margin per game, not difference of total averages
     max_margin = max_m;
-    // 计算先手胜率
+    // Calculate first player win rate
     if (player1_first_games > 0) {
-        // player1先手时的胜率在player1_wins中已包含
+        // Win rate when player1 goes first is already included in player1_wins
     }
 }
 std::pair<double, double> BattleStats::getWinRateCI1() const {
-    // 简单近似: 使用正态分布近似二项分布
+    // Simple approximation: use normal distribution to approximate binomial distribution
     double p = win_rate1;
     double n = total_games;
     double se = std::sqrt(p * (1 - p) / n);
-    double z = 1.96;  // 95%置信度
+    double z = 1.96;  // 95% confidence
     return {p - z * se, p + z * se};
 }
 std::string BattleStats::toString() const {
@@ -78,26 +78,26 @@ std::string BattleStats::toString() const {
     return oss.str();
 }
 // ============================================================================
-// BattleEngine 实现
+// BattleEngine Implementation
 // ============================================================================
 BattleStats BattleEngine::runBattle(const BattleConfig& config,
                                       BattleProgressCallback progress_callback) {
     BattleStats stats;
     stats.player1_name = config.player1_name;
     stats.player2_name = config.player2_name;
-    // 设置随机种子
+    // Set random seed
     if (config.random_seed != 0) {
         setRandomSeed(config.random_seed);
     }
-    // 验证配置
+    // Validate config
     if (!validateConfig(config)) {
         std::cerr << "[BattleEngine] Invalid config, aborting battle" << std::endl;
         return stats;
     }
-    // 重置AI状态
+    // Reset AI state
     config.player1->reset();
     config.player2->reset();
-    // 根据配置选择对战方式
+    // Select battle method based on config
     std::vector<SingleGameResult> results;
     if (config.parallel && config.num_games > 1) {
         results = runParallelBattle(config);
@@ -113,11 +113,11 @@ BattleStats BattleEngine::runBattle(const BattleConfig& config,
             result.game_number = i + 1;
             updateStats(stats, result, player1_first);
             results.push_back(result);
-            // 进度回调
+            // Progress callback
             if (progress_callback) {
                 progress_callback(i + 1, config.num_games, result);
             }
-            // 重置AI状态
+            // Reset AI state
             config.player1->reset();
             config.player2->reset();
         }
@@ -125,29 +125,29 @@ BattleStats BattleEngine::runBattle(const BattleConfig& config,
     stats.games = std::move(results);
     stats.total_games = config.num_games;
     stats.calculate();
-    // 计算统计显著性 (使用二项分布检验)
+    // Calculate statistical significance (using binomial test)
     if (stats.total_games >= 10) {
-        // 假设零假设是50%胜率
+        // Hypothesis: null hypothesis is 50% win rate
         int wins = stats.player1_wins;
         int n = stats.total_games;
-        double p_win = 0.5;  // 零假设：50%胜率
-        // 计算二项分布单侧p值
+        double p_win = 0.5;  // Null hypothesis: 50% win rate
+        // Calculate one-sided p-value of binomial distribution
         double p_value = 0.0;
         for (int k = wins; k <= n; ++k) {
-            // 简化计算：使用正态近似
-            // 这里使用简化方法
+            // Simplified calculation: use normal approximation
+            // Here uses simplified method
         }
-        // 使用正态近似计算p值
+        // Calculate p-value using normal approximation
         double expected = n * p_win;
         double std_dev = std::sqrt(n * p_win * (1 - p_win));
         if (std_dev > 0) {
             double z = (wins - expected) / std_dev;
-            // 标准正态分布CDF
+            // Standard normal distribution CDF
             double cdf = 0.5 * (1.0 + std::erf(z / std::sqrt(2.0)));
             if (z > 0) {
-                p_value = 2.0 * (1.0 - cdf);  // 双侧检验
+                p_value = 2.0 * (1.0 - cdf);  // Two-sided test
             } else {
-                p_value = 2.0 * cdf;  // 双侧检验
+                p_value = 2.0 * cdf;  // Two-sided test
             }
         }
         stats.p_value = std::min(p_value, 1.0);
@@ -306,17 +306,17 @@ SingleGameResult BattleEngine::playGameInternal(
     SingleGameResult result;
     auto start_time = std::chrono::steady_clock::now();
     Board board;
-    // 设置AI的颜色，让它们知道自己的角色
-    // p1扮演first指定的一方，p2扮演另一方
+    // Set AI color, let them know their role
+    // p1 plays the side specified by first, p2 plays the other side
     p1.setColor(first);
     p2.setColor((first == PlayerColor::Black) ? PlayerColor::White : PlayerColor::Black);
     PlayerColor current = board.getCurrentTurn();
-    // 记录着法
+    // Record moves
     std::vector<Move> moves;
-    // 对局循环
+    // Game loop
     while (!board.isGameOver()) {
-        // 根据棋盘当前玩家确定使用哪个AI
-        // p1扮演first指定的颜色，p2扮演另一颜色
+        // Determine which AI to use based on current player on board
+        // p1 plays the color specified by first, p2 plays the other color
         AIStrategy& current_ai = (current == first) ? p1 : p2;
         const SearchLimits& current_limits = (current == first) ? l1 : l2;
         Move move = current_ai.findBestMove(board, current_limits);
@@ -324,18 +324,18 @@ SingleGameResult BattleEngine::playGameInternal(
             move = Move::pass();
         }
         if (move.is_pass) {
-            // 跳过回合
+            // Skip turn
             board.makeMove(move);
             moves.push_back(move);
             current = board.getCurrentTurn();
-            // 检查双方是否都无棋可下
+            // Check if both players have no moves
             if (board.getValidMoves().empty() && board.isGameOver()) {
                 break;
             }
             continue;
         }
         if (!board.makeMove(move)) {
-            // 移动无效，使用第一个有效移动
+            // Move invalid, use first valid move
             auto valid = board.getValidMoves();
             if (!valid.empty()) {
                 move = valid[0];
@@ -349,22 +349,22 @@ SingleGameResult BattleEngine::playGameInternal(
     result.duration_ms = std::chrono::duration<double, std::milli>(end_time - start_time).count();
     result.moves_count = static_cast<int>(moves.size());
     result.game_moves = std::move(moves);
-    // 计算最终分数
+    // Calculate final score
     result.black_score = board.getBitBoard().getScore(PlayerColor::Black);
     result.white_score = board.getBitBoard().getScore(PlayerColor::White);
-    // 确定胜者
+    // Determine winner
     if (result.black_score > result.white_score) {
         result.winner = PlayerColor::Black;
     } else if (result.white_score > result.black_score) {
         result.winner = PlayerColor::White;
     } else {
-        result.winner = PlayerColor::Black;  // 平局时默认为黑棋（不影响统计，isDraw会处理）
+        result.winner = PlayerColor::Black;  // Default to black on draw (does not affect statistics, isDraw handles it)
     }
     return result;
 }
 void BattleEngine::updateStats(BattleStats& stats, const SingleGameResult& result,
                                 bool player1_first) {
-    // 统计先手游戏
+    // Statistics for first player games
     if (player1_first) {
         stats.player1_first_games++;
     } else {
@@ -376,8 +376,8 @@ void BattleEngine::updateStats(BattleStats& stats, const SingleGameResult& resul
         return;
     }
 
-    // winner 是 Black 还是 White (实际的胜者颜色)
-    // player1 (MinimaxAI) 在 player1_first=true 时是 Black，否则是 White
+    // winner is Black or White (actual winner color)
+    // player1 (MinimaxAI) is Black when player1_first=true, otherwise White
     bool player1_won = (result.winner == (player1_first ? PlayerColor::Black : PlayerColor::White));
 
     if (player1_won) {

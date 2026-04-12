@@ -1,6 +1,6 @@
 /**
  * @file SearchTreeWidget.cpp
- * @brief 搜索树可视化组件实现 - v0.9.0可视化增强版
+ * @brief Search tree visualization component implementation - v0.9.0 visualization enhancement
  */
 
 #include "ui/SearchTreeWidget.h"
@@ -38,11 +38,11 @@ void SearchTreeWidget::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    // 背景
+    // Background
     painter.fillRect(rect(), QColor(43, 43, 43));
 
     if (!hasData_) {
-        // 显示提示文字
+        // Show placeholder text
         painter.setPen(Qt::white);
         painter.drawText(rect(), Qt::AlignCenter, "No search data");
         return;
@@ -55,7 +55,7 @@ void SearchTreeWidget::drawSearchTree(QPainter& painter) {
     int width = this->width();
     int height = this->height();
 
-    // 绘制标题
+    // Draw title
     painter.setPen(Qt::white);
     painter.setFont(QFont("Arial", 10));
     QString title = QString("Search Tree - Depth: %1, Nodes: %2")
@@ -63,13 +63,13 @@ void SearchTreeWidget::drawSearchTree(QPainter& painter) {
                         .arg(currentStats_.nodesExplored);
     painter.drawText(10, 20, title);
 
-    // 简化显示：显示搜索统计信息作为树的替代
-    // 完整实现需要遍历实际的搜索树节点
+    // Simplified display: show search statistics as alternative to tree
+    // Full implementation requires traversing actual search tree nodes
     int y = 50;
     int lineHeight = 20;
 
-    // 显示PV路线信息
-    painter.setPen(QColor(255, 215, 0)); // 金色
+    // Show PV line information
+    painter.setPen(QColor(255, 215, 0)); // Gold
     painter.drawText(20, y, "PV Line:");
     y += lineHeight;
 
@@ -87,7 +87,7 @@ void SearchTreeWidget::drawSearchTree(QPainter& painter) {
             y += lineHeight;
         }
     } else {
-        // 如果没有PV信息，显示基本信息
+        // If no PV info, show basic info
         painter.setPen(QColor(200, 200, 200));
         painter.drawText(30, y, "  (searching...)");
         y += lineHeight;
@@ -95,7 +95,7 @@ void SearchTreeWidget::drawSearchTree(QPainter& painter) {
 
     y += lineHeight;
 
-    // 显示统计摘要
+    // Show statistics summary
     painter.setPen(Qt::white);
     painter.drawText(20, y, "Statistics:");
     y += lineHeight;
@@ -118,8 +118,8 @@ void SearchTreeWidget::drawSearchTree(QPainter& painter) {
 
 void SearchTreeWidget::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
-        // 简化实现：点击时发出节点点击信号
-        // 完整实现需要检测点击位置对应的节点
+        // Simplified implementation: emit node clicked signal on click
+        // Full implementation requires detecting which node was clicked
         emit nodeClicked(-1);
     }
     QWidget::mousePressEvent(event);

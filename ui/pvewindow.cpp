@@ -133,7 +133,7 @@ void PvEWindow::setupUI()
     setupControls();
     rightLayout_->addWidget(controlsGroup_);
 
-    // 添加弹性空间，让 controls 往下移动
+    // Add stretch to push controls to the bottom
     rightLayout_->addStretch(2);
 
     mainLayout->addWidget(leftPanel, 65);
@@ -152,7 +152,7 @@ void PvEWindow::setupAIConfig()
     QVBoxLayout* groupLayout = new QVBoxLayout(aiConfigGroup_);
     groupLayout->setSpacing(10);
 
-    // AI First / Player First 垂直排列
+    // AI First / Player First vertical layout
     aiFirstRadio_ = new QRadioButton(tr("AI First"), this);
     playerFirstRadio_ = new QRadioButton(tr("Player First"), this);
     playerFirstRadio_->setChecked(true);
@@ -291,7 +291,7 @@ void PvEWindow::initGame()
     currentPlayer_ = Reversi::PlayerColor::Black;
     gameResult_ = Reversi::GameResult::Unknown;
 
-    // 只在第一次时创建 timer 和 controller
+    // Only create timer and controller on first time
     if (!moveDelayTimer_) {
         moveDelayTimer_ = new QTimer(this);
         moveDelayTimer_->setSingleShot(true);
@@ -442,7 +442,7 @@ void PvEWindow::onStartGameClicked()
 
     Reversi::Difficulty difficulty = static_cast<Reversi::Difficulty>(difficultyCombo_->currentData().toInt());
 
-    // 从 ComboBox 读取 AI 配置
+    // Read AI configuration from ComboBox
     int algorithm = algorithmCombo_->currentData().toInt();
     int depth = depthCombo_->currentText().toInt();
 

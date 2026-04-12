@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 20pt &quot;Adobe 黑体 Std R&quot;;</string>
+     <string notr="true">font: 20pt "Segoe UI";</string>
     </property>
     <property name="text">
      <string>Black</string>
@@ -52,7 +52,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 20pt &quot;Adobe 黑体 Std R&quot;;</string>
+     <string notr="true">font: 20pt "Segoe UI";</string>
     </property>
     <property name="text">
      <string>White</string>
@@ -68,7 +68,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 13pt &quot;Adobe 黑体 Std R&quot;;</string>
+     <string notr="true">font: 13pt "Segoe UI";</string>
     </property>
     <property name="text">
      <string>2</string>
@@ -84,7 +84,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 12pt &quot;Adobe 黑体 Std R&quot;;</string>
+     <string notr="true">font: 12pt "Segoe UI";</string>
     </property>
     <property name="text">
      <string>2</string>

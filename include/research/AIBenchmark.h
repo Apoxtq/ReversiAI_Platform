@@ -13,14 +13,14 @@
 
 /**
  * @file AIBenchmark.h
- * @brief AI搜索性能基准测试
+ * @brief AI Search Performance Benchmark
  *
- * 测量AI算法的搜索吞吐量:
- * - Minimax吞吐量
- * - MCTS仿真率
- * - 搜索深度性能
+ * Measures AI algorithm search throughput:
+ * - Minimax throughput
+ * - MCTS simulation rate
+ * - Search depth performance
  *
- * 参考: Egaroucid src/engine/search.hpp
+ * Reference: Egaroucid src/engine/search.hpp
  *
  * @author AI Assistant
  * @date 2026
@@ -30,66 +30,66 @@
 namespace Reversi {
 
 /**
- * @brief AI性能测试结果
+ * @brief AI performance test result
  */
 struct AISearchBenchmarkResult {
-    std::string ai_name;         ///< AI名称
-    std::string test_name;       ///< 测试名称
-    int depth;                   ///< 搜索深度
-    int64_t nodes_searched;       ///< 搜索节点数
-    double time_ms;               ///< 耗时(毫秒)
-    double nps;                   ///< 每秒节点数
-    double throughput;            ///< 吞吐量 (M nodes/sec)
-    std::string unit;             ///< 单位
-    bool passed;                  ///< 是否通过验收标准
-    std::string message;          ///< 结果描述
+    std::string ai_name;         ///< AI name
+    std::string test_name;       ///< Test name
+    int depth;                   ///< Search depth
+    int64_t nodes_searched;       ///< Searched nodes
+    double time_ms;               ///< Time elapsed (milliseconds)
+    double nps;                   ///< Nodes per second
+    double throughput;            ///< Throughput (M nodes/sec)
+    std::string unit;             ///< Unit
+    bool passed;                  ///< Whether passed acceptance criteria
+    std::string message;          ///< Result description
 
     /**
-     * @brief 转换为字符串
+     * @brief Convert to string
      */
     std::string toString() const;
 };
 
 /**
- * @brief AI搜索基准测试类
+ * @brief AI search benchmark class
  *
- * 提供系统化的AI性能测试
+ * Provides systematic AI performance testing
  */
 class AISearchBenchmark {
 public:
-    // 验收标准 (基于 Reversi_Proposal.md 8.3.2)
+    // Acceptance criteria (based on Reversi_Proposal.md 8.3.2)
     static constexpr double TARGET_MINIMAX6_NPS = 2.0;   // M nodes/sec @ depth 6
     static constexpr double TARGET_MINIMAX8_NPS = 1.0;   // M nodes/sec @ depth 8
     static constexpr double TARGET_MCTS_SIMS = 200.0;    // K sims/sec
 
-    // 默认测试参数
+    // Default test parameters
     static constexpr int DEFAULT_TIME_LIMIT_MS = 5000;
     static constexpr int DEFAULT_POSITION_COUNT = 10;
 
     /**
-     * @brief 构造函数
+     * @brief Constructor
      */
     AISearchBenchmark();
 
     /**
-     * @brief 运行完整AI基准测试
-     * @return 测试结果向量
+     * @brief Run full AI benchmark
+     * @return Test result vector
      */
     std::vector<AISearchBenchmarkResult> runFullBenchmark();
 
     // =========================================================================
-    // Minimax性能测试
+    // Minimax Performance Tests
     // =========================================================================
 
     /**
-     * @brief Minimax性能测试
+     * @brief Minimax performance test
      *
-     * 测量Minimax AI的搜索吞吐量
+     * Measures Minimax AI search throughput
      *
-     * @param ai AI策略
-     * @param depth 搜索深度
-     * @param time_limit_ms 时间限制(毫秒)
-     * @return 测试结果
+     * @param ai AI strategy
+     * @param depth Search depth
+     * @param time_limit_ms Time limit (milliseconds)
+     * @return Test result
      */
     AISearchBenchmarkResult benchmarkMinimax(
         AIStrategy& ai,
@@ -98,27 +98,27 @@ public:
     );
 
     /**
-     * @brief 测量Minimax吞吐量
+     * @brief Measure Minimax throughput
      *
-     * @param depth 搜索深度
-     * @param time_limit_ms 时间限制
-     * @return 吞吐量 (M nodes/sec)
+     * @param depth Search depth
+     * @param time_limit_ms Time limit
+     * @return Throughput (M nodes/sec)
      */
     double measureMinimaxThroughput(int depth, int time_limit_ms = DEFAULT_TIME_LIMIT_MS);
 
     // =========================================================================
-    // MCTS性能测试
+    // MCTS Performance Tests
     // =========================================================================
 
     /**
-     * @brief MCTS性能测试
+     * @brief MCTS performance test
      *
-     * 测量MCTS AI的仿真率
+     * Measures MCTS AI simulation rate
      *
-     * @param ai AI策略
-     * @param simulations 仿真次数
-     * @param time_limit_ms 时间限制
-     * @return 测试结果
+     * @param ai AI strategy
+     * @param simulations Number of simulations
+     * @param time_limit_ms Time limit
+     * @return Test result
      */
     AISearchBenchmarkResult benchmarkMCTS(
         AIStrategy& ai,
@@ -127,26 +127,26 @@ public:
     );
 
     /**
-     * @brief 测量MCTS仿真率
+     * @brief Measure MCTS simulation rate
      *
-     * @param time_limit_ms 时间限制
-     * @return 仿真率 (K sims/sec)
+     * @param time_limit_ms Time limit
+     * @return Simulation rate (K sims/sec)
      */
     double measureMCTSSimulationRate(int time_limit_ms = DEFAULT_TIME_LIMIT_MS);
 
     // =========================================================================
-    // 组合测试
+    // Combined Tests
     // =========================================================================
 
     /**
-     * @brief 完整AI对比测试
+     * @brief Full AI comparison test
      *
-     * 对比多个AI的性能
+     * Compare multiple AI performances
      *
-     * @param ai1 AI1
-     * @param ai2 AI2
-     * @param num_games 测试局数
-     * @return 对比结果
+     * @param ai1 AI 1
+     * @param ai2 AI 2
+     * @param num_games Number of test games
+     * @return Comparison results
      */
     std::vector<AISearchBenchmarkResult> compareAI(
         AIStrategy& ai1,
@@ -155,7 +155,7 @@ public:
     );
 
     /**
-     * @brief 基准测试配置
+     * @brief Benchmark configuration
      */
     struct Config {
         int time_limit_ms = DEFAULT_TIME_LIMIT_MS;
@@ -165,37 +165,37 @@ public:
     };
 
     /**
-     * @brief 设置测试配置
+     * @brief Set test configuration
      */
     void setConfig(const Config& config);
 
     /**
-     * @brief 获取测试配置
+     * @brief Get test configuration
      */
     const Config& getConfig() const;
 
     /**
-     * @brief 测试回调函数类型
+     * @brief Test callback function type
      */
     using ProgressCallback = std::function<void(int current, int total, const std::string& name)>;
 
     /**
-     * @brief 设置进度回调
+     * @brief Set progress callback
      */
     void setProgressCallback(ProgressCallback callback);
 
     /**
-     * @brief 获取测试位置
+     * @brief Get test positions
      */
     static std::vector<BitBoard> getTestPositions();
 
     /**
-     * @brief 生成报告
+     * @brief Generate report
      */
     static std::string generateReport(const std::vector<AISearchBenchmarkResult>& results);
 
     /**
-     * @brief 导出为JSON
+     * @brief Export as JSON
      */
     static std::string toJson(const std::vector<AISearchBenchmarkResult>& results);
 
@@ -204,7 +204,7 @@ private:
     ProgressCallback progress_callback_;
 
     /**
-     * @brief 预热
+     * @brief Warmup
      */
     void warmUp();
 };

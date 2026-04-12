@@ -364,6 +364,19 @@ void NetworkClient::dispatchMessage(const Message& message)
             break;
         }
 
+        case MessageType::UNDO_REQUEST: {
+            qDebug() << "NetworkClient: Dispatching UNDO_REQUEST";
+            emit undoRequestReceived();
+            break;
+        }
+
+        case MessageType::UNDO_RESPONSE: {
+            qDebug() << "NetworkClient: Dispatching UNDO_RESPONSE";
+            bool accepted = message.payload["accepted"].toBool(false);
+            emit undoResponseReceived(accepted);
+            break;
+        }
+
         default:
             qDebug() << "NetworkClient: Unknown message type:" << static_cast<int>(message.type);
             break;

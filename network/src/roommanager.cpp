@@ -226,8 +226,6 @@ bool RoomManager::addDiscoveredHost(const DiscoveredHost& host)
     room.gameVersion = host.gameVersion;
     room.createTime = QDateTime::currentMSecsSinceEpoch();
     room.lastActivityTime = room.createTime;
-    // NOTE: Do NOT add host to players list - this is a discovered room for others to join
-    // The host is not actually in this room from the client's perspective
     room.hostAddress = host.address;
     room.hostPort = host.port;
 

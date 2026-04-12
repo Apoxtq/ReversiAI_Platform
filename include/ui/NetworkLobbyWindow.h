@@ -127,8 +127,6 @@ private:
     QGroupBox* createGroup_;
     QLineEdit* roomNameEdit_;
     QLineEdit* playerNameEdit_;
-    QSpinBox* timeLimitSpin_;
-    QCheckBox* rankedCheck_;
     QPushButton* createButton_;
 
     // Navigation

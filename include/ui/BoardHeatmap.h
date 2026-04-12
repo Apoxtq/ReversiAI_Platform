@@ -1,8 +1,8 @@
 /**
  * @file BoardHeatmap.h
- * @brief 棋盘热度图 - v0.9.0可视化增强版
+ * @brief Board Heatmap - v0.9.0 Visualization Enhanced
  *
- * 在棋盘上叠加显示位置价值、访问次数、胜率等热力图
+ * Overlay display of position value, visit count, win rate heatmap on board
  */
 
 #pragma once
@@ -19,89 +19,89 @@ namespace Reversi {
 
 /**
  * @class BoardHeatmap
- * @brief 棋盘热度图组件
+ * @brief Board heatmap component
  *
- * 在棋盘上叠加显示各种热力图数据
+ * Overlay display of various heatmap data on board
  */
 class BoardHeatmap : public QWidget {
     Q_OBJECT
 
 public:
     /**
-     * @brief 构造函数
-     * @param parent 父窗口指针
+     * @brief Constructor
+     * @param parent Parent window pointer
      */
     explicit BoardHeatmap(QWidget* parent = nullptr);
 
     /**
-     * @brief 设置热度数据
-     * @param values 64个格子的值 (0.0 - 1.0)
-     * @param type 热度图类型
+     * @brief Set heatmap data
+     * @param values Values for 64 cells (0.0 - 1.0)
+     * @param type Heatmap type
      */
     void setHeatmapData(const QVector<double>& values, HeatmapType type);
 
     /**
-     * @brief 设置热度数据类型
-     * @param type 数据类型
+     * @brief Set heatmap data type
+     * @param type Data type
      */
     void setHeatmapType(HeatmapType type);
 
     /**
-     * @brief 清除热度数据
+     * @brief Clear heatmap data
      */
     void clearHeatmap();
 
     /**
-     * @brief 设置透明度
-     * @param opacity 透明度 (0.0 - 1.0)
+     * @brief Set opacity
+     * @param opacity Opacity (0.0 - 1.0)
      */
     void setHeatmapOpacity(double opacity);
 
     /**
-     * @brief 获取当前热度类型
+     * @brief Get current heatmap type
      */
     HeatmapType getHeatmapType() const { return currentType_; }
 
     /**
-     * @brief 是否显示热度图
+     * @brief Whether to show heatmap
      */
     bool isVisible() const { return isVisible_; }
 
     /**
-     * @brief 显示/隐藏热度图
+     * @brief Show/hide heatmap
      */
     void setVisible(bool visible) { isVisible_ = visible; update(); }
 
 signals:
     /**
-     * @brief 热度类型变化信号
+     * @brief Heatmap type change signal
      */
     void heatmapTypeChanged(HeatmapType type);
 
 protected:
     /**
-     * @brief 绘制事件
+     * @brief Paint event
      */
     void paintEvent(QPaintEvent* event) override;
 
     /**
-     * @brief 获取热力颜色
-     * @param value 数值 (0.0 - 1.0)
-     * @return 颜色
+     * @brief Get heat color
+     * @param value Value (0.0 - 1.0)
+     * @return Color
      */
     QColor getHeatColor(double value) const;
 
 private:
     /**
-     * @brief 初始化颜色映射
+     * @brief Initialize color maps
      */
     void initColorMaps();
 
-    QVector<double> heatmapData_;      // 热度数据
-    HeatmapType currentType_;          // 当前类型
-    double opacity_;                    // 透明度
-    bool isVisible_;                   // 是否显示
-    bool hasData_;                     // 是否有数据
+    QVector<double> heatmapData_;      // Heatmap data
+    HeatmapType currentType_;          // Current type
+    double opacity_;                    // Opacity
+    bool isVisible_;                   // Whether to display
+    bool hasData_;                     // Has data
 };
 
 } // namespace Reversi

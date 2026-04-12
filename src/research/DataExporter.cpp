@@ -13,11 +13,11 @@
 namespace Reversi {
 
 // ============================================================================
-// DataExporter 实现
+// DataExporter Implementation
 // ============================================================================
 
 DataExporter::DataExporter() {
-    // 默认配置
+    // Default configuration
 }
 
 void DataExporter::setConfig(const ExportConfig& config) {
@@ -29,7 +29,7 @@ const DataExporter::ExportConfig& DataExporter::getConfig() const {
 }
 
 // ============================================================================
-// Bitboard 结果导出
+// Bitboard Results Export
 // ============================================================================
 
 bool DataExporter::exportBitboardResults(
@@ -38,13 +38,13 @@ bool DataExporter::exportBitboardResults(
 ) {
     bool success = true;
     
-    // 导出为JSON
+    // Export to JSON
     success &= exportBitboardToJson(results, makePath(filename, "json"));
     
-    // 导出为CSV
+    // Export to CSV
     success &= exportBitboardToCsv(results, makePath(filename, "csv"));
     
-    // 导出为Markdown
+    // Export to Markdown
     success &= exportBitboardToMarkdown(results, makePath(filename, "md"));
     
     return success;
@@ -102,7 +102,7 @@ bool DataExporter::exportBitboardToMarkdown(
 }
 
 // ============================================================================
-// AI 结果导出
+// AI Results Export
 // ============================================================================
 
 bool DataExporter::exportAIResults(
@@ -173,7 +173,7 @@ bool DataExporter::exportAIToMarkdown(
 }
 
 // ============================================================================
-// 对战结果导出
+// Battle Results Export
 // ============================================================================
 
 bool DataExporter::exportBattleResults(
@@ -260,7 +260,7 @@ bool DataExporter::exportBattleToMarkdown(
 }
 
 // ============================================================================
-// 综合报告
+// Comprehensive Report
 // ============================================================================
 
 bool DataExporter::exportFullReport(
@@ -271,11 +271,11 @@ bool DataExporter::exportFullReport(
 ) {
     bool success = true;
     
-    // JSON报告
+    // JSON report
     std::string json = generateExperimentJson(bitboard_results, ai_results, battle_results);
     success &= writeFile(makePath(filename, "json"), json);
     
-    // Markdown报告
+    // Markdown report
     std::string md = generateExperimentMarkdown(bitboard_results, ai_results, battle_results);
     success &= writeFile(makePath(filename, "md"), md);
     
@@ -293,7 +293,7 @@ std::string DataExporter::generateExperimentJson(
     oss << "    \"name\": \"" << config_.experiment_name << "\",\n";
     oss << "    \"timestamp\": \"" << getTimestamp() << "\",\n";
     
-    // 系统信息
+    // System information
     auto sys_info = getSystemInfo();
     oss << "    \"system\": {\n";
     for (auto it = sys_info.begin(); it != sys_info.end(); ++it) {
@@ -303,13 +303,13 @@ std::string DataExporter::generateExperimentJson(
     }
     oss << "    },\n";
     
-    // Bitboard结果
+    // Bitboard results
     oss << "    \"bitboard_benchmark\": " << BitboardBenchmark::toJson(bitboard_results) << ",\n";
     
-    // AI结果
+    // AI results
     oss << "    \"ai_benchmark\": " << AISearchBenchmark::toJson(ai_results) << ",\n";
     
-    // 战报
+    // Battle reports
     oss << "    \"battles\": [";
     for (size_t i = 0; i < battle_results.size(); ++i) {
         const auto& b = battle_results[i];
@@ -341,7 +341,7 @@ std::string DataExporter::generateExperimentMarkdown(
     oss << "**Experiment**: " << config_.experiment_name << "\n\n";
     oss << "**Generated**: " << getTimestamp() << "\n\n";
     
-    // 系统信息
+    // System information
     auto sys_info = getSystemInfo();
     oss << "## System Information\n\n";
     for (const auto& p : sys_info) {
@@ -349,7 +349,7 @@ std::string DataExporter::generateExperimentMarkdown(
     }
     oss << "\n";
     
-    // Bitboard结果
+    // Bitboard results
     oss << "## Bitboard Benchmark Results\n\n";
     oss << "| Test | Value | Unit | Status |\n";
     oss << "|------|-------|------|--------|\n";
@@ -361,7 +361,7 @@ std::string DataExporter::generateExperimentMarkdown(
     }
     oss << "\n";
     
-    // AI结果
+    // AI results
     oss << "## AI Benchmark Results\n\n";
     oss << "| AI | Test | Depth | Throughput | Status |\n";
     oss << "|----|------|-------|------------|--------|\n";
@@ -375,7 +375,7 @@ std::string DataExporter::generateExperimentMarkdown(
     }
     oss << "\n";
     
-    // 战报
+    // Battle reports
     if (!battle_results.empty()) {
         oss << "## Battle Results\n\n";
         for (const auto& b : battle_results) {
@@ -395,7 +395,7 @@ std::string DataExporter::generateExperimentMarkdown(
 }
 
 // ============================================================================
-// 工具函数
+// Utility Functions
 // ============================================================================
 
 bool DataExporter::ensureDirectory(const std::string& path) {
@@ -423,7 +423,7 @@ std::string DataExporter::formatTableAsCsv(
 std::map<std::string, std::string> DataExporter::getSystemInfo() {
     std::map<std::string, std::string> info;
     
-    // 平台
+    // Platform
 #ifdef _WIN32
     info["Platform"] = "Windows";
 #elif __linux__
@@ -434,7 +434,7 @@ std::map<std::string, std::string> DataExporter::getSystemInfo() {
     info["Platform"] = "Unknown";
 #endif
     
-    // 编译器
+    // Compiler
 #ifdef _MSC_VER
     std::ostringstream oss;
     oss << "MSVC " << _MSC_VER;
@@ -453,7 +453,7 @@ std::map<std::string, std::string> DataExporter::getSystemInfo() {
 }
 
 // ============================================================================
-// 私有函数
+// Private Functions
 // ============================================================================
 
 std::string DataExporter::makePath(const std::string& filename, const std::string& extension) {
@@ -470,7 +470,7 @@ std::string DataExporter::makePath(const std::string& filename, const std::strin
 }
 
 bool DataExporter::writeFile(const std::string& path, const std::string& content) {
-    // 确保目录存在
+    // Ensure directory exists
     size_t pos = path.find_last_of("/\\");
     if (pos != std::string::npos) {
         std::string dir = path.substr(0, pos);

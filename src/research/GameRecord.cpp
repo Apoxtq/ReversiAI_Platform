@@ -1,6 +1,6 @@
 /**
  * @file GameRecord.cpp
- * @brief 对局记录系统实现 - v0.9.0可视化增强版
+ * @brief Game record system implementation - v0.9.0 visualization enhancement
  */
 
 #include "research/GameRecord.h"
@@ -14,7 +14,7 @@
 
 namespace Reversi {
 
-// ===== MoveRecord 实现 =====
+// ===== MoveRecord Implementation =====
 
 QJsonObject MoveRecord::toJson() const {
     QJsonObject json;
@@ -53,7 +53,7 @@ QString MoveRecord::toCoordinateString() const {
     return file + rank;
 }
 
-// ===== GameRecord 实现 =====
+// ===== GameRecord Implementation =====
 
 QJsonObject GameRecord::toJson() const {
     QJsonObject json;
@@ -74,7 +74,7 @@ QJsonObject GameRecord::toJson() const {
     json["event"] = event;
     json["venue"] = venue;
 
-    // 序列化走法列表
+    // Serialize move list
     QJsonArray movesArray;
     for (const auto& move : moves) {
         movesArray.append(move.toJson());
@@ -103,7 +103,7 @@ GameRecord GameRecord::fromJson(const QJsonObject& json) {
     record.event = json["event"].toString();
     record.venue = json["venue"].toString();
 
-    // 反序列化走法列表
+    // Deserialize move list
     QJsonArray movesArray = json["moves"].toArray();
     for (int i = 0; i < movesArray.size(); ++i) {
         record.moves.append(MoveRecord::fromJson(movesArray[i].toObject()));
@@ -115,7 +115,7 @@ GameRecord GameRecord::fromJson(const QJsonObject& json) {
 QString GameRecord::toPGN() const {
     QString pgn;
 
-    // PGN 头部信息
+    // PGN header information
     pgn += "[Event \"" + (event.isEmpty() ? "Reversi Game" : event) + "\"]\n";
     pgn += "[Site \"" + (venue.isEmpty() ? "Unknown" : venue) + "\"]\n";
     pgn += "[Date \"" + startTime.toString("yyyy.MM.dd") + "\"]\n";
@@ -125,14 +125,14 @@ QString GameRecord::toPGN() const {
     pgn += "[Result \"";
 
     switch (winner) {
-        case 0: pgn += "1-0"; break;  // 黑胜
-        case 1: pgn += "0-1"; break;  //白胜
-        case 2: pgn += "1/2-1/2"; break; // 平局
+        case 0: pgn += "1-0"; break;  // Black wins
+        case 1: pgn += "0-1"; break;  // White wins
+        case 2: pgn += "1/2-1/2"; break; // Draw
         default: pgn += "*"; break;
     }
     pgn += "\"]\n";
 
-    // 添加额外标签
+    // Add extra tags
     if (!player1Type.isEmpty()) {
         pgn += "[Player1Type \"" + player1Type + "\"]\n";
     }
@@ -145,12 +145,12 @@ QString GameRecord::toPGN() const {
 
     pgn += "\n";
 
-    // 走法列表
+    // Move list
     int moveNumber = 1;
     for (int i = 0; i < moves.size(); ++i) {
         const auto& move = moves[i];
 
-        // 黑棋走法
+        // Black's move
         if (move.player == 0) {
             pgn += QString::number(moveNumber) + ". " + move.toCoordinateString();
             if (!qIsNull(move.aiEvaluation)) {
@@ -158,7 +158,7 @@ QString GameRecord::toPGN() const {
             }
             pgn += " ";
         } else {
-            // 白棋走法
+        // White's move
             pgn += move.toCoordinateString();
             if (!qIsNull(move.aiEvaluation)) {
                 pgn += " {" + QString::number(move.aiEvaluation, 'f', 2) + "}";
@@ -167,13 +167,13 @@ QString GameRecord::toPGN() const {
             moveNumber++;
         }
 
-        // 每行不超过80个字符
+        // Maximum 80 characters per line
         if (i % 8 == 7) {
             pgn += "\n";
         }
     }
 
-    // 添加结果
+    // Add result
     switch (winner) {
         case 0: pgn += "1-0"; break;
         case 1: pgn += "0-1"; break;
@@ -187,18 +187,18 @@ QString GameRecord::toPGN() const {
 QString GameRecord::toSGF() const {
     QString sgf;
 
-    // SGF 头部
+    // SGF header
     sgf = "(;FF[4]GM[11]RU[Othello]\n";
 
-    // 玩家信息
+    // Player information
     sgf += "PB[" + player1Name + "]\n";
     sgf += "PW[" + player2Name + "]\n";
 
-    // 日期时间
+    // Date and time
     sgf += "DT[" + startTime.toString("yyyy-MM-dd") + "]\n";
     sgf += "TM[" + QString::number(getDurationMs() / 1000) + "]\n";
 
-    // 结果
+    // Result
     QString result;
     switch (winner) {
         case 0: result = "B+"; break;
@@ -210,15 +210,15 @@ QString GameRecord::toSGF() const {
         sgf += "RE[" + result + "]\n";
     }
 
-    // 附加信息
+    // Additional information
     if (!event.isEmpty()) sgf += "EV[" + event + "]\n";
     if (!venue.isEmpty()) sgf += "PC[" + venue + "]\n";
 
-    // 走法
+    // Moves
     for (int i = 0; i < moves.size(); ++i) {
         const auto& move = moves[i];
         QString color = (move.player == 0) ? "B" : "W";
-        // SGF坐标: 0-63 -> a1-h8
+        // SGF coordinate: 0-63 -> a1-h8
         int col = move.move % 8;
         int row = move.move / 8;
         QString coord;
@@ -234,14 +234,14 @@ QString GameRecord::toSGF() const {
 
 GameRecord GameRecord::fromPGN(const QString& pgn) {
     GameRecord record;
-    // 简化实现 - 完整PGN解析需要更复杂的解析器
-    // 这里仅提供基本框架
+    // Simplified implementation - complete PGN parsing requires more complex parser
+    // This only provides basic framework
 
     QStringList lines = pgn.split('\n');
     for (const QString& line : lines) {
         QString trimmed = line.trimmed();
         if (trimmed.startsWith('[')) {
-            // 解析标签
+            // Parse tags
             int start = trimmed.indexOf('"');
             int end = trimmed.lastIndexOf('"');
             if (start >= 0 && end > start) {
@@ -266,8 +266,8 @@ GameRecord GameRecord::fromPGN(const QString& pgn) {
                 }
             }
         } else if (!trimmed.isEmpty() && !trimmed.startsWith('(')) {
-            // 解析走法
-            // 简化: 实际需要更复杂的解析
+            // Parse moves
+            // Simplified: actually requires more complex parsing
         }
     }
 
@@ -276,10 +276,10 @@ GameRecord GameRecord::fromPGN(const QString& pgn) {
 
 GameRecord GameRecord::fromSGF(const QString& sgf) {
     GameRecord record;
-    // 简化实现 - 完整SGF解析需要更复杂的解析器
-    // 这里仅提供基本框架
+    // Simplified implementation - complete SGF parsing requires more complex parser
+    // This only provides basic framework
 
-    // 提取基本标签
+    // Extract basic tags
     QRegularExpression pbRegex("PB\\[([^\\]]+)\\]");
     QRegularExpressionMatch match = pbRegex.match(sgf);
     if (match.hasMatch()) {
@@ -301,13 +301,13 @@ GameRecord GameRecord::fromSGF(const QString& sgf) {
         else if (result == "0") record.winner = 2;
     }
 
-    // 提取走法
-    // 简化实现 - 暂不解析具体走法
+    // Extract moves
+    // Simplified implementation - does not parse specific moves for now
 
     return record;
 }
 
-// ===== GameReplay 实现 =====
+// ===== GameReplay Implementation =====
 
 GameReplay::GameReplay()
     : currentBoard_(nullptr)
@@ -327,10 +327,10 @@ bool GameReplay::loadRecord(const GameRecord& record) {
     currentMoveIndex_ = 0;
     isPlaying_ = false;
 
-    // 重建初始棋盘
+    // Rebuild initial board
     rebuildBoard(0);
 
-    // 触发回调
+    // Trigger callback
     if (boardUpdateCallback_) {
         boardUpdateCallback_(currentBoard_);
     }
@@ -344,7 +344,7 @@ bool GameReplay::loadRecord(const GameRecord& record) {
 void GameReplay::play() {
     if (record_.moves.isEmpty()) return;
     if (isFinished()) {
-        // 如果已经播放完毕，重新开始
+        // If already finished, restart from beginning
         jumpToMove(0);
     }
 
@@ -433,7 +433,7 @@ const MoveRecord& GameReplay::getCurrentMove() const {
 }
 
 void GameReplay::rebuildBoard(int moveIndex) {
-    // 从头开始重建棋盘到指定步数
+    // Rebuild board from beginning to specified step
     currentBoard_ = new Board();
 
     for (int i = 0; i <= moveIndex && i < record_.moves.size(); ++i) {

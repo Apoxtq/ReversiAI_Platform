@@ -1,6 +1,6 @@
 /**
  * @file SearchStatisticsPanel.cpp
- * @brief 实时统计面板实现 - v0.9.0可视化增强版
+ * @brief Real-time statistics panel implementation - v0.9.0 visualization enhancement
  */
 
 #include "ui/SearchStatisticsPanel.h"
@@ -10,7 +10,7 @@
 
 namespace Reversi {
 
-// 辅助函数：格式化数字
+// Helper function: format number
 static QString formatNumber(int64_t num) {
     if (num >= 1000000) {
         return QString::number(num / 1000000.0, 'f', 1) + "M";
@@ -49,21 +49,21 @@ SearchStatisticsPanel::SearchStatisticsPanel(QWidget* parent)
 SearchStatisticsPanel::~SearchStatisticsPanel() = default;
 
 void SearchStatisticsPanel::setupUI() {
-    // 主布局
+    // Main layout
     mainLayout_ = new QVBoxLayout(this);
     mainLayout_->setContentsMargins(0, 0, 0, 0);
 
-    // 分组框
+    // Group box
     groupBox_ = new QGroupBox(tr("Search Statistics"), this);
     QVBoxLayout* boxLayout = new QVBoxLayout();
 
-    // 网格布局用于统计项
+    // Grid layout for statistics items
     QGridLayout* gridLayout = new QGridLayout();
     gridLayout->setSpacing(8);
 
     int row = 0;
 
-    // 基础统计
+    // Basic statistics
     createStatRow(tr("Depth:"), depthLabel_);
     gridLayout->addWidget(new QLabel(tr("Depth:")), row, 0);
     gridLayout->addWidget(depthLabel_, row++, 1);
@@ -84,8 +84,8 @@ void SearchStatisticsPanel::setupUI() {
     gridLayout->addWidget(new QLabel(tr("Time:")), row, 0);
     gridLayout->addWidget(timeLabel_, row++, 1);
 
-    // 详细统计（可折叠）
-    row++; // 空行
+    // Detailed statistics (collapsible)
+    row++; // Empty row
 
     createStatRow(tr("0"), cutoffsLabel_);
     gridLayout->addWidget(new QLabel(tr("Cutoffs:")), row, 0);
@@ -107,9 +107,9 @@ void SearchStatisticsPanel::setupUI() {
     gridLayout->addWidget(new QLabel(tr("TT Size:")), row, 0);
     gridLayout->addWidget(ttEntriesLabel_, row++, 1);
 
-    row++; // 空行
+    row++; // Empty row
 
-    // 最佳走法
+    // Best move
     createStatRow(tr("--"), bestMoveLabel_);
     gridLayout->addWidget(new QLabel(tr("Best Move:")), row, 0);
     gridLayout->addWidget(bestMoveLabel_, row++, 1);
@@ -118,9 +118,9 @@ void SearchStatisticsPanel::setupUI() {
     gridLayout->addWidget(new QLabel(tr("Value:")), row, 0);
     gridLayout->addWidget(bestValueLabel_, row++, 1);
 
-    row++; // 空行
+    row++; // Empty row
 
-    // MCTS统计
+    // MCTS statistics
     createStatRow(tr("0"), simulationsLabel_);
     gridLayout->addWidget(new QLabel(tr("Simulations:")), row, 0);
     gridLayout->addWidget(simulationsLabel_, row++, 1);
@@ -131,7 +131,7 @@ void SearchStatisticsPanel::setupUI() {
 
     boxLayout->addLayout(gridLayout);
 
-    // 进度条
+    // Progress bar
     searchProgress_ = new QProgressBar(this);
     searchProgress_->setRange(0, 100);
     searchProgress_->setValue(0);
@@ -142,7 +142,7 @@ void SearchStatisticsPanel::setupUI() {
     groupBox_->setLayout(boxLayout);
     mainLayout_->addWidget(groupBox_);
 
-    // 设置样式
+    // Set stylesheet
     setStyleSheet(R"(
         QGroupBox {
             font-weight: bold;
@@ -181,25 +181,25 @@ void SearchStatisticsPanel::updateStatistics(const SearchStats& stats) {
     currentStats_ = stats;
     isSearching_ = stats.isSearching;
 
-    // 更新显示
+    // Update display
     updateDisplay();
 }
 
 void SearchStatisticsPanel::updateDisplay() {
-    // 深度
+    // Depth
     updateLabel(depthLabel_, QString::number(currentStats_.currentDepth));
     updateLabel(maxDepthLabel_, QString::number(currentStats_.maxDepth));
 
-    // 节点数
+    // Nodes
     updateLabel(nodesLabel_, formatNumber(currentStats_.nodesExplored));
 
     // NPS
     updateLabel(npsLabel_, QString::fromStdString(currentStats_.getNPSString()) + "/s");
 
-    // 时间
+    // Time
     updateLabel(timeLabel_, QString::fromStdString(currentStats_.getTimeString()) + "s");
 
-    // 详细统计
+    // Detailed statistics
     if (showDetails_) {
         updateLabel(cutoffsLabel_, formatNumber(currentStats_.cutoffs));
         updateLabel(ttHitRateLabel_, QString::number(currentStats_.ttHitRate * 100, 'f', 1) + "%");
@@ -208,7 +208,7 @@ void SearchStatisticsPanel::updateDisplay() {
         updateLabel(ttEntriesLabel_, formatNumber(currentStats_.ttEntries));
     }
 
-    // 最佳走法
+    // Best move
     if (currentStats_.bestMove >= 0) {
         int col = currentStats_.bestMove % 8;
         int row = currentStats_.bestMove / 8;
@@ -219,15 +219,15 @@ void SearchStatisticsPanel::updateDisplay() {
     }
     updateLabel(bestValueLabel_, QString::number(currentStats_.bestValue));
 
-    // MCTS统计
+    // MCTS statistics
     if (showDetails_) {
         updateLabel(simulationsLabel_, formatNumber(currentStats_.simulations));
         updateLabel(winRateLabel_, QString::number(currentStats_.winRate * 100, 'f', 1) + "%");
     }
 
-    // 进度条
+    // Progress bar
     if (currentStats_.isSearching) {
-        searchProgress_->setRange(0, 0); // 不确定进度
+        searchProgress_->setRange(0, 0); // Indeterminate
         searchProgress_->setValue(0);
     } else if (currentStats_.isComplete) {
         searchProgress_->setRange(0, 100);
@@ -279,7 +279,7 @@ void SearchStatisticsPanel::setTitle(const QString& title) {
 void SearchStatisticsPanel::setShowDetails(bool show) {
     showDetails_ = show;
 
-    // 显示/隐藏详细统计标签
+    // Show/hide detailed statistics labels
     if (cutoffsLabel_) cutoffsLabel_->setVisible(show);
     if (ttHitRateLabel_) ttHitRateLabel_->setVisible(show);
     if (killerHitRateLabel_) killerHitRateLabel_->setVisible(show);

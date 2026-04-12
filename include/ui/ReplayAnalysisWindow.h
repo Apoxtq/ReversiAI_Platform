@@ -1,8 +1,8 @@
 /**
  * @file ReplayAnalysisWindow.h
- * @brief 复盘分析窗口 - v0.9.0可视化增强版
+ * @brief Replay Analysis Window - v0.9.0 Visualization Enhanced
  *
- * 提供对局复盘和分析功能，支持棋谱导入导出
+ * Provides game replay and analysis features, supports game record import/export
  */
 
 #pragma once
@@ -29,194 +29,194 @@ namespace Reversi {
 
 /**
  * @class ReplayAnalysisWindow
- * @brief 复盘分析窗口
+ * @brief Replay analysis window
  *
- * 提供对局回放、分析和导出功能
+ * Provides game replay, analysis, and export functionality
  */
 class ReplayAnalysisWindow : public QMainWindow {
     Q_OBJECT
 
 public:
     /**
-     * @brief 构造函数
-     * @param parent 父窗口指针
+     * @brief Constructor
+     * @param parent Parent window pointer
      */
     explicit ReplayAnalysisWindow(QWidget* parent = nullptr);
 
     /**
-     * @brief 析构函数
+     * @brief Destructor
      */
     ~ReplayAnalysisWindow() override;
 
     /**
-     * @brief 加载对局文件
-     * @param filepath 文件路径
-     * @return 是否成功
+     * @brief Load game file
+     * @param filepath File path
+     * @return Whether successful
      */
     bool loadGameFile(const QString& filepath);
 
     /**
-     * @brief 加载对局记录
-     * @param record 对局记录
+     * @brief Load game record
+     * @param record Game record
      */
     void loadRecord(const GameRecord& record);
 
     /**
-     * @brief 获取当前对局记录
+     * @brief Get current game record
      */
     const GameRecord& getCurrentRecord() const { return currentRecord_; }
 
 signals:
     /**
-     * @brief 返回主菜单信号
+     * @brief Return to main menu signal
      */
     void backToMenu();
 
 private slots:
     /**
-     * @brief 打开文件
+     * @brief Open file
      */
     void onOpenFile();
 
     /**
-     * @brief 导出PGN
+     * @brief Export PGN
      */
     void onExportPGN();
 
     /**
-     * @brief 导出SGF
+     * @brief Export SGF
      */
     void onExportSGF();
 
     /**
-     * @brief 播放速度变化
+     * @brief Playback speed changed
      */
     void onPlaybackSpeedChanged(int index);
 
     /**
-     * @brief 播放/暂停按钮
+     * @brief Play/pause button
      */
     void onPlayPauseClicked();
 
     /**
-     * @brief 停止按钮
+     * @brief Stop button
      */
     void onStopClicked();
 
     /**
-     * @brief 上一步
+     * @brief Previous step
      */
     void onStepBackwardClicked();
 
     /**
-     * @brief 下一步
+     * @brief Next step
      */
     void onStepForwardClicked();
 
     /**
-     * @brief 滑块值变化
+     * @brief Slider value changed
      */
     void onSliderValueChanged(int value);
 
     /**
-     * @brief 返回主菜单
+     * @brief Return to main menu
      */
     void onBackClicked();
 
     /**
-     * @brief 棋盘更新
+     * @brief Board update
      */
     void onBoardUpdated(class Board* board);
 
     /**
-     * @brief 走法变化
+     * @brief Move changed
      */
     void onMoveChanged(int moveIndex, const MoveRecord& move);
 
     /**
-     * @brief 播放完毕
+     * @brief Playback finished
      */
     void onPlaybackFinished();
 
     /**
-     * @brief 定时器触发
+     * @brief Timer triggered
      */
     void onTimerTimeout();
 
 private:
     /**
-     * @brief 初始化UI
+     * @brief Initialize UI
      */
     void setupUI();
 
     /**
-     * @brief 初始化菜单
+     * @brief Initialize menu
      */
     void setupMenu();
 
     /**
-     * @brief 初始化工具栏
+     * @brief Initialize toolbar
      */
     void setupToolbar();
 
     /**
-     * @brief 连接信号槽
+     * @brief Connect signals and slots
      */
     void setupConnections();
 
     /**
-     * @brief 更新显示
+     * @brief Update display
      */
     void updateDisplay();
 
     /**
-     * @brief 更新控制按钮状态
+     * @brief Update control button states
      */
     void updateControlButtons();
 
     /**
-     * @brief 加载JSON文件
+     * @brief Load JSON file
      */
     bool loadJsonFile(const QString& filepath);
 
-    // 中心部件
+    // Central widget
     QWidget* centralWidget_;
     QVBoxLayout* mainLayout_;
 
-    // 棋盘显示区域
+    // Board display area
     QLabel* boardLabel_;
     QSize boardDisplaySize_;
 
-    // 播放控制区域
+    // Playback control area
     QGroupBox* controlGroup_;
     QHBoxLayout* controlLayout_;
 
-    // 滑块
+    // Slider
     QSlider* moveSlider_;
     QLabel* moveIndexLabel_;
     QLabel* progressLabel_;
 
-    // 播放按钮
+    // Playback buttons
     QPushButton* playPauseButton_;
     QPushButton* stopButton_;
     QPushButton* stepBackwardButton_;
     QPushButton* stepForwardButton_;
 
-    // 速度选择
+    // Speed selection
     QComboBox* speedComboBox_;
 
-    // 信息显示
+    // Information display
     QLabel* playerInfoLabel_;
     QLabel* moveInfoLabel_;
 
-    // 记录和回放
+    // Record and replay
     GameRecord currentRecord_;
     GameReplay replay_;
 
-    // 播放定时器
+    // Playback timer
     QTimer* playbackTimer_;
 
-    // 当前状态
+    // Current state
     bool isLoaded_;
 };
 

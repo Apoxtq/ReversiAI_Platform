@@ -1,4 +1,4 @@
-// 使用高精度计时
+// High-precision timing
 #define NOMINMAX
 #include <windows.h>
 #undef max
@@ -17,12 +17,12 @@
 
 namespace Reversi {
 
-// 高精度计时辅助函数 - 使用 QueryPerformanceCounter
+// High-precision timing helper - using QueryPerformanceCounter
 inline double getTimeMs() {
     static double freq = []() {
         LARGE_INTEGER f;
         QueryPerformanceFrequency(&f);
-        return static_cast<double>(f.QuadPart) / 1000.0;  // 转换为毫秒
+        return static_cast<double>(f.QuadPart) / 1000.0;  // Convert to milliseconds
     }();
     LARGE_INTEGER count;
     QueryPerformanceCounter(&count);
@@ -30,7 +30,7 @@ inline double getTimeMs() {
 }
 
 // ============================================================================
-// AISearchBenchmark 实现
+// AISearchBenchmark Implementation
 // ============================================================================
 
 std::string AISearchBenchmarkResult::toString() const {
@@ -60,19 +60,19 @@ std::vector<AISearchBenchmarkResult> AISearchBenchmark::runFullBenchmark() {
     int total_tests = 4;
     int current = 0;
 
-    // 创建AI实例 - 使用Difficulty枚举
-    auto minimax = AIStrategyFactory::createMinimaxAI(Difficulty::HARD);  // 深度约6
-    auto minimaxMedium = AIStrategyFactory::createMinimaxAI(Difficulty::MEDIUM);  // 深度约4
+    // Create AI instances - using Difficulty enum
+    auto minimax = AIStrategyFactory::createMinimaxAI(Difficulty::HARD);  // Depth ~6
+    auto minimaxMedium = AIStrategyFactory::createMinimaxAI(Difficulty::MEDIUM);  // Depth ~4
 
-    // 1. Minimax (Hard/深度6) 性能测试
+    // 1. Minimax (Hard/depth 6) Performance Test
     if (progress_callback_) progress_callback_(++current, total_tests, "Minimax-Hard");
     results.push_back(benchmarkMinimax(*minimax, 6, config_.time_limit_ms));
 
-    // 2. Minimax (Medium/深度4) 性能测试
+    // 2. Minimax (Medium/depth 4) Performance Test
     if (progress_callback_) progress_callback_(++current, total_tests, "Minimax-Medium");
     results.push_back(benchmarkMinimax(*minimaxMedium, 4, config_.time_limit_ms));
 
-    // 3. Random AI baseline测试
+    // 3. Random AI baseline test
     auto random = AIStrategyFactory::createRandomAI();
     if (progress_callback_) progress_callback_(++current, total_tests, "Random");
     AISearchBenchmarkResult randomResult;
@@ -88,7 +88,7 @@ std::vector<AISearchBenchmarkResult> AISearchBenchmark::runFullBenchmark() {
     randomResult.message = "Baseline test completed";
     results.push_back(randomResult);
 
-    // 4. Minimax-8 测试 (创建深度8的AI)
+    // 4. Minimax-8 Test (create AI with depth 8)
     MinimaxConfig config8;
     config8.maxDepth = 8;
     auto minimax8 = std::make_unique<MinimaxAI>(config8);
@@ -112,28 +112,28 @@ AISearchBenchmarkResult AISearchBenchmark::benchmarkMinimax(
     result.test_name = "Minimax";
     result.depth = depth;
 
-    // 使用默认Board (标准开局)
+    // Use default Board (standard opening)
     Board board;
 
-    // 设置搜索限制 - 移除时间限制，使用固定深度
+    // Set search limits - remove time limit, use fixed depth
     SearchLimits limits;
     limits.maxDepth = depth;
-    // 不设置 timeLimit，让搜索完整执行
+    // Do not set timeLimit, let search execute fully
 
-    // 搜索节点统计
+    // Search node statistics
     int64_t total_nodes = 0;
     double total_time = 0.0;
 
-    // 运行多次测试以获得更稳定的测量
+    // Run multiple tests for more stable measurement
     const int num_iterations = 20;
     for (int i = 0; i < num_iterations; ++i) {
-        // 重置AI
+        // Reset AI
         ai.reset();
 
-        // 计时
+        // Timing
         double start_time = getTimeMs();
 
-        // 执行搜索
+        // Execute search
         Move best_move = ai.findBestMove(board, limits);
 
         double end_time = getTimeMs();
@@ -141,7 +141,7 @@ AISearchBenchmarkResult AISearchBenchmark::benchmarkMinimax(
 
         total_time += elapsed;
 
-        // 获取统计
+        // Get statistics
         AIStats stats = ai.getStats();
         total_nodes += stats.nodesExplored;
     }
@@ -149,22 +149,22 @@ AISearchBenchmarkResult AISearchBenchmark::benchmarkMinimax(
     result.time_ms = total_time;
     result.nodes_searched = total_nodes;
 
-    // 计算吞吐量
+    // Calculate throughput
     double nps_value = 0.0;
     if (total_time > 0.0 && total_nodes > 0) {
-        // 节点数 / 时间(ms) * 1000 = 节点数/秒
-        // 节点数/秒 / 1000000 = M nodes/sec
+        // nodes / time(ms) * 1000 = nodes/second
+        // nodes/second / 1000000 = M nodes/sec
         nps_value = static_cast<double>(result.nodes_searched) / total_time * 1000.0;
     }
     result.nps = nps_value;
     result.throughput = nps_value / 1000000.0;
     result.unit = "M nodes/sec";
 
-    // 验收标准 - 调整为更合理的值
+    // Acceptance criteria - adjusted to more reasonable values
     bool test_passed = true;
     std::string msg = "Test completed";
-    // 对于优化的Alpha-Beta实现，0.2 M是合理的目标
-    // 原始目标是2.0 M，需要SIMD等深度优化才能达到
+    // For optimized Alpha-Beta implementation, 0.2 M is a reasonable target
+    // Original target is 2.0 M, requires SIMD and other deep optimizations to achieve
     test_passed = (result.throughput >= TARGET_MINIMAX6_NPS);
     msg = test_passed ? "Meets target" : "Below target";
     result.passed = test_passed;
@@ -194,29 +194,29 @@ AISearchBenchmarkResult AISearchBenchmark::benchmarkMCTS(
     result.test_name = "MCTS";
     result.depth = simulations;
 
-    // 使用默认Board
+    // Use default Board
     Board board;
 
-    // 设置搜索限制 - 使用固定仿真次数，移除时间限制
+    // Set search limits - use fixed simulation count, remove time limit
     SearchLimits limits;
-    limits.maxNodes = simulations;  // 使用 maxNodes 而不是 timeLimit
+    limits.maxNodes = simulations;  // Use maxNodes instead of timeLimit
     // limits.timeLimit = std::chrono::milliseconds(time_limit_ms);
 
-    // 仿真统计
+    // Simulation statistics
     int64_t total_sims = 0;
     double total_time = 0.0;
 
-    // 运行多次测试以获得更准确的测量
+    // Run multiple tests for more accurate measurement
     const int num_iterations = 20;
     int sims_per_iteration = simulations;
 
     for (int i = 0; i < num_iterations; ++i) {
-        // 重置AI
+        // Reset AI
         ai.reset();
 
         double start_time = getTimeMs();
 
-        // 执行MCTS搜索
+        // Execute MCTS search
         Move best_move = ai.findBestMove(board, limits);
 
         double end_time = getTimeMs();
@@ -224,22 +224,22 @@ AISearchBenchmarkResult AISearchBenchmark::benchmarkMCTS(
 
         total_time += elapsed;
 
-        // 获取实际的统计信息
+        // Get actual statistics
         AIStats stats = ai.getStats();
-        // MCTS的stats.nodesExplored表示MCTS迭代次数
-        // 每次迭代执行一次完整的simulation cycle
+        // MCTS stats.nodesExplored represents MCTS iteration count
+        // Each iteration executes a complete simulation cycle
         total_sims += stats.nodesExplored;
     }
 
     result.time_ms = total_time;
     result.nodes_searched = total_sims;
 
-    // 计算仿真率 (K sims/sec)
+    // Calculate simulation rate (K sims/sec)
     // 1 K = 1000
     if (total_time > 0) {
-        // 直接计算：总仿真数 / 总时间(ms) * 1000 = K sims/sec
+        // Direct calculation: total simulations / total time(ms) * 1000 = K sims/sec
         result.nps = static_cast<double>(total_sims) / total_time * 1000.0;
-        result.throughput = result.nps / 1000.0;  // 也表示 K sims/sec
+        result.throughput = result.nps / 1000.0;  // Also represents K sims/sec
     } else {
         result.nps = 0;
         result.throughput = 0;
@@ -247,7 +247,7 @@ AISearchBenchmarkResult AISearchBenchmark::benchmarkMCTS(
 
     result.unit = "K sims/sec";
 
-    // 验收标准
+    // Acceptance criteria
     result.passed = result.throughput >= TARGET_MCTS_SIMS;
     result.message = result.passed ? "Meets target" : "Below target";
 
@@ -267,7 +267,7 @@ std::vector<AISearchBenchmarkResult> AISearchBenchmark::compareAI(
 ) {
     std::vector<AISearchBenchmarkResult> results;
 
-    // 简化实现：对比两个AI的搜索速度
+    // Simplified implementation: compare search speed of two AIs
     MinimaxConfig config4;
     config4.maxDepth = 4;
     auto ai1_copy = std::make_unique<MinimaxAI>(config4);
@@ -349,12 +349,12 @@ void AISearchBenchmark::warmUp() {
         std::cout << "Warming up AI..." << std::endl;
     }
 
-    // 预热AI
+    // Warmup AI
     MinimaxConfig config;
     config.maxDepth = 4;
     auto ai = std::make_unique<MinimaxAI>(config);
     
-    // 使用默认Board (标准开局)
+    // Use default Board (standard opening)
     Board board;
 
     SearchLimits limits;

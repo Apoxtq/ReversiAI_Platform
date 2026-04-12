@@ -1,6 +1,6 @@
 /**
  * @file BoardHeatmap.cpp
- * @brief 棋盘热度图实现 - v0.9.0可视化增强版
+ * @brief Board heatmap implementation - v0.9.0 visualization enhancement
  */
 
 #include "ui/BoardHeatmap.h"
@@ -23,7 +23,7 @@ BoardHeatmap::BoardHeatmap(QWidget* parent)
 }
 
 void BoardHeatmap::initColorMaps() {
-    // 颜色映射在getHeatColor中动态生成
+    // Color mapping is generated dynamically in getHeatColor
 }
 
 void BoardHeatmap::setHeatmapData(const QVector<double>& values, HeatmapType type) {
@@ -56,13 +56,13 @@ void BoardHeatmap::setHeatmapOpacity(double opacity) {
 }
 
 QColor BoardHeatmap::getHeatColor(double value) const {
-    // 将值限制在0-1之间
+    // Clamp value to 0-1 range
     double v = qBound(0.0, value, 1.0);
 
     switch (currentType_) {
         case HeatmapType::PositionValue:
         case HeatmapType::ActionValue:
-            // 蓝色(低) -> 红色(高)
+            // Blue (low) -> Red (high)
             return QColor::fromRgb(
                 static_cast<int>(255 * v),
                 0,
@@ -71,7 +71,7 @@ QColor BoardHeatmap::getHeatColor(double value) const {
             );
 
         case HeatmapType::VisitCount:
-            // 白色(低) -> 深蓝(高)
+            // White (low) -> Dark blue (high)
             return QColor::fromRgb(
                 static_cast<int>(255 * (1.0 - v)),
                 static_cast<int>(255 * (1.0 - v)),
@@ -80,9 +80,9 @@ QColor BoardHeatmap::getHeatColor(double value) const {
             );
 
         case HeatmapType::WinRate:
-            // 红色(0%) -> 黄色(50%) -> 绿色(100%)
+            // Red (0%) -> Yellow (50%) -> Green (100%)
             if (v < 0.5) {
-                // 红色 -> 黄色
+                // Red -> Yellow
                 double t = v * 2.0;
                 return QColor::fromRgb(
                     255,
@@ -91,7 +91,7 @@ QColor BoardHeatmap::getHeatColor(double value) const {
                     static_cast<int>(255 * opacity_)
                 );
             } else {
-                // 黄色 -> 绿色
+                // Yellow -> Green
                 double t = (v - 0.5) * 2.0;
                 return QColor::fromRgb(
                     static_cast<int>(255 * (1.0 - t)),
@@ -115,28 +115,28 @@ void BoardHeatmap::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    // 获取棋盘大小
+    // Get board dimensions
     int width = this->width();
     int height = this->height();
 
-    // 计算格子大小
+    // Calculate cell size
     int cellWidth = width / 8;
     int cellHeight = height / 8;
 
-    // 绘制每个格子的热度
+    // Draw heatmap for each cell
     for (int i = 0; i < 64; ++i) {
         double value = heatmapData_[i];
-        if (value <= 0.0) continue; // 跳过无数据的格子
+        if (value <= 0.0) continue; // Skip cells with no data
 
         int row = i / 8;
         int col = i % 8;
 
         QRect cellRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
 
-        // 缩小一点以便显示格子边框
+        // Shrink slightly to show cell border
         cellRect.adjust(1, 1, -1, -1);
 
-        // 绘制热度
+        // Draw heatmap
         painter.fillRect(cellRect, getHeatColor(value));
     }
 }

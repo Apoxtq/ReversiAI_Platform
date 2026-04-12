@@ -1,15 +1,15 @@
 /**
  * @file mainwindow.h
- * @brief 主窗口 - V0.4.0重构版本
+ * @brief Main Window - V0.4.0 Refactored Version
  *
- * 重构内容:
- * - 移除对MCTS.h的引用（已删除）
- * - 使用GameController管理游戏状态
- * - 移除重复的Board类定义
- * - 移除全局变量
- * - 基于QtReversi/widget.h的信号槽设计
+ * Refactoring content:
+ * - Removed reference to MCTS.h (deleted)
+ * - Use GameController to manage game state
+ * - Removed duplicate Board class definition
+ * - Removed global variables
+ * - Signal-slot design based on QtReversi/widget.h
  *
- * @reference QtReversi/代码/chess/widget.h - 游戏状态定义和信号槽设计
+ * @reference QtReversi/代码/chess/widget.h - Game state definition and signal-slot design
  */
 
 #ifndef MAINWINDOW_H
@@ -31,14 +31,14 @@ class GameController;
 
 /**
  * @class MainWindow
- * @brief 主窗口类 - 负责UI显示和用户交互
+ * @brief Main Window class - responsible for UI display and user interaction
  *
- * 职责:
- * - 棋盘绘制 (paintEvent)
- * - 鼠标事件处理 (mousePressEvent)
- * - 连接GameController信号槽
+ * Responsibilities:
+ * - Board drawing (paintEvent)
+ * - Mouse event handling (mousePressEvent)
+ * - Connect GameController signal-slot
  *
- * 状态管理委托给GameController处理
+ * State management delegated to GameController
  */
 class MainWindow : public QMainWindow
 {
@@ -50,109 +50,109 @@ public:
 
 protected:
     /**
-     * @brief 绘制棋盘和棋子
-     * 保留原有实现逻辑，只修改数据来源
+     * @brief Draw board and pieces
+     * Keep original implementation, only modify data source
      */
     void paintEvent(QPaintEvent *event) override;
 
     /**
-     * @brief 处理鼠标点击事件
-     * 将落子操作委托给GameController处理
+     * @brief Handle mouse click event
+     * Delegate move operation to GameController
      */
     void mousePressEvent(QMouseEvent *e) override;
 
 private slots:
-    // ============ UI信号槽 ============
+    // ============ UI Signal-Slot ============
 
     /**
-     * @brief 开始/重置游戏按钮点击
+     * @brief Start/Reset game button click
      */
     void onStartGameClicked();
 
     /**
-     * @brief 游戏开始信号处理
+     * @brief Game start signal handling
      */
     void onGameStarted(Reversi::GameMode mode, Reversi::PlayerColor humanColor);
 
     /**
-     * @brief 游戏阶段变化信号处理
+     * @brief Game phase change signal handling
      */
     void onPhaseChanged(Reversi::GamePhase phase);
 
     /**
-     * @brief 回合变化信号处理
+     * @brief Turn change signal handling
      */
     void onTurnChanged(Reversi::PlayerColor player);
 
     /**
-     * @brief 落子信号处理
+     * @brief Move made signal handling
      */
     void onMoveMade(int row, int col, Reversi::PlayerColor player);
 
     /**
-     * @brief 游戏结束信号处理
+     * @brief Game end signal handling
      */
     void onGameEnded(Reversi::GameResult result);
 
     /**
-     * @brief AI开始思考信号处理
+     * @brief AI started thinking signal handling
      */
     void onAIThinkingStarted(const QString& aiName);
 
     /**
-     * @brief AI思考完成信号处理
+     * @brief AI thinking completed signal handling
      */
     void onAIThinkingFinished(int row, int col);
 
     /**
-     * @brief AI统计更新信号处理
+     * @brief AI stats update signal handling
      */
     void onAIStatsUpdated(const Reversi::AIStats& stats);
 
     /**
-     * @brief 错误信号处理
+     * @brief Error signal handling
      */
     void onErrorOccurred(const QString& message);
 
 private:
-    // ============ 私有方法 ============
+    // ============ Private Methods ============
 
     /**
-     * @brief 初始化UI组件
-     * 保留原有init()调用
+     * @brief Initialize UI components
+     * Keep original init() call
      */
     void initUI();
 
     /**
-     * @brief 连接GameController信号槽
+     * @brief Connect GameController signal-slot
      */
     void setupConnections();
 
     /**
-     * @brief 更新分数显示
+     * @brief Update score display
      */
     void updateScoreDisplay();
 
-    // ============ 成员变量 ============
+    // ============ Member Variables ============
 
-    Ui::MainWindow *ui;                                     // Qt Designer生成的UI
-    std::unique_ptr<Reversi::GameController> gameController_; // 游戏控制器
+    Ui::MainWindow *ui;                                     // Qt Designer generated UI
+    std::unique_ptr<Reversi::GameController> gameController_; // Game controller
 
-    // ============ 保留的资源文件 ============
-    // 这些资源文件从原有代码保留
+    // ============ Retained Resource Files ============
+    // These resource files retained from original code
     QPixmap background;
     QPixmap white, black;
     QPixmap hintwhite, hintblack, hintred;
 
-    // ============ 移除的全局变量 ============
-    // 以下全局变量已移除，改为由GameController管理
-    // - bool mousedown ❌ 删除
-    // - int mousex, mousey ❌ 删除
-    // - Board* mainBoard ❌ 由GameController管理
-    // - MCTS* root ❌ 使用AIStrategy
-    // - std::string turn ❌ 使用GamePhase枚举
-    // - bool gameOver ❌ 由GameController管理
-    // - int playerTile, computerTile ❌ 由GameController管理
+    // ============ Removed Global Variables ============
+    // The following global variables have been removed, now managed by GameController
+    // - bool mousedown (removed)
+    // - int mousex, mousey (removed)
+    // - Board* mainBoard (managed by GameController)
+    // - MCTS* root (use AIStrategy)
+    // - std::string turn (use GamePhase enum)
+    // - bool gameOver (managed by GameController)
+    // - int playerTile, computerTile (managed by GameController)
 };
 
 #endif // MAINWINDOW_H

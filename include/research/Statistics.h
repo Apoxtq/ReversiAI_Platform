@@ -12,14 +12,14 @@
 
 /**
  * @file Statistics.h
- * @brief 统计工具类
+ * @brief Statistics Utility Class
  *
- * 实现:
- * - 均值和标准差
- * - 95%置信区间
- * - Wilcoxon signed-rank测试
- * - 胜率比较
- * - 二项分布检验
+ * Implements:
+ * - Mean and standard deviation
+ * - 95% confidence interval
+ * - Wilcoxon signed-rank test
+ * - Win rate comparison
+ * - Binomial test
  *
  * @author AI Assistant
  * @date 2026
@@ -32,91 +32,91 @@ namespace Reversi {
 struct BattleStats;
 
 /**
- * @brief 统计工具类
+ * @brief Statistics utility class
  *
- * 提供各种统计分析功能，用于AI算法评估和比较
+ * Provides various statistical analysis functions for AI algorithm evaluation and comparison
  */
 class Statistics {
 public:
     // =========================================================================
-    // 基础统计
+    // Basic Statistics
     // =========================================================================
 
     /**
-     * @brief 计算均值
+     * @brief Calculate mean
      *
-     * @tparam T 数值类型
-     * @param data 数据向量
-     * @return 均值
+     * @tparam T Numeric type
+     * @param data Data vector
+     * @return Mean
      */
     template<typename T>
     static double mean(const std::vector<T>& data);
 
     /**
-     * @brief 计算中位数
+     * @brief Calculate median
      *
-     * @tparam T 数值类型
-     * @param data 数据向量
-     * @return 中位数
+     * @tparam T Numeric type
+     * @param data Data vector
+     * @return Median
      */
     template<typename T>
     static double median(std::vector<T> data);
 
     /**
-     * @brief 计算标准差
+     * @brief Calculate standard deviation
      *
-     * @tparam T 数值类型
-     * @param data 数据向量
-     * @param sample true=样本标准差, false=总体标准差
-     * @return 标准差
+     * @tparam T Numeric type
+     * @param data Data vector
+     * @param sample true=sample std dev, false=population std dev
+     * @return Standard deviation
      */
     template<typename T>
     static double stddev(const std::vector<T>& data, bool sample = true);
 
     /**
-     * @brief 计算方差
+     * @brief Calculate variance
      *
-     * @tparam T 数值类型
-     * @param data 数据向量
-     * @return 方差
+     * @tparam T Numeric type
+     * @param data Data vector
+     * @return Variance
      */
     template<typename T>
     static double variance(const std::vector<T>& data);
 
     /**
-     * @brief 计算95%置信区间
+     * @brief Calculate 95% confidence interval
      *
-     * @tparam T 数值类型
-     * @param data 数据向量
-     * @return pair(下界, 上界)
+     * @tparam T Numeric type
+     * @param data Data vector
+     * @return pair(lower, upper)
      */
     template<typename T>
     static std::pair<double, double> confidenceInterval95(const std::vector<T>& data);
 
     /**
-     * @brief 计算任意置信区间
+     * @brief Calculate arbitrary confidence interval
      *
-     * @tparam T 数值类型
-     * @param data 数据向量
-     * @param confidence 置信度 (0.9, 0.95, 0.99等)
-     * @return pair(下界, 上界)
+     * @tparam T Numeric type
+     * @param data Data vector
+     * @param confidence Confidence level (0.9, 0.95, 0.99, etc.)
+     * @return pair(lower, upper)
      */
     template<typename T>
     static std::pair<double, double> confidenceInterval(const std::vector<T>& data, double confidence);
 
     // =========================================================================
-    // 假设检验
+    // Hypothesis Testing
     // =========================================================================
 
     /**
-     * @brief Wilcoxon signed-rank测试
+     * @brief Wilcoxon signed-rank test
      *
-     * 用于配对样本的统计显著性检验
-     * 适用于对战结果的胜/负序列分析
+     * Used for paired sample statistical significance test
+     * Applicable to win/loss sequence analysis of battle results
      *
-     * @param sample1 样本1 (胜/负序列: +1/-1)
-     * @param sample2 样本2
-     * @return pair(统计量W, p值)
+     * @param sample1 Sample 1 (win/loss sequence: +1/-1)
+     * @param sample2 Sample 2
+     * @return pair(statistic W, p value)
      */
     static std::pair<double, double> wilcoxonSignedRankTest(
         const std::vector<int>& sample1,
@@ -124,25 +124,25 @@ public:
     );
 
     /**
-     * @brief 二项分布检验
+     * @brief Binomial test
      *
-     * 检验胜率是否显著偏离期望值
+     * Test whether win rate significantly deviates from expected value
      *
-     * @param wins 胜场数
-     * @param total 总场数
-     * @param expected_rate 期望胜率 (default: 0.5)
-     * @return p值
+     * @param wins Number of wins
+     * @param total Total games
+     * @param expected_rate Expected win rate (default: 0.5)
+     * @return p value
      */
     static double binomialTest(int wins, int total, double expected_rate = 0.5);
 
     /**
-     * @brief 单样本t检验
+     * @brief One-sample t-test
      *
-     * 检验样本均值是否显著不同于假设均值
+     * Test whether sample mean significantly differs from hypothesized mean
      *
-     * @param data 数据向量
-     * @param hypothesized_mean 假设均值
-     * @return pair(t统计量, p值)
+     * @param data Data vector
+     * @param hypothesized_mean Hypothesized mean
+     * @return pair(t statistic, p value)
      */
     template<typename T>
     static std::pair<double, double> oneSampleTTest(
@@ -151,13 +151,13 @@ public:
     );
 
     /**
-     * @brief 独立样本t检验
+     * @brief Independent samples t-test
      *
-     * 检验两个独立样本的均值是否有显著差异
+     * Test whether means of two independent samples have significant difference
      *
-     * @param sample1 样本1
-     * @param sample2 样本2
-     * @return pair(t统计量, p值)
+     * @param sample1 Sample 1
+     * @param sample2 Sample 2
+     * @return pair(t statistic, p value)
      */
     template<typename T>
     static std::pair<double, double> independentSamplesTTest(
@@ -166,130 +166,130 @@ public:
     );
 
     // =========================================================================
-    // 胜率分析
+    // Win Rate Analysis
     // =========================================================================
 
     /**
-     * @brief 计算胜率及其置信区间
+     * @brief Calculate win rate and its confidence interval
      *
-     * @param wins 胜场数
-     * @param total 总场数
-     * @param ci_low 输出: 置信区间下界
-     * @param ci_high 输出: 置信区间上界
-     * @return 胜率
+     * @param wins Number of wins
+     * @param total Total games
+     * @param ci_low Output: confidence interval lower bound
+     * @param ci_high Output: confidence interval upper bound
+     * @return Win rate
      */
     static double winRateWithCI(int wins, int total, double& ci_low, double& ci_high);
 
     /**
-     * @brief 计算Wilson置信区间 (胜率)
+     * @brief Calculate Wilson confidence interval (win rate)
      *
-     * 比正态近似更准确的置信区间方法
+     * More accurate confidence interval method than normal approximation
      *
-     * @param wins 胜场数
-     * @param total 总场数
-     * @param confidence 置信度
-     * @return pair(下界, 上界)
+     * @param wins Number of wins
+     * @param total Total games
+     * @param confidence Confidence level
+     * @return pair(lower, upper)
      */
     static std::pair<double, double> wilsonCI(int wins, int total, double confidence = 0.95);
 
     /**
-     * @brief 检验胜率是否显著
+     * @brief Test whether win rate is significant
      *
-     * @param win_rate 胜率
-     * @param total 总场数
-     * @param threshold 阈值 (default: 0.5)
-     * @return true 如果显著高于阈值
+     * @param win_rate Win rate
+     * @param total Total games
+     * @param threshold Threshold (default: 0.5)
+     * @return true if significantly higher than threshold
      */
     static bool isSignificantlyBetter(double win_rate, int total, double threshold = 0.5);
 
     // =========================================================================
-    // 效果量 (Effect Size)
+    // Effect Size
     // =========================================================================
 
     /**
-     * @brief 计算Cohen's d
+     * @brief Calculate Cohen's d
      *
-     * 衡量两个样本之间的差异大小
+     * Measure the magnitude of difference between two samples
      *
-     * @param sample1 样本1
-     * @param sample2 样本2
-     * @return Cohen's d值
+     * @param sample1 Sample 1
+     * @param sample2 Sample 2
+     * @return Cohen's d value
      */
     template<typename T>
     static double cohensD(const std::vector<T>& sample1, const std::vector<T>& sample2);
 
     /**
-     * @brief 计算 Cliff's delta
+     * @brief Calculate Cliff's delta
      *
-     * 非参数效果量
+     * Non-parametric effect size
      *
-     * @param sample1 样本1
-     * @param sample2 样本2
-     * @return Cliff's delta值
+     * @param sample1 Sample 1
+     * @param sample2 Sample 2
+     * @return Cliff's delta value
      */
     template<typename T>
     static double cliffsDelta(const std::vector<T>& sample1, const std::vector<T>& sample2);
 
     // =========================================================================
-    // 实用工具
+    // Utility Functions
     // =========================================================================
 
     /**
-     * @brief 计算样本量
+     * @brief Calculate sample size
      *
-     * 达到指定置信区间宽度所需的样本量
+     * Sample size required to achieve specified confidence interval width
      *
-     * @param std_dev 估计的标准差
-     * @param margin 期望的边际误差
-     * @param confidence 置信度
-     * @return 所需样本量
+     * @param std_dev Estimated standard deviation
+     * @param margin Desired margin of error
+     * @param confidence Confidence level
+     * @return Required sample size
      */
     static int requiredSampleSize(double std_dev, double margin, double confidence = 0.95);
 
     /**
-     * @brief 正态分布CDF
+     * @brief Normal distribution CDF
      *
-     * @param x 值
-     * @return CDF值
+     * @param x Value
+     * @return CDF value
      */
     static double normalCDF(double x);
 
     /**
-     * @brief t分布CDF近似
+     * @brief t-distribution CDF approximation
      *
-     * @param x 值
-     * @param df 自由度
-     * @return CDF值
+     * @param x Value
+     * @param df Degrees of freedom
+     * @return CDF value
      */
     static double tCDF(double x, int df);
 
     /**
-     * @brief 生成正态分布随机数
+     * @brief Generate normally distributed random number
      *
-     * @param mean 均值
-     * @param std_dev 标准差
-     * @param seed 随机种子
-     * @return 随机数
+     * @param mean Mean
+     * @param std_dev Standard deviation
+     * @param seed Random seed
+     * @return Random number
      */
     static double normalRandom(double mean, double std_dev, uint64_t seed = 0);
 
     /**
-     * @brief 格式化统计摘要
+     * @brief Format statistical summary
      *
-     * @param data 数据向量
-     * @return 格式化的统计摘要字符串
+     * @param data Data vector
+     * @return Formatted statistical summary string
      */
     template<typename T>
     static std::string summary(const std::vector<T>& data);
 
 private:
     /**
-     * @brief 计算阶乘
+     * @brief Calculate factorial
      */
     static double factorial(int n);
 
     /**
-     * @brief 计算二项分布概率
+     * @brief Calculate binomial probability
      */
     static double binomialProbability(int k, int n, double p);
 };
@@ -351,7 +351,7 @@ std::pair<double, double> Statistics::confidenceInterval(const std::vector<T>& d
     double m = mean(data);
     double se = stddev(data) / std::sqrt(data.size());
 
-    // z值近似 (可以使用更精确的值)
+    // z-value approximation (can use more precise values)
     static const double z_values[] = {
         1.645,  // 90%
         1.960,  // 95%
@@ -406,18 +406,12 @@ std::pair<double, double> Statistics::independentSamplesTTest(
 
     double t = (m1 - m2) / se;
 
-    // Welch-Satterthwaite 自由度
+    // Welch-Satterthwaite degrees of freedom
     double num = std::pow(v1/n1 + v2/n2, 2);
     double denom = std::pow(v1/n1, 2) / (n1 - 1) + std::pow(v2/n2, 2) / (n2 - 1);
     int df = static_cast<int>(num / denom);
 
-    double p = 2.0 * (1.0 - tCDF(std::abs(t), df));
-
-    return {t, p};
-}
-
-template<typename T>
-double Statistics::cohensD(const std::vector<T>& sample1, const std::vector<T>& sample2) {
+    double p = 2.0 * (1.0 - tCDF(std::abs(t), df));  // Calculate p-value (two-tailed)
     if (sample1.empty() || sample2.empty()) return 0.0;
 
     double m1 = mean(sample1);
@@ -428,7 +422,7 @@ double Statistics::cohensD(const std::vector<T>& sample1, const std::vector<T>& 
     int n1 = static_cast<int>(sample1.size());
     int n2 = static_cast<int>(sample2.size());
 
-    // 合并标准差
+    // Pooled standard deviation
     double pooled_std = std::sqrt(((n1 - 1) * s1 + (n2 - 1) * s2) / (n1 + n2 - 2));
 
     if (pooled_std == 0) return 0.0;

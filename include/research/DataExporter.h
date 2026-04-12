@@ -15,12 +15,12 @@
 
 /**
  * @file DataExporter.h
- * @brief 实验数据导出模块
+ * @brief Experiment Data Export Module
  *
- * 支持将实验数据导出为多种格式:
- * - JSON (机器可读)
- * - CSV (表格数据)
- * - Markdown (文档格式)
+ * Supports exporting experiment data in multiple formats:
+ * - JSON (machine readable)
+ * - CSV (tabular data)
+ * - Markdown (document format)
  *
  * @author AI Assistant
  * @date 2026
@@ -30,47 +30,47 @@
 namespace Reversi {
 
 /**
- * @brief 实验数据导出器
+ * @brief Experiment data exporter
  *
- * 提供统一的接口导出各种实验数据
+ * Provides unified interface for exporting various experiment data
  */
 class DataExporter {
 public:
     /**
-     * @brief 导出配置
+     * @brief Export configuration
      */
     struct ExportConfig {
-        std::string output_dir = "benchmark_results";  ///< 输出目录
-        std::string experiment_name = "experiment";      ///< 实验名称
-        bool include_timestamp = true;                   ///< 包含时间戳
-        bool pretty_print = true;                       ///< 格式化输出
+        std::string output_dir = "benchmark_results";  ///< Output directory
+        std::string experiment_name = "experiment";      ///< Experiment name
+        bool include_timestamp = true;                   ///< Include timestamp
+        bool pretty_print = true;                       ///< Formatted output
     };
 
     /**
-     * @brief 构造函数
+     * @brief Constructor
      */
     DataExporter();
 
     /**
-     * @brief 设置导出配置
+     * @brief Set export configuration
      */
     void setConfig(const ExportConfig& config);
 
     /**
-     * @brief 获取导出配置
+     * @brief Get export configuration
      */
     const ExportConfig& getConfig() const;
 
     // =========================================================================
-    // Bitboard基准测试导出
+    // Bitboard Benchmark Export
     // =========================================================================
 
     /**
-     * @brief 导出Bitboard基准测试结果
+     * @brief Export bitboard benchmark results
      *
-     * @param results 基准测试结果
-     * @param filename 文件名 (不含扩展名)
-     * @return 是否成功
+     * @param results Benchmark results
+     * @param filename Filename (without extension)
+     * @return Whether successful
      */
     bool exportBitboardResults(
         const std::vector<BenchmarkResult>& results,
@@ -78,7 +78,7 @@ public:
     );
 
     /**
-     * @brief 导出Bitboard结果为JSON
+     * @brief Export bitboard results as JSON
      */
     bool exportBitboardToJson(
         const std::vector<BenchmarkResult>& results,
@@ -86,7 +86,7 @@ public:
     );
 
     /**
-     * @brief 导出Bitboard结果为CSV
+     * @brief Export bitboard results as CSV
      */
     bool exportBitboardToCsv(
         const std::vector<BenchmarkResult>& results,
@@ -94,7 +94,7 @@ public:
     );
 
     /**
-     * @brief 导出Bitboard结果为Markdown
+     * @brief Export bitboard results as Markdown
      */
     bool exportBitboardToMarkdown(
         const std::vector<BenchmarkResult>& results,
@@ -102,11 +102,11 @@ public:
     );
 
     // =========================================================================
-    // AI基准测试导出
+    // AI Benchmark Export
     // =========================================================================
 
     /**
-     * @brief 导出AI基准测试结果
+     * @brief Export AI benchmark results
      */
     bool exportAIResults(
         const std::vector<AISearchBenchmarkResult>& results,
@@ -114,7 +114,7 @@ public:
     );
 
     /**
-     * @brief 导出AI结果为JSON
+     * @brief Export AI results as JSON
      */
     bool exportAIToJson(
         const std::vector<AISearchBenchmarkResult>& results,
@@ -122,7 +122,7 @@ public:
     );
 
     /**
-     * @brief 导出AI结果为CSV
+     * @brief Export AI results as CSV
      */
     bool exportAIToCsv(
         const std::vector<AISearchBenchmarkResult>& results,
@@ -130,7 +130,7 @@ public:
     );
 
     /**
-     * @brief 导出AI结果为Markdown
+     * @brief Export AI results as Markdown
      */
     bool exportAIToMarkdown(
         const std::vector<AISearchBenchmarkResult>& results,
@@ -138,11 +138,11 @@ public:
     );
 
     // =========================================================================
-    // 对战结果导出
+    // Battle Result Export
     // =========================================================================
 
     /**
-     * @brief 导出对战结果
+     * @brief Export battle results
      */
     bool exportBattleResults(
         const BattleStats& stats,
@@ -150,7 +150,7 @@ public:
     );
 
     /**
-     * @brief 导出战报为JSON
+     * @brief Export battle report as JSON
      */
     bool exportBattleToJson(
         const BattleStats& stats,
@@ -158,7 +158,7 @@ public:
     );
 
     /**
-     * @brief 导出战报为CSV
+     * @brief Export battle report as CSV
      */
     bool exportBattleToCsv(
         const BattleStats& stats,
@@ -166,7 +166,7 @@ public:
     );
 
     /**
-     * @brief 导出战报为Markdown
+     * @brief Export battle report as Markdown
      */
     bool exportBattleToMarkdown(
         const BattleStats& stats,
@@ -174,18 +174,18 @@ public:
     );
 
     // =========================================================================
-    // 综合报告导出
+    // Comprehensive Report Export
     // =========================================================================
 
     /**
-     * @brief 导出完整实验报告
+     * @brief Export complete experiment report
      *
-     * 包含所有测试结果的综合报告
+     * Contains comprehensive report of all test results
      *
-     * @param bitboard_results Bitboard结果
-     * @param ai_results AI结果
-     * @param battle_results 对战结果
-     * @param filename 文件名
+     * @param bitboard_results Bitboard results
+     * @param ai_results AI results
+     * @param battle_results Battle results
+     * @param filename Filename
      */
     bool exportFullReport(
         const std::vector<BenchmarkResult>& bitboard_results,
@@ -195,7 +195,7 @@ public:
     );
 
     /**
-     * @brief 生成实验报告JSON
+     * @brief Generate experiment report JSON
      */
     std::string generateExperimentJson(
         const std::vector<BenchmarkResult>& bitboard_results,
@@ -204,7 +204,7 @@ public:
     );
 
     /**
-     * @brief 生成实验报告Markdown
+     * @brief Generate experiment report Markdown
      */
     std::string generateExperimentMarkdown(
         const std::vector<BenchmarkResult>& bitboard_results,
@@ -213,16 +213,16 @@ public:
     );
 
     // =========================================================================
-    // 工具函数
+    // Utility Functions
     // =========================================================================
 
     /**
-     * @brief 获取当前时间戳字符串
+     * @brief Get current timestamp string
      */
     static std::string getTimestamp();
 
     /**
-     * @brief 创建带时间戳的文件名
+     * @brief Create filename with timestamp
      */
     static std::string createTimestampedFilename(
         const std::string& base,
@@ -230,19 +230,19 @@ public:
     );
 
     /**
-     * @brief 确保目录存在
+     * @brief Ensure directory exists
      */
     static bool ensureDirectory(const std::string& path);
 
     /**
-     * @brief 格式化表格数据为CSV字符串
+     * @brief Format table data as CSV string
      */
     static std::string formatTableAsCsv(
         const std::vector<std::vector<std::string>>& rows
     );
 
     /**
-     * @brief 获取系统信息
+     * @brief Get system information
      */
     static std::map<std::string, std::string> getSystemInfo();
 
@@ -250,12 +250,12 @@ private:
     ExportConfig config_;
 
     /**
-     * @brief 生成文件路径
+     * @brief Generate file path
      */
     std::string makePath(const std::string& filename, const std::string& extension);
 
     /**
-     * @brief 写入文件
+     * @brief Write file
      */
     bool writeFile(const std::string& path, const std::string& content);
 };

@@ -1,7 +1,0 @@
--DWIN32
---compiler-flavor=msvc
--o
-D:/Project/Reversi/ReversiAI_Platform/build_test/network/include/network/moc_gamesynchronizer.cpp
-D:/Project/Reversi/ReversiAI_Platform/network/include/network/gamesynchronizer.hpp
--DWIN32
---compiler-flavor=msvc

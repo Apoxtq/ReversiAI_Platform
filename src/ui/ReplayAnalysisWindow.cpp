@@ -1,6 +1,6 @@
 /**
  * @file ReplayAnalysisWindow.cpp
- * @brief 复盘分析窗口实现 - v0.9.0可视化增强版
+ * @brief Replay analysis window implementation - v0.9.0 visualization enhancement
  */
 
 #include "ui/ReplayAnalysisWindow.h"
@@ -46,43 +46,43 @@ ReplayAnalysisWindow::ReplayAnalysisWindow(QWidget* parent)
 ReplayAnalysisWindow::~ReplayAnalysisWindow() = default;
 
 void ReplayAnalysisWindow::setupUI() {
-    // 中心部件
+    // Central widget
     centralWidget_ = new QWidget(this);
     setCentralWidget(centralWidget_);
 
-    // 主布局
+    // Main layout
     mainLayout_ = new QVBoxLayout(centralWidget_);
     mainLayout_->setContentsMargins(10, 10, 10, 10);
     mainLayout_->setSpacing(10);
 
-    // 棋盘显示
+    // Board display
     boardLabel_ = new QLabel(this);
     boardLabel_->setAlignment(Qt::AlignCenter);
     boardLabel_->setMinimumSize(400, 400);
     boardLabel_->setStyleSheet("background-color: #769656; border: 2px solid #333;");
     mainLayout_->addWidget(boardLabel_, 1);
 
-    // 播放控制区域
+    // Playback control area
     controlGroup_ = new QGroupBox(tr("Playback Control"), this);
     controlLayout_ = new QHBoxLayout();
 
-    // 滑块
+    // Slider
     moveSlider_ = new QSlider(Qt::Horizontal, this);
     moveSlider_->setRange(0, 0);
     moveSlider_->setTickPosition(QSlider::TicksBelow);
     moveSlider_->setTickInterval(1);
     controlLayout_->addWidget(moveSlider_);
 
-    // 步数显示
+    // Step display
     moveIndexLabel_ = new QLabel("0/0", this);
     moveIndexLabel_->setMinimumWidth(60);
     moveIndexLabel_->setAlignment(Qt::AlignCenter);
     controlLayout_->addWidget(moveIndexLabel_);
 
-    // 分隔
+    // Spacer
     controlLayout_->addSpacing(10);
 
-    // 播放控制按钮
+    // Playback control buttons
     stepBackwardButton_ = new QPushButton("<<", this);
     stepBackwardButton_->setFixedWidth(40);
     controlLayout_->addWidget(stepBackwardButton_);
@@ -99,24 +99,24 @@ void ReplayAnalysisWindow::setupUI() {
     stopButton_->setFixedWidth(60);
     controlLayout_->addWidget(stopButton_);
 
-    // 分隔
+    // Spacer
     controlLayout_->addSpacing(10);
 
-    // 速度选择
+    // Speed selection
     speedComboBox_ = new QComboBox(this);
     speedComboBox_->addItem("0.25x", 0.25);
     speedComboBox_->addItem("0.5x", 0.5);
     speedComboBox_->addItem("1x", 1.0);
     speedComboBox_->addItem("2x", 2.0);
     speedComboBox_->addItem("4x", 4.0);
-    speedComboBox_->setCurrentIndex(2); // 默认1x
+    speedComboBox_->setCurrentIndex(2); // Default: 1x
     controlLayout_->addWidget(new QLabel(tr("Speed:"), this));
     controlLayout_->addWidget(speedComboBox_);
 
     controlGroup_->setLayout(controlLayout_);
     mainLayout_->addWidget(controlGroup_);
 
-    // 信息显示
+    // Information display
     playerInfoLabel_ = new QLabel(this);
     playerInfoLabel_->setStyleSheet("padding: 5px; background-color: #333; color: #ccc;");
     mainLayout_->addWidget(playerInfoLabel_);
@@ -125,14 +125,14 @@ void ReplayAnalysisWindow::setupUI() {
     moveInfoLabel_->setStyleSheet("padding: 5px; background-color: #222; color: #aaa;");
     mainLayout_->addWidget(moveInfoLabel_);
 
-    // 设置按钮状态
+    // Set button states
     updateControlButtons();
 }
 
 void ReplayAnalysisWindow::setupMenu() {
     QMenuBar* menuBar = this->menuBar();
 
-    // 文件菜单
+    // File menu
     QMenu* fileMenu = menuBar->addMenu(tr("File"));
 
     QAction* openAction = new QAction(tr("Open..."), this);
@@ -168,7 +168,7 @@ void ReplayAnalysisWindow::setupToolbar() {
 }
 
 void ReplayAnalysisWindow::setupConnections() {
-    // 播放控制
+    // Playback control
     connect(playPauseButton_, &QPushButton::clicked, this, &ReplayAnalysisWindow::onPlayPauseClicked);
     connect(stopButton_, &QPushButton::clicked, this, &ReplayAnalysisWindow::onStopClicked);
     connect(stepBackwardButton_, &QPushButton::clicked, this, &ReplayAnalysisWindow::onStepBackwardClicked);
@@ -176,7 +176,7 @@ void ReplayAnalysisWindow::setupConnections() {
     connect(moveSlider_, &QSlider::valueChanged, this, &ReplayAnalysisWindow::onSliderValueChanged);
     connect(speedComboBox_, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ReplayAnalysisWindow::onPlaybackSpeedChanged);
 
-    // 设置回放回调
+    // Set playback callbacks
     replay_.setBoardUpdateCallback([this](Board* board) {
         onBoardUpdated(board);
     });
@@ -190,7 +190,7 @@ void ReplayAnalysisWindow::setupConnections() {
         updateControlButtons();
     });
 
-    // 连接定时器
+    // Connect timer
     playbackTimer_ = new QTimer(this);
     connect(playbackTimer_, &QTimer::timeout, this, &ReplayAnalysisWindow::onTimerTimeout);
 }
@@ -270,14 +270,14 @@ void ReplayAnalysisWindow::loadRecord(const GameRecord& record) {
     currentRecord_ = record;
     isLoaded_ = true;
 
-    // 加载到回放控制器
+    // Load to replay controller
     replay_.loadRecord(record);
 
-    // 更新滑块范围
+    // Update slider range
     moveSlider_->setRange(0, record.moves.size() - 1);
     moveSlider_->setValue(0);
 
-    // 更新显示
+    // Update display
     updateDisplay();
     updateControlButtons();
 }
@@ -285,7 +285,7 @@ void ReplayAnalysisWindow::loadRecord(const GameRecord& record) {
 void ReplayAnalysisWindow::updateDisplay() {
     if (!isLoaded_) return;
 
-    // 更新玩家信息
+    // Update player info
     QString info = QString("%1 (%2) vs %3 (%4)")
                       .arg(currentRecord_.player1Name)
                       .arg(currentRecord_.player1Type)
@@ -397,8 +397,8 @@ void ReplayAnalysisWindow::onPlayPauseClicked() {
         playbackTimer_->stop();
     } else {
         replay_.play();
-        // 获取播放间隔并启动定时器
-        // 这里简化处理，直接使用固定间隔
+        // Get playback interval and start timer
+        // Simplified: use fixed interval
         playbackTimer_->start(1000);
     }
 }
@@ -430,15 +430,15 @@ void ReplayAnalysisWindow::onBackClicked() {
 
 void ReplayAnalysisWindow::onBoardUpdated(Board* board) {
     Q_UNUSED(board);
-    // 这里可以添加绘制棋盘的代码
-    // 为简化实现，暂时只更新统计信息
+    // Board drawing code can be added here
+    // Simplified implementation: only update statistics for now
 }
 
 void ReplayAnalysisWindow::onMoveChanged(int moveIndex, const MoveRecord& move) {
-    // 更新步数显示
+    // Update step display
     moveIndexLabel_->setText(QString("%1/%2").arg(moveIndex + 1).arg(currentRecord_.moves.size()));
 
-    // 更新走法信息
+    // Update move info
     QString moveInfo = QString("Move %1: %2 - %3 (Black: %4, White: %5)")
                            .arg(moveIndex + 1)
                            .arg(move.toCoordinateString())
@@ -447,7 +447,7 @@ void ReplayAnalysisWindow::onMoveChanged(int moveIndex, const MoveRecord& move) 
                            .arg(move.discCountWhite);
     moveInfoLabel_->setText(moveInfo);
 
-    // 更新滑块
+    // Update slider
     moveSlider_->blockSignals(true);
     moveSlider_->setValue(moveIndex);
     moveSlider_->blockSignals(false);

@@ -1,8 +1,8 @@
 /**
  * @file SearchStats.h
- * @brief 搜索统计数据结构 - v0.9.0可视化增强版
+ * @brief Search Statistics Data Structure - v0.9.0 Visualization Enhanced
  *
- * 用于在AI搜索过程中收集统计信息，供UI可视化使用
+ * Used to collect statistics during AI search for UI visualization
  */
 
 #pragma once
@@ -16,57 +16,57 @@
 namespace Reversi {
 
 /**
- * @brief 搜索树节点信息
+ * @brief Search tree node info
  */
 struct SearchTreeNodeInfo {
-    int move;                    // 走法 (0-63)
-    int depth;                   // 深度
-    int value;                   // 评估值
-    int nodeCount;               // 子节点数
-    bool isPV;                   // 是否为PV (Principal Variation) 路线
-    int64_t nodesSearched;       // 搜索的节点数
-    std::vector<int> childMoves; // 子节点走法列表
+    int move;                    // Move (0-63)
+    int depth;                   // Depth
+    int value;                   // Evaluation value
+    int nodeCount;               // Number of child nodes
+    bool isPV;                   // Whether PV (Principal Variation) line
+    int64_t nodesSearched;       // Number of searched nodes
+    std::vector<int> childMoves; // Child move list
 
     SearchTreeNodeInfo() : move(-1), depth(0), value(0), nodeCount(0),
                           isPV(false), nodesSearched(0) {}
 };
 
 /**
- * @brief 实时搜索统计数据
+ * @brief Real-time search statistics
  */
 struct SearchStats {
-    // 基础统计
-    int currentDepth = 0;                    // 当前搜索深度
-    int maxDepth = 0;                        // 最大深度
-    int64_t nodesExplored = 0;              // 已搜索节点数
-    int64_t nodesPerSecond = 0;              // 每秒搜索节点数
-    double timeElapsed = 0.0;                // 已用时间(秒)
+    // Basic statistics
+    int currentDepth = 0;                    // Current search depth
+    int maxDepth = 0;                        // Maximum depth
+    int64_t nodesExplored = 0;              // Explored nodes
+    int64_t nodesPerSecond = 0;            // Nodes per second
+    double timeElapsed = 0.0;                // Elapsed time (seconds)
 
-    // 剪枝和转置表统计
-    int cutoffs = 0;                         // 剪枝次数
-    double ttHitRate = 0.0;                 // 转置表命中率
-    double killerHitRate = 0.0;             // Killer走法命中率
-    double historyHitRate = 0.0;            // History启发命中率
-    int64_t ttEntries = 0;                  // 转置表条目数
+    // Pruning and transposition table statistics
+    int cutoffs = 0;                         // Number of cutoffs
+    double ttHitRate = 0.0;                 // Transposition table hit rate
+    double killerHitRate = 0.0;             // Killer move hit rate
+    double historyHitRate = 0.0;            // History heuristic hit rate
+    int64_t ttEntries = 0;                  // Transposition table entries
 
-    // 搜索树信息
-    std::vector<SearchTreeNodeInfo> pvLine; // PV路线 (主要变化)
-    int totalTreeNodes = 0;                 // 搜索树总节点数
+    // Search tree info
+    std::vector<SearchTreeNodeInfo> pvLine; // PV line (Principal Variation)
+    int totalTreeNodes = 0;                 // Total tree nodes
 
-    // MCTS特定统计 (仅MCTS使用)
-    int64_t simulations = 0;                // 模拟次数
-    double winRate = 0.0;                   // 胜率估计
+    // MCTS specific statistics (only used by MCTS)
+    int64_t simulations = 0;                // Number of simulations
+    double winRate = 0.0;                   // Win rate estimate
 
-    // 最佳走法信息
-    int bestMove = -1;                      // 当前最佳走法
-    int bestValue = 0;                      // 最佳走法评估值
+    // Best move info
+    int bestMove = -1;                      // Current best move
+    int bestValue = 0;                      // Best move evaluation value
 
-    // 搜索状态
-    bool isSearching = false;               // 是否正在搜索
-    bool isComplete = false;                // 搜索是否完成
+    // Search state
+    bool isSearching = false;               // Whether searching
+    bool isComplete = false;                // Whether search complete
 
     /**
-     * @brief 重置所有统计
+     * @brief Reset all statistics
      */
     void reset() {
         currentDepth = 0;
@@ -90,7 +90,7 @@ struct SearchStats {
     }
 
     /**
-     * @brief 获取NPS (Nodes Per Second) 格式化字符串
+     * @brief Get NPS (Nodes Per Second) formatted string
      */
     std::string getNPSString() const {
         if (nodesPerSecond >= 1000000) {
@@ -102,7 +102,7 @@ struct SearchStats {
     }
 
     /**
-     * @brief 获取时间格式化字符串
+     * @brief Get time formatted string
      */
     std::string getTimeString() const {
         int minutes = static_cast<int>(timeElapsed) / 60;
@@ -119,22 +119,22 @@ struct SearchStats {
 };
 
 /**
- * @brief 热度图数据类型
+ * @brief Heatmap data type
  */
 enum class HeatmapType {
-    PositionValue,     // 静态位置价值
-    VisitCount,        // 访问次数 (MCTS)
-    WinRate,           // 胜率
-    ActionValue        // 动作评估值
+    PositionValue,     // Static position value
+    VisitCount,        // Visit count (MCTS)
+    WinRate,           // Win rate
+    ActionValue        // Action evaluation value
 };
 
 /**
- * @brief 热度图数据
+ * @brief Heatmap data
  */
 struct HeatmapData {
-    std::vector<double> values;  // 64个格子的值 (0.0 - 1.0)
-    HeatmapType type;            // 数据类型
-    bool isValid = false;        // 数据是否有效
+    std::vector<double> values;  // Values for 64 cells (0.0 - 1.0)
+    HeatmapType type;            // Data type
+    bool isValid = false;        // Whether data is valid
 
     HeatmapData() : type(HeatmapType::PositionValue), isValid(false) {
         values.resize(64, 0.0);

@@ -1,12 +1,12 @@
 /**
  * @file PvPWindow.h
- * @brief 双人对战窗口
+ * @brief Two-player Battle Window
  *
- * 功能:
- * - 双人同机对战
- * - 轮流执黑/白棋
- * - 悔棋功能
- * - 返回菜单功能
+ * Features:
+ * - Two-player on same machine
+ * - Take turns playing black/white
+ * - Undo function
+ * - Return to menu function
  */
 
 #ifndef PVPWINDOW_H
@@ -35,7 +35,7 @@ public:
     ~PvPWindow() override;
 
 signals:
-    void backToMenu();  // 返回菜单
+    void backToMenu();  // Return to menu
 
 protected:
     void paintEvent(QPaintEvent* event) override;

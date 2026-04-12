@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="rsc.qrc">
-    <normaloff>:/images/black.png</normaloff>:/images/black.png</iconset>
+    <normaloff>:/rsc/black.png</normaloff>:/rsc/black.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -98,7 +98,7 @@
        <set>Qt::AlignCenter</set>
       </property>
     <property name="text">
-     <string>选择游戏模式</string>
+     <string>Select Game Mode</string>
     </property>
    </widget>
     </item>
@@ -149,7 +149,7 @@
        </font>
       </property>
       <property name="text">
-       <string>人机对战 (PvE)</string>
+       <string>Human vs AI (PvE)</string>
       </property>
       <property name="iconSize">
        <size>
@@ -175,7 +175,7 @@
        </font>
       </property>
       <property name="text">
-       <string>本地双人 (PvP)</string>
+       <string>Local Two-Player (PvP)</string>
       </property>
       <property name="iconSize">
        <size>
@@ -201,7 +201,7 @@
        </font>
       </property>
       <property name="text">
-       <string>AI vs AI 对战</string>
+       <string>AI vs AI Battle</string>
       </property>
       <property name="iconSize">
        <size>
@@ -241,7 +241,7 @@ QPushButton:pressed {
        </font>
       </property>
       <property name="text">
-       <string>网络对战 (PvN)</string>
+       <string>Network Battle (PvN)</string>
       </property>
       <property name="iconSize">
        <size>

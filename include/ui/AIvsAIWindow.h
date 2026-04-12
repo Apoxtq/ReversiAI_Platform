@@ -189,17 +189,17 @@ private:
      */
     void setControlsEnabled(bool enabled);
 
-    // UI组件
+    // UI Components
     QWidget* centralWidget_;
     QVBoxLayout* mainLayout_;
 
-    // 对战配置区域
+    // Battle Configuration Area
     QGroupBox* configGroup_;
     QGridLayout* configLayout_;
-    QComboBox* ai1TypeCombo_;   // AI1算法类型选择
-    QComboBox* ai2TypeCombo_;   // AI2算法类型选择
-    QComboBox* ai1Combo_;       // AI1难度选择
-    QComboBox* ai2Combo_;       // AI2难度选择
+    QComboBox* ai1TypeCombo_;   // AI1 algorithm type selection
+    QComboBox* ai2TypeCombo_;   // AI2 algorithm type selection
+    QComboBox* ai1Combo_;       // AI1 difficulty selection
+    QComboBox* ai2Combo_;       // AI2 difficulty selection
     QSpinBox* gamesSpinBox_;
     QComboBox* depth1Combo_;
     QComboBox* depth2Combo_;

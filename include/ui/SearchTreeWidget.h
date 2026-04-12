@@ -1,9 +1,8 @@
 /**
- * @file SearchTreeWidget.h
- * @brief 搜索树可视化组件 - v0.9.0可视化增强版
+ * @brief Search tree visualization component - v0.9.0 Visualization Enhanced
  *
- * 显示AI搜索树的深度、节点数、分支情况
- * 注意：这是一个简化版本，完整版需要更复杂的绘制逻辑
+ * Displays AI search tree depth, node count, branch information
+ * Note: This is a simplified version, full version requires more complex drawing logic
  */
 
 #pragma once
@@ -19,71 +18,71 @@ namespace Reversi {
 
 /**
  * @class SearchTreeWidget
- * @brief 搜索树可视化部件
+ * @brief Search tree visualization widget
  *
- * 显示搜索树的图形化表示
+ * Displays graphical representation of search tree
  */
 class SearchTreeWidget : public QWidget {
     Q_OBJECT
 
 public:
     /**
-     * @brief 构造函数
-     * @param parent 父窗口指针
+     * @brief Constructor
+     * @param parent Parent window pointer
      */
     explicit SearchTreeWidget(QWidget* parent = nullptr);
 
     /**
-     * @brief 更新搜索树数据
-     * @param stats 搜索统计信息
+     * @brief Update search tree data
+     * @param stats Search statistics
      */
     void updateSearchTree(const SearchStats& stats);
 
     /**
-     * @brief 清空显示
+     * @brief Clear display
      */
     void clear();
 
     /**
-     * @brief 设置显示的最大深度
-     * @param depth 最大深度
+     * @brief Set maximum display depth
+     * @param depth Maximum depth
      */
     void setMaxDisplayDepth(int depth) { maxDisplayDepth_ = depth; }
 
     /**
-     * @brief 设置是否自动滚动到最新
-     * @param autoScroll 自动滚动
+     * @brief Set auto-scroll to latest
+     * @param autoScroll Auto scroll
      */
     void setAutoScroll(bool autoScroll) { autoScroll_ = autoScroll; }
 
 signals:
     /**
-     * @brief 节点点击信号
-     * @param nodeIndex 节点索引
+     * @brief Node click signal
+     * @param nodeIndex Node index
      */
     void nodeClicked(int nodeIndex);
 
 protected:
     /**
-     * @brief 绘制事件
+     * @brief Paint event
      */
     void paintEvent(QPaintEvent* event) override;
 
     /**
-     * @brief 鼠标点击事件
+     * @brief Mouse press event
      */
     void mousePressEvent(QMouseEvent* event) override;
 
 private:
     /**
-     * @brief 绘制搜索树节点
+     * @brief Draw search tree nodes
      */
     void drawSearchTree(QPainter& painter);
 
-    SearchStats currentStats_;       // 当前搜索统计
-    int maxDisplayDepth_;            // 最大显示深度
-    bool autoScroll_;                // 自动滚动
-    bool hasData_;                  // 是否有数据
+    SearchStats currentStats_;       // Current search statistics
+    int maxDisplayDepth_;            // Maximum display depth
+    bool autoScroll_;                // Auto scroll
+    bool hasData_;                  // Has data
 };
 
 } // namespace Reversi

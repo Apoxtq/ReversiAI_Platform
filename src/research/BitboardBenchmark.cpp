@@ -10,7 +10,7 @@
 namespace Reversi {
 
 // ============================================================================
-// BenchmarkResult 实现
+// BenchmarkResult Implementation
 // ============================================================================
 
 std::string BenchmarkResult::toString() const {
@@ -24,7 +24,7 @@ std::string BenchmarkResult::toString() const {
 }
 
 // ============================================================================
-// BitboardBenchmark 实现
+// BitboardBenchmark Implementation
 // ============================================================================
 
 BitboardBenchmark::BitboardBenchmark() {
@@ -38,7 +38,7 @@ std::vector<BenchmarkResult> BitboardBenchmark::runAllBenchmarks() {
         std::cout << "=== Bitboard Benchmark Starting ===" << std::endl;
     }
 
-    // 预热
+    // Warmup
     if (config_.warmup) {
         std::cout << "Running warmup..." << std::endl;
         warmUp();
@@ -50,7 +50,7 @@ std::vector<BenchmarkResult> BitboardBenchmark::runAllBenchmarks() {
     int total_tests = 7;
     int current = 0;
 
-    // 1. 翻转性能测试
+    // 1. Flip Performance Test
     if (progress_callback_) progress_callback_(++current, total_tests, "Flip Performance");
     std::cout << "Running test 1: Flip Performance..." << std::endl;
     try {
@@ -61,28 +61,28 @@ std::vector<BenchmarkResult> BitboardBenchmark::runAllBenchmarks() {
         throw;
     }
 
-    // 2. 移动生成性能测试
+    // 2. Move Generation Performance Test
     if (progress_callback_) progress_callback_(++current, total_tests, "Move Generation");
     std::cout << "Running test 2: Move Generation..." << std::endl;
     results.push_back(measureMoveGenerationPerformance(config_.move_iterations));
 
-    // 3. 合法性检查性能测试
+    // 3. Legal Move Check Performance Test
     if (progress_callback_) progress_callback_(++current, total_tests, "Legal Move Check");
     results.push_back(measureLegalMovePerformance(config_.legal_iterations));
 
-    // 4. 棋盘复制性能测试
+    // 4. Board Copy Performance Test
     if (progress_callback_) progress_callback_(++current, total_tests, "Board Copy");
     results.push_back(measureBoardCopyPerformance(config_.copy_iterations));
 
-    // 5. 评估函数性能测试
+    // 5. Evaluation Function Performance Test
     if (progress_callback_) progress_callback_(++current, total_tests, "Evaluation");
     results.push_back(measureEvaluationPerformance(config_.move_iterations));
 
-    // 6. Zobrist哈希性能测试
+    // 6. Zobrist Hash Performance Test
     if (progress_callback_) progress_callback_(++current, total_tests, "Zobrist Hash");
     results.push_back(measureZobristHashPerformance(config_.move_iterations));
 
-    // 7. 搜索性能测试
+    // 7. Search Performance Test
     if (progress_callback_) progress_callback_(++current, total_tests, "Search Performance");
     results.push_back(measureSearchPerformance(100000));
 
@@ -98,23 +98,23 @@ BenchmarkResult BitboardBenchmark::measureFlipPerformance(int iterations) {
     result.name = "Flip Performance";
     result.iterations = iterations;
 
-    // 标准开局: 黑棋在 D4(27), E5(36); 白棋在 E4(35), D5(28)
-    // 初始局面 (黑先) - 注意：player=黑棋, opponent=白棋
-    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // 黑棋位置
-    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // 白棋位置
+    // Standard opening: Black at D4(27), E5(36); White at E4(35), D5(28)
+    // Initial position (Black moves first) - Note: player=Black, opponent=White
+    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // Black positions
+    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // White positions
     BitBoard board(player_bits, opponent_bits);
 
-    // 测试移动: D3 = (2, 3) = row 2, col 3
+    // Test move: D3 = (2, 3) = row 2, col 3
     int row = 2;
     int col = 3;
 
-    // 预热
+    // Warmup
     for (int i = 0; i < 1000; ++i) {
         BitBoard temp(player_bits, opponent_bits);
         temp.makeMove(row, col, PlayerColor::Black);
     }
 
-    // 正式测试
+    // Actual test
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < iterations; ++i) {
         BitBoard temp(player_bits, opponent_bits);
@@ -139,12 +139,12 @@ BenchmarkResult BitboardBenchmark::measureMoveGenerationPerformance(int iteratio
     result.name = "Move Generation";
     result.iterations = iterations;
 
-    // 使用多个测试位置
+    // Use multiple test positions
     std::cout << "  Getting test positions..." << std::endl;
     auto test_positions = getTestPositions();
     std::cout << "  Got " << test_positions.size() << " test positions" << std::endl;
 
-    // 预热
+    // Warmup
     std::cout << "  Warming up move generation..." << std::endl;
     for (size_t idx = 0; idx < test_positions.size(); ++idx) {
         const auto& board = test_positions[idx];
@@ -154,7 +154,7 @@ BenchmarkResult BitboardBenchmark::measureMoveGenerationPerformance(int iteratio
     }
     std::cout << "  Warmup complete." << std::endl;
 
-    // 正式测试
+    // Actual test
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < iterations; ++i) {
         test_positions[i % test_positions.size()].getValidMoves(PlayerColor::Black);
@@ -178,26 +178,26 @@ BenchmarkResult BitboardBenchmark::measureLegalMovePerformance(int iterations) {
     result.name = "Legal Move Check";
     result.iterations = iterations;
 
-    // 标准开局
-    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // 黑棋位置
-    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // 白棋位置
+    // Standard opening
+    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // Black positions
+    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // White positions
     BitBoard board(player_bits, opponent_bits);
 
-    // 先获取有效移动位图
+    // Get valid move bitmap first
     uint64_t valid_moves = board.getValidMoves(PlayerColor::Black);
 
-    // 预热
+    // Warmup
     for (int i = 0; i < 1000; ++i) {
         for (int m = 0; m < 64; ++m) {
             if (valid_moves & (1ULL << m)) {
-                // 模拟检查
+                // Simulate check
                 volatile bool check = true;
                 (void)check;
             }
         }
     }
 
-    // 正式测试 - 检查所有64个位置
+    // Actual test - check all 64 positions
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < iterations; ++i) {
         for (int m = 0; m < 64; ++m) {
@@ -225,17 +225,17 @@ BenchmarkResult BitboardBenchmark::measureBoardCopyPerformance(int iterations) {
     result.name = "Board Copy";
     result.iterations = iterations;
 
-    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // 黑棋位置
-    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // 白棋位置
+    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // Black positions
+    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // White positions
     BitBoard board(player_bits, opponent_bits);
 
-    // 预热
+    // Warmup
     for (int i = 0; i < 1000; ++i) {
         BitBoard copy = board;
         (void)copy;
     }
 
-    // 正式测试
+    // Actual test
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < iterations; ++i) {
         BitBoard copy = board;
@@ -260,19 +260,19 @@ BenchmarkResult BitboardBenchmark::measureEvaluationPerformance(int iterations) 
     result.name = "Evaluation";
     result.iterations = iterations;
 
-    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // 黑棋位置
-    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // 白棋位置
+    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // Black positions
+    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // White positions
     BitBoard board(player_bits, opponent_bits);
 
-    // 创建评估器
+    // Create evaluator
     auto evaluator = EvaluatorFactory::createStaticEvaluator();
 
-    // 预热
+    // Warmup
     for (int i = 0; i < 1000; ++i) {
         evaluator->evaluate(board, PlayerColor::Black);
     }
 
-    // 正式测试
+    // Actual test
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < iterations; ++i) {
         evaluator->evaluate(board, PlayerColor::Black);
@@ -285,7 +285,7 @@ BenchmarkResult BitboardBenchmark::measureEvaluationPerformance(int iterations) 
     result.time_ms = time_ms;
     result.value = (iterations / time_ms) * 1000.0;  // M evals/sec
     result.unit = "M evals/sec";
-    result.passed = true;  // 没有特定目标
+    result.passed = true;  // No specific target
     result.message = "Evaluation test completed";
 
     return result;
@@ -296,18 +296,18 @@ BenchmarkResult BitboardBenchmark::measureZobristHashPerformance(int iterations)
     result.name = "Zobrist Hash";
     result.iterations = iterations;
 
-    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // 黑棋位置
-    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // 白棋位置
+    uint64_t player_bits = (1ULL << 28) | (1ULL << 35);     // Black positions
+    uint64_t opponent_bits = (1ULL << 27) | (1ULL << 36);   // White positions
 
-    // 初始化Zobrist哈希
+    // Initialize Zobrist hash
     ZobristHash::init();
 
-    // 预热
+    // Warmup
     for (int i = 0; i < 1000; ++i) {
         ZobristHash::computeHash(player_bits, opponent_bits);
     }
 
-    // 正式测试
+    // Actual test
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < iterations; ++i) {
         ZobristHash::computeHash(player_bits, opponent_bits);
@@ -320,7 +320,7 @@ BenchmarkResult BitboardBenchmark::measureZobristHashPerformance(int iterations)
     result.time_ms = time_ms;
     result.value = (iterations / time_ms) * 1000.0;  // M hashes/sec
     result.unit = "M hashes/sec";
-    result.passed = true;  // 没有特定目标
+    result.passed = true;  // No specific target
     result.message = "Hash test completed";
 
     return result;
@@ -331,13 +331,13 @@ BenchmarkResult BitboardBenchmark::measureSearchPerformance(int iterations) {
     result.name = "Search Performance";
     result.iterations = iterations;
 
-    // 测试完整搜索步骤
+    // Test complete search steps
     auto test_positions = getTestPositions();
 
-    // 创建评估器
+    // Create evaluator
     auto evaluator = EvaluatorFactory::createStaticEvaluator();
 
-    // 预热
+    // Warmup
     for (const auto& board : test_positions) {
         for (int i = 0; i < 100; ++i) {
             uint64_t moves = board.getValidMoves(PlayerColor::Black);
@@ -353,7 +353,7 @@ BenchmarkResult BitboardBenchmark::measureSearchPerformance(int iterations) {
         }
     }
 
-    // 正式测试
+    // Actual test
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < iterations; ++i) {
         const auto& board = test_positions[i % test_positions.size()];
@@ -376,7 +376,7 @@ BenchmarkResult BitboardBenchmark::measureSearchPerformance(int iterations) {
     result.time_ms = time_ms;
     result.value = (iterations / time_ms) * 1000.0;  // M searches/sec
     result.unit = "M searches/sec";
-    result.passed = true;  // 没有特定目标
+    result.passed = true;  // No specific target
     result.message = "Search test completed";
 
     return result;
@@ -397,36 +397,36 @@ void BitboardBenchmark::setProgressCallback(ProgressCallback callback) {
 std::vector<BitBoard> BitboardBenchmark::getTestPositions() {
     std::vector<BitBoard> positions;
 
-    // 1. 标准开局 - 注意：player=黑棋, opponent=白棋
-    uint64_t p1 = (1ULL << 28) | (1ULL << 35);   // 黑棋位置 (3,4),(4,3)
-    uint64_t o1 = (1ULL << 27) | (1ULL << 36);   // 白棋位置 (3,3),(4,4)
+    // 1. Standard opening - Note: player=Black, opponent=White
+    uint64_t p1 = (1ULL << 28) | (1ULL << 35);   // Black positions (3,4),(4,3)
+    uint64_t o1 = (1ULL << 27) | (1ULL << 36);   // White positions (3,3),(4,4)
     std::cout << "  Position 1: p1=0x" << std::hex << p1 << ", o1=0x" << o1 << std::dec << std::endl;
     positions.push_back(BitBoard(p1, o1));
 
-    // 2. 早期阶段 - 模拟几个走法后的局面
-    uint64_t p2 = p1 | (1ULL << 19);  // 黑棋 D6
-    uint64_t o2 = o1 | (1ULL << 26);  // 白棋 C5
+    // 2. Early stage - position after a few moves
+    uint64_t p2 = p1 | (1ULL << 19);  // Black D6
+    uint64_t o2 = o1 | (1ULL << 26);  // White C5
     std::cout << "  Position 2: p2=0x" << std::hex << p2 << ", o2=0x" << o2 << std::dec << std::endl;
     positions.push_back(BitBoard(p2, o2));
 
-    // 3. 中局 - 更多棋子
-    // 修复: o2 初始包含 bit 10，与 p3 中的 bit 10 冲突
-    // 重新分配: p3 新增 bit 11，o3 新增 bit 12 (均不与初始 bits {10,19,26,27,35} 冲突)
+    // 3. Mid-game - more pieces
+    // Fix: o2 initially contains bit 10, conflicts with bit 10 in p3
+    // Reallocated: p3 adds bit 11, o3 adds bit 12 (both don't conflict with initial bits {10,19,26,27,35})
     uint64_t p3 = p2 | (1ULL << 18) | (1ULL << 11);
     uint64_t o3 = o2 | (1ULL << 17) | (1ULL << 12);
     std::cout << "  Position 3: p3=0x" << std::hex << p3 << ", o3=0x" << o3 << ", overlap=" << ((p3 & o3) ? "YES" : "no") << std::dec << std::endl;
     positions.push_back(BitBoard(p3, o3));
 
-    // 4. 更多中局位置 - 使用已知不重叠的位图 (确保在64格范围内)
-    // p4: 位 40-47 (0x00FF000000), o4: 位 48-55 (0xFF00000000)
-    uint64_t p4 = 0x00FF000000ULL;  // 黑棋 (位40-47)
-    uint64_t o4 = 0xFF00000000ULL;  // 白棋 (位48-55)
-    // 验证没有重叠
+    // 4. More mid-game positions - use bitmaps known to not overlap (ensure within 64 squares)
+    // p4: bits 40-47 (0x00FF000000), o4: bits 48-55 (0xFF00000000)
+    uint64_t p4 = 0x00FF000000ULL;  // Black (bits 40-47)
+    uint64_t o4 = 0xFF00000000ULL;  // White (bits 48-55)
+    // Verify no overlap
     std::cout << "  Position 4: p4=0x" << std::hex << p4 << ", o4=0x" << o4 << ", overlap=" << ((p4 & o4) ? "YES" : "no") << std::dec << std::endl;
     assert((p4 & o4) == 0 && "Player and opponent bits must not overlap");
     positions.push_back(BitBoard(p4, o4));
 
-    // 5. 随机位置
+    // 5. Random positions
     std::mt19937_64 rng(42);
     uint64_t p5 = 0;
     uint64_t o5 = 0;
@@ -434,7 +434,7 @@ std::vector<BitBoard> BitboardBenchmark::getTestPositions() {
     for (int i = 0; i < 30; ++i) {
         uint64_t moves = board.getValidMoves(PlayerColor::Black);
         if (moves != 0) {
-            // 获取最低位的移动 (跨平台兼容)
+            // Get least significant bit move (cross-platform compatible)
 #ifdef _MSC_VER
             unsigned long move_index;
             _BitScanForward64(&move_index, moves);
@@ -517,14 +517,14 @@ void BitboardBenchmark::warmUp() {
         std::cout << "Warming up..." << std::endl;
     }
 
-    // CPU预热
+    // CPU warmup
     volatile double sum = 0.0;
     for (int i = 0; i < 100000; ++i) {
         sum += i * 0.1;
     }
     (void)sum;
 
-    // 内存预热 - 使用 resetToStandardOpening() 创建合法棋盘
+    // Memory warmup - use resetToStandardOpening() to create a valid board
     BitBoard board;
     board.resetToStandardOpening();
     

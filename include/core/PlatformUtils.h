@@ -2,9 +2,9 @@
 
 /**
  * @file PlatformUtils.h
- * @brief 跨平台工具函数和宏
+ * @brief Cross-platform utility functions and macros
  *
- * 提供在不同编译器（MSVC, GCC, Clang）之间可移植的工具函数
+ * Provides portable utility functions across different compilers (MSVC, GCC, Clang)
  */
 
 #include <cstdint>
@@ -16,12 +16,12 @@
 namespace PlatformUtils {
 
 /**
- * @brief 跨平台人口计数 (Population Count)
+ * @brief Cross-platform population count (Popcount)
  *
- * 计算64位整数中设置为1的位数
+ * Counts the number of bits set to 1 in a 64-bit integer
  *
- * @param x 要计数的64位整数
- * @return 设置为1的位数
+ * @param x 64-bit integer to count
+ * @return Number of bits set to 1
  */
 #if defined(_MSC_VER)
     inline int popcount64(uint64_t x) {
@@ -34,13 +34,13 @@ namespace PlatformUtils {
 #endif
 
 /**
- * @brief 跨平台计算尾随零 (Count Trailing Zeros)
+ * @brief Cross-platform count trailing zeros (CTZ)
  *
- * 计算从最低位开始连续0的个数
+ * Counts the number of consecutive zeros starting from the least significant bit
  *
- * @param x 要计算的64位整数
- * @return 尾随零的个数
- * @note 如果 x 为0，则行为未定义
+ * @param x 64-bit integer to calculate
+ * @return Number of trailing zeros
+ * @note If x is 0, behavior is undefined
  */
 #if defined(_MSC_VER)
     inline int ctz64(uint64_t x) {
@@ -55,10 +55,10 @@ namespace PlatformUtils {
 #endif
 
 /**
- * @brief 跨平台人口计数 (32位版本)
+ * @brief Cross-platform population count (32-bit version)
  *
- * @param x 要计数的32位整数
- * @return 设置为1的位数
+ * @param x 32-bit integer to count
+ * @return Number of bits set to 1
  */
 #if defined(_MSC_VER)
     inline int popcount32(uint32_t x) {
@@ -72,7 +72,7 @@ namespace PlatformUtils {
 
 } // namespace PlatformUtils
 
-// 便捷宏定义
+// Convenience macro definitions
 #if defined(_MSC_VER)
     #define POPCOUNT64(x) PlatformUtils::popcount64(x)
     #define CTZ64(x) PlatformUtils::ctz64(x)

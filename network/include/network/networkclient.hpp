@@ -213,6 +213,17 @@ signals:
      */
     void playerReadyReceived(const QString& playerName, const QString& sender, qint64 timestamp);
 
+    /**
+     * @brief Emitted when an undo request is received from opponent
+     */
+    void undoRequestReceived();
+
+    /**
+     * @brief Emitted when an undo response is received from opponent
+     * @param accepted true if opponent accepted the undo request
+     */
+    void undoResponseReceived(bool accepted);
+
     // State signals
     /**
      * @brief Emitted when connection state changes

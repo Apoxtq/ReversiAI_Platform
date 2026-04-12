@@ -69,9 +69,9 @@ void NetworkLobbyWindow::setupUI()
     
     // Room table
     roomTable_ = new QTableWidget(this);
-    roomTable_->setColumnCount(5);
+    roomTable_->setColumnCount(4);
     roomTable_->setHorizontalHeaderLabels(QStringList() 
-        << tr("Room Name") << tr("Host") << tr("Players") << tr("Time Limit") << tr("Status"));
+        << tr("Room Name") << tr("Host") << tr("Players") << tr("Status"));
     roomTable_->horizontalHeader()->setStretchLastSection(true);
     roomTable_->setSelectionBehavior(QAbstractItemView::SelectRows);
     roomTable_->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -104,16 +104,7 @@ void NetworkLobbyWindow::setupUI()
     playerNameEdit_->setPlaceholderText(tr("Enter your name"));
     playerNameEdit_->setText(localPlayerName_);
     formLayout->addRow(tr("Your Name:"), playerNameEdit_);
-    
-    timeLimitSpin_ = new QSpinBox(this);
-    timeLimitSpin_->setRange(0, 60);
-    timeLimitSpin_->setValue(0);
-    timeLimitSpin_->setSuffix(tr(" min (0 = unlimited)"));
-    formLayout->addRow(tr("Time Limit:"), timeLimitSpin_);
-    
-    rankedCheck_ = new QCheckBox(tr("Ranked Game"), this);
-    formLayout->addRow(tr("Game Type:"), rankedCheck_);
-    
+
     createButton_ = new QPushButton(tr("Create Room"), this);
     formLayout->addRow("", createButton_);
     
@@ -286,9 +277,8 @@ void NetworkLobbyWindow::onCreateRoomClicked()
     
     // Get room settings
     QJsonObject settings;
-    settings["timeLimit"] = timeLimitSpin_->value();
-    settings["isRanked"] = rankedCheck_->isChecked();
-    
+    settings["isRanked"] = false;
+
     // Create room
     Network::GameRoom room = roomManager_->createRoom(
         roomNameEdit_->text(),
@@ -389,15 +379,13 @@ void NetworkLobbyWindow::updateRoomTable()
         // Host name
         roomTable_->setItem(row, 1, new QTableWidgetItem(room.hostName));
         
-        // Players
-        QString playerCount = QString("%1/2").arg(room.players.size());
+        // Players (discovered rooms count host as player 1)
+        int displayCount = room.players.size();
+        if (room.roomId.startsWith("disc_")) {
+            displayCount += 1;  // Host is already in the room
+        }
+        QString playerCount = QString("%1/2").arg(displayCount);
         roomTable_->setItem(row, 2, new QTableWidgetItem(playerCount));
-        
-        // Time limit
-        QString timeLimit = room.timeLimit > 0 
-            ? QString("%1 min").arg(room.timeLimit)
-            : tr("Unlimited");
-        roomTable_->setItem(row, 3, new QTableWidgetItem(timeLimit));
         
         // Status
         QString status;
@@ -414,7 +402,7 @@ void NetworkLobbyWindow::updateRoomTable()
             default:
                 status = tr("Unknown");
         }
-        roomTable_->setItem(row, 4, new QTableWidgetItem(status));
+        roomTable_->setItem(row, 3, new QTableWidgetItem(status));
     }
     
     // Update status

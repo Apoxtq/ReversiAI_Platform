@@ -1,6 +1,6 @@
 # ReversiAI_Platform
 
-**Version**: v1.0.6
+**Version**: v1.0.7
 **Status**: Production Ready (Merit Target Achieved)
 **Project**: University of Liverpool COMP390 Honours Year Project
 
@@ -23,16 +23,7 @@
 
 ## 快速开始
 
-### 方法一：直接运行（推荐新手）
-
-使用已编译好的可运行版本：
-
-| 版本 | 路径 | 说明 |
-|------|------|------|
-| **Debug 版本** | `end_submite/Debug/ReversiAI_Platform.exe` | 包含调试信息，适合开发测试 |
-| **Release 版本** | `Release_Package/ReversiAI_Platform.exe` | 优化版本，适合发布使用 |
-
-### 方法二：从源码编译
+### 从源码编译
 
 详见 [编译指南](#编译指南) 部分。
 
@@ -71,7 +62,6 @@ D:\Project\Reversi\ReversiAI_Platform\
 ├── tests/                    # 测试代码
 ├── network/                  # 网络模块
 ├── docs/                     # 文档目录
-├── scripts/                  # 脚本工具
 └── 项目计划（文档放置）/       # 项目计划文档
 ```
 
@@ -180,54 +170,9 @@ windeployqt Debug\ReversiAI_Platform.exe
 
 ## 运行指南
 
-### 可运行版本
+### 编译说明
 
-#### Debug 版本 (end_submite/Debug)
-
-**路径**：`D:\Project\Reversi\ReversiAI_Platform\end_submite\Debug\ReversiAI_Platform.exe`
-
-**包含文件**：
-```
-Debug/
-├── ReversiAI_Platform.exe          # 主程序 (2.8 MB)
-├── Qt6Cored.dll                    # Qt 核心 (21 MB)
-├── Qt6Guid.dll                     # Qt GUI (27 MB)
-├── Qt6Widgetsd.dll                 # Qt Widgets (17 MB)
-├── Qt6Networkd.dll                 # Qt 网络 (5 MB)
-├── Qt6Svgd.dll                     # Qt SVG (2 MB)
-├── D3Dcompiler_47.dll              # Direct3D 着色器
-├── opengl32sw.dll                 # OpenGL 软件渲染 (20 MB)
-├── icuuc.dll                      # ICU Unicode
-├── generic/                       # 触摸插件
-│   └── qtuiotouchplugind.dll
-├── iconengines/                   # 图标引擎
-│   └── qsvgicond.dll
-├── imageformats/                  # 图片格式
-│   ├── qgifd.dll
-│   ├── qjpegd.dll
-│   ├── qpngd.dll
-│   ├── qsvgd.dll
-│   └── ... (更多格式)
-├── platforms/                     # ★ 平台插件 (必须！)
-│   └── qwindowsd.dll
-├── styles/                        # 样式
-│   └── qmodernwindowsstyled.dll
-└── tls/                          # TLS/SSL
-    ├── qcertonlybackendd.dll
-    └── qschannelbackendd.dll
-```
-
-**注意**：这个版本已包含所有必需的 DLL 和插件，可直接运行！
-
-#### Release 版本 (Release_Package)
-
-**路径**：`D:\Project\Reversi\ReversiAI_Platform\Release_Package\ReversiAI_Platform.exe`
-
-**特性**：
-- MinGW 编译
-- 优化版本
-- 包含 Qt 运行时
-- 适合发布
+请参考 [编译指南](#编译指南) 从源码编译项目。
 
 ### 运行时依赖
 
@@ -295,7 +240,6 @@ D:\Project\Reversi\ReversiAI_Platform\    # 项目根目录
 ├── build_test/                          # 测试构建
 ├── end_submite/                         # 提交的预编译版本
 │   └── Debug/                           # ★ 可运行的 Debug 版本
-├── Release_Package/                    # ★ 可运行的 Release 版本
 └── zhiqiandebanbenneirong/             # GitHub 下载的旧版本备份
     └── ReversiAI_Platform-main/         #   用于恢复参考
 ```
@@ -305,7 +249,6 @@ D:\Project\Reversi\ReversiAI_Platform\    # 项目根目录
 | 版本 | 路径 | 编译器 |
 |------|------|--------|
 | Debug | `end_submite\Debug\ReversiAI_Platform.exe` | MSVC |
-| Release | `Release_Package\ReversiAI_Platform.exe` | MinGW |
 
 ### Qt 安装路径 (参考)
 

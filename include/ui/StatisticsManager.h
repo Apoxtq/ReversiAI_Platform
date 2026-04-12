@@ -1,10 +1,10 @@
 /**
  * @file StatisticsManager.h
- * @brief 游戏统计管理器
+ * @brief Game Statistics Manager
  *
- * 记录游戏历史、计算胜率、导出统计
+ * Records game history, calculates win rate, exports statistics
  *
- * @reference 参考Egaroucid项目的统计功能设计
+ * @reference Reference Egaroucid project statistics design
  */
 
 #pragma once
@@ -22,17 +22,17 @@ namespace Reversi {
 
 /**
  * @enum GameMode
- * @brief 游戏模式
+ * @brief Game mode
  */
 enum class GameMode {
-    PvP,      // 双人对战
-    PvE,      // 人机对战
-    AIvAI     // AI对战
+    PvP,      // Two-player
+    PvE,      // Human vs AI
+    AIvAI     // AI vs AI
 };
 
 /**
  * @enum GameResult
- * @brief 游戏结果
+ * @brief Game result
  */
 enum class GameResult {
     BlackWins,
@@ -43,7 +43,7 @@ enum class GameResult {
 
 /**
  * @enum Difficulty
- * @brief AI难度等级
+ * @brief AI difficulty level
  */
 enum class Difficulty {
     EASY,
@@ -54,13 +54,13 @@ enum class Difficulty {
 
 /**
  * @class StatisticsManager
- * @brief 游戏统计管理器
+ * @brief Game statistics manager
  *
- * 功能：
- * - 记录每局游戏的结果
- * - 查询历史记录
- * - 计算胜率统计
- * - 导出CSV/JSON格式
+ * Features:
+ * - Record each game result
+ * - Query history records
+ * - Calculate win rate statistics
+ * - Export CSV/JSON format
  */
 class StatisticsManager : public QObject {
     Q_OBJECT
@@ -68,35 +68,35 @@ class StatisticsManager : public QObject {
 public:
     /**
      * @struct GameRecord
-     * @brief 游戏记录
+     * @brief Game record
      */
     struct GameRecord {
-        QDateTime timestamp;           // 游戏开始时间
-        GameMode mode;                 // 游戏模式
-        QString aiType;                // 使用的AI类型
-        Difficulty difficulty;         // 难度等级
-        GameResult result;             // 游戏结果
-        int blackCount;                // 黑棋最终数量
-        int whiteCount;                // 白棋最终数量
-        int moveCount;                 // 总回合数
-        int durationSeconds;           // 游戏时长（秒）
-        QString humanColor;            // 人类玩家颜色
-        bool humanWon;                 // 人类是否获胜
+        QDateTime timestamp;           // Game start time
+        GameMode mode;                 // Game mode
+        QString aiType;                // AI type used
+        Difficulty difficulty;          // Difficulty level
+        GameResult result;             // Game result
+        int blackCount;                // Black final count
+        int whiteCount;                // White final count
+        int moveCount;                 // Total moves
+        int durationSeconds;           // Game duration (seconds)
+        QString humanColor;            // Human player color
+        bool humanWon;                  // Human won
     };
 
     explicit StatisticsManager(QObject* parent = nullptr);
     ~StatisticsManager() override;
 
-    // ============ 记录游戏 ============
+    // ============ Record Games ============
 
     /**
-     * @brief 记录一局游戏
-     * @param record 游戏记录
+     * @brief Record a game
+     * @param record Game record
      */
     void recordGame(const GameRecord& record);
 
     /**
-     * @brief 从当前游戏状态创建记录
+     * @brief Create record from current game state
      */
     GameRecord createRecordFromCurrentGame(
         GameMode mode,
@@ -108,178 +108,178 @@ public:
         const QString& humanColor
     );
 
-    // ============ 查询历史 ============
+    // ============ Query History ============
 
     /**
-     * @brief 获取最近的N局游戏
+     * @brief Get the most recent N games
      */
     QVector<GameRecord> getRecentGames(int count = 10) const;
 
     /**
-     * @brief 按模式筛选游戏
+     * @brief Filter games by mode
      */
     QVector<GameRecord> getGamesByMode(GameMode mode) const;
 
     /**
-     * @brief 按AI类型筛选游戏
+     * @brief Filter games by AI type
      */
     QVector<GameRecord> getGamesByAI(const QString& aiType) const;
 
     /**
-     * @brief 获取所有记录
+     * @brief Get all records
      */
     const QVector<GameRecord>& getAllGames() const { return history_; }
 
-    // ============ 统计数据 ============
+    // ============ Statistics Data ============
 
     /**
-     * @brief 获取总局数
+     * @brief Get total games
      */
     int getTotalGames() const;
 
     /**
-     * @brief 获取获胜局数
-     * @param aiType 如果指定，只统计该AI的胜局
+     * @brief Get wins
+     * @param aiType If specified, only count wins for this AI
      */
     int getWins(const QString& aiType = QString()) const;
 
     /**
-     * @brief 获取失败局数
+     * @brief Get losses
      */
     int getLosses(const QString& aiType = QString()) const;
 
     /**
-     * @brief 获取平局数
+     * @brief Get draws
      */
     int getDraws(const QString& aiType = QString()) const;
 
     /**
-     * @brief 获取胜率
-     * @param aiType 如果指定，只统计该AI的胜率
-     * @return 胜率（0.0 - 1.0），返回-1.0表示无数据
+     * @brief Get win rate
+     * @param aiType If specified, only count win rate for this AI
+     * @return Win rate (0.0 - 1.0), returns -1.0 if no data
      */
     double getWinRate(const QString& aiType = QString()) const;
 
     /**
-     * @brief 获取平均回合数
+     * @brief Get average moves
      */
     double getAverageMoves() const;
 
     /**
-     * @brief 获取平均游戏时长（秒）
+     * @brief Get average game duration (seconds)
      */
     double getAverageDuration() const;
 
     /**
-     * @brief 清除所有历史记录
+     * @brief Clear all history records
      */
     void clearHistory();
 
 public slots:
     /**
-     * @brief 游戏结束时自动记录
+     * @brief Auto record when game ends
      */
     void onGameEnded(GameResult result, int blackCount, int whiteCount,
                      int moveCount, const QString& humanColor);
 
 signals:
     /**
-     * @brief 统计数据更新信号
+     * @brief Statistics data update signal
      */
     void statsUpdated();
 
     /**
-     * @brief 新游戏记录信号
+     * @brief New game record signal
      */
     void newGameRecorded(const GameRecord& record);
 
-    // ============ 导出信号 ============
+    // ============ Export Signals ============
 
     /**
-     * @brief 导出完成信号
+     * @brief Export completed signal
      */
     void exportCompleted(bool success, const QString& filename);
 
     /**
-     * @brief 导入完成信号
+     * @brief Import completed signal
      */
     void importCompleted(bool success, int gamesImported);
 
     /**
-     * @brief 错误信号
+     * @brief Error signal
      */
     void errorOccurred(const QString& message);
 
 public:
-    // ============ 导出功能 ============
+    // ============ Export Functions ============
 
     /**
-     * @brief 导出为CSV格式
+     * @brief Export to CSV format
      */
     bool exportToCSV(const QString& filename);
 
     /**
-     * @brief 导出为JSON格式
+     * @brief Export to JSON format
      */
     bool exportToJSON(const QString& filename);
 
     /**
-     * @brief 从JSON导入
+     * @brief Import from JSON
      */
     bool importFromJSON(const QString& filename);
 
-    // ============ 持久化 ============
+    // ============ Persistence ============
 
     /**
-     * @brief 保存历史到文件
+     * @brief Save history to file
      */
     bool saveToFile(const QString& filename = QString());
 
     /**
-     * @brief 从文件加载历史
+     * @brief Load history from file
      */
     bool loadFromFile(const QString& filename = QString());
 
     /**
-     * @brief 获取默认历史文件路径
+     * @brief Get default history file path
      */
     static QString getDefaultHistoryPath();
 
 private:
     /**
-     * @brief 将GameResult转换为字符串
+     * @brief Convert GameResult to string
      */
     static QString gameResultToString(GameResult result);
 
     /**
-     * @brief 将字符串转换为GameResult
+     * @brief Convert string to GameResult
      */
     static GameResult stringToGameResult(const QString& str);
 
     /**
-     * @brief 将Difficulty转换为字符串
+     * @brief Convert Difficulty to string
      */
     static QString difficultyToString(Difficulty difficulty);
 
     /**
-     * @brief 将字符串转换为Difficulty
+     * @brief Convert string to Difficulty
      */
     static Difficulty stringToDifficulty(const QString& str);
 
     /**
-     * @brief 将GameMode转换为字符串
+     * @brief Convert GameMode to string
      */
     static QString gameModeToString(GameMode mode);
 
     /**
-     * @brief 将字符串转换为GameMode
+     * @brief Convert string to GameMode
      */
     static GameMode stringToGameMode(const QString& str);
 
-    QVector<GameRecord> history_;       // 游戏历史记录
-    QString historyFilePath_;           // 历史文件路径
-    QDateTime gameStartTime_;           // 当前游戏开始时间
-    int currentMoveCount_;              // 当前游戏回合数
+    QVector<GameRecord> history_;       // Game history records
+    QString historyFilePath_;           // History file path
+    QDateTime gameStartTime_;           // Current game start time
+    int currentMoveCount_;              // Current game move count
 };
 
 } // namespace Reversi

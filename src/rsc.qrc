@@ -1,11 +1,11 @@
 <RCC>
     <qresource prefix="/rsc">
-        <file>black.png</file>
-        <file>blackpotential.png</file>
-        <file>board.png</file>
-        <file>brown.png</file>
-        <file>white.png</file>
-        <file>whitepotential.png</file>
-        <file>redpotential.png</file>
+        <file alias="black.png">images/black.png</file>
+        <file alias="blackpotential.png">images/blackpotential.png</file>
+        <file alias="board.png">images/board.png</file>
+        <file alias="brown.png">images/brown.png</file>
+        <file alias="white.png">images/white.png</file>
+        <file alias="whitepotential.png">images/whitepotential.png</file>
+        <file alias="redpotential.png">images/redpotential.png</file>
     </qresource>
 </RCC>

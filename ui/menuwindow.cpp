@@ -99,7 +99,7 @@ void MenuWindow::onPvEButtonClicked() {
     qDebug() << "MenuWindow: Starting PvE game";
     emit startPvEGame();
 
-    // 创建并显示 PvE 窗口
+    // Create and show PvE window
     PvEWindow* pveWindow = new PvEWindow(this);
     pveWindow->setAttribute(Qt::WA_DeleteOnClose);
     connect(pveWindow, &PvEWindow::backToMenu, this, [this, pveWindow]() {
@@ -115,7 +115,7 @@ void MenuWindow::onPvPButtonClicked() {
     qDebug() << "MenuWindow: Starting PvP game";
     emit startPvPGame();
 
-    // 创建并显示 PvP 窗口
+    // Create and show PvP window
     PvPWindow* pvpWindow = new PvPWindow(this);
     pvpWindow->setAttribute(Qt::WA_DeleteOnClose);
     connect(pvpWindow, &PvPWindow::backToMenu, this, [this, pvpWindow]() {
@@ -130,7 +130,7 @@ void MenuWindow::onPvPButtonClicked() {
 void MenuWindow::onAiVsAiButtonClicked() {
     qDebug() << "MenuWindow: Opening Watch AI Battle";
 
-    // 直接打开 Watch Single Battle 窗口
+    // Directly open Watch Single Battle window
     Reversi::AIWatchWindow* watchWindow = new Reversi::AIWatchWindow(this);
     watchWindow->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -146,7 +146,7 @@ void MenuWindow::onAiVsAiButtonClicked() {
 void MenuWindow::onBenchmarkButtonClicked() {
     qDebug() << "MenuWindow: Opening Benchmark Suite";
 
-    // 打开 AI Research Mode (Benchmark)
+    // Open AI Research Mode (Benchmark)
     Reversi::AIvsAIWindow* aiWindow = new Reversi::AIvsAIWindow(this);
     aiWindow->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -163,60 +163,58 @@ void MenuWindow::onNetworkButtonClicked() {
     qDebug() << "MenuWindow: Starting Network game";
     emit startPvNGame();
 
-    // 创建并显示网络大厅
+    // Create and show network lobby
     NetworkLobbyWindow* lobbyWindow = new NetworkLobbyWindow(this);
     lobbyWindow->setAttribute(Qt::WA_DeleteOnClose);
     lobbyWindow->initNetwork();
 
-    // 连接大厅信号到槽
+    // Connect lobby signals to slots
     connect(lobbyWindow, &NetworkLobbyWindow::backToMenu, this, [this, lobbyWindow]() {
         lobbyWindow->close();
         this->show();
     });
 
-    // 当加入游戏时，创建网络对战窗口
+    // When joining a game, create network game window
     connect(lobbyWindow, &NetworkLobbyWindow::joinGame,
             this, [this, lobbyWindow](const QHostAddress& hostAddress, quint16 port, const QString& playerName) {
         qDebug() << "MenuWindow: Joining network game at" << hostAddress.toString() << ":" << port;
 
-        // 隐藏大厅，显示游戏窗口
+        // Hide lobby, show game window
         lobbyWindow->hide();
 
-        // 创建网络对战窗口
+        // Create network game window
         NetworkGameWindow* gameWindow = new NetworkGameWindow(this);
         gameWindow->setAttribute(Qt::WA_DeleteOnClose);
         gameWindow->initNetwork(hostAddress, port, playerName);
 
-        // 连接返回菜单信号
+        // Connect back to menu signal
         connect(gameWindow, &NetworkGameWindow::backToMenu, this, [this, gameWindow, lobbyWindow]() {
             gameWindow->close();
             lobbyWindow->close();
-            this->show();  // 直接回到主界面
+            this->show();  // Return to main interface
         });
 
         gameWindow->show();
     });
 
-    // 当创建游戏时
+    // When creating a game
     connect(lobbyWindow, &NetworkLobbyWindow::createGame,
-            this, [this, lobbyWindow](const QString& roomName, const QString& playerName, const QJsonObject& settings) {
-        Q_UNUSED(roomName)
-        Q_UNUSED(settings)
+            this, [this, lobbyWindow](const QString& roomName, const QString& playerName, const QJsonObject& /* settings */) {
         qDebug() << "MenuWindow: Creating network game as" << playerName;
 
-        // 隐藏大厅，显示游戏窗口
+        // Hide lobby, show game window
         lobbyWindow->hide();
 
-        // 创建网络对战窗口（作为主机）
+        // Create network game window (as host)
         NetworkGameWindow* gameWindow = new NetworkGameWindow(this);
         gameWindow->setAttribute(Qt::WA_DeleteOnClose);
-        gameWindow->startHosting(playerName, 45455);  // 默认端口
+        gameWindow->startHosting(playerName, roomName, 45455);  // Default port
 
-        // 连接返回菜单信号
+        // Connect back to menu signal
         connect(gameWindow, &NetworkGameWindow::backToMenu, this, [this, gameWindow, lobbyWindow]() {
             gameWindow->close();
             lobbyWindow->close();
-            this->show();  // 直接回到主界面
+            this->show();  // Return to main interface
         });
 
         gameWindow->show();

@@ -63,6 +63,10 @@ enum class MessageType {
     // Chat (P3)
     CHAT_MESSAGE,        ///< Player chat message
 
+    // Undo (P3)
+    UNDO_REQUEST,         ///< Request undo from opponent
+    UNDO_RESPONSE,       ///< Response to undo request (accept/reject)
+
     // Error/ACK
     ERROR,               ///< Error message
     ACKNOWLEDGMENT       ///< Message acknowledgment
@@ -219,6 +223,30 @@ struct Message {
         Message msg;
         msg.type = MessageType::PONG;
         msg.timestamp = pingTimestamp;
+        return msg;
+    }
+
+    /**
+     * @brief Create an undo request message
+     * @return Undo request message
+     */
+    static Message createUndoRequest() {
+        Message msg;
+        msg.type = MessageType::UNDO_REQUEST;
+        msg.timestamp = QDateTime::currentMSecsSinceEpoch();
+        return msg;
+    }
+
+    /**
+     * @brief Create an undo response message
+     * @param accepted Whether the undo was accepted
+     * @return Undo response message
+     */
+    static Message createUndoResponse(bool accepted) {
+        Message msg;
+        msg.type = MessageType::UNDO_RESPONSE;
+        msg.timestamp = QDateTime::currentMSecsSinceEpoch();
+        msg.payload["accepted"] = accepted;
         return msg;
     }
 };

@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>人机对战 (PvE)</string>
+   <string>Human vs AI (PvE)</string>
   </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">

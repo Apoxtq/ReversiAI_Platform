@@ -1,12 +1,12 @@
 /**
  * @file GameController.cpp
- * @brief 游戏控制器实现
+ * @brief Game controller implementation
  *
- * 基于QtReversi/widget.cpp的游戏流程管理逻辑
- * 参考Reversi(Java)/GamePanel.java的manageTurn()设计
+ * Game flow management logic based on QtReversi/widget.cpp
+ * Reference Reversi(Java)/GamePanel.java's manageTurn() design
  *
- * @reference QtReversi/代码/chess/widget.cpp - 游戏规则和界面交互
- * @reference Reversi(Java)/src/game/GamePanel.java - manageTurn()回合管理逻辑
+ * @reference QtReversi/code/chess/widget.cpp - Game rules and UI interaction
+ * @reference Reversi(Java)/src/game/GamePanel.java - manageTurn() turn management logic
  */
 
 #include "ui/GameController.h"
@@ -17,7 +17,7 @@
 
 namespace Reversi {
 
-// 悔棋最大步数 (Reversi 最多 60 步)
+// Maximum undo steps (Reversi has max 60 moves)
 constexpr int MAX_UNDO_STEPS = 60;
 
 GameController::GameController(QObject* parent)
@@ -48,12 +48,12 @@ void GameController::startNewGame(GameMode mode, PlayerColor humanColor,
     currentPlayer_ = PlayerColor::Black;
     moveHistory_.clear();
 
-    // 创建新的棋盘（因为Board没有reset()方法）
+    // Create new board (Board doesn't have reset() method)
     board_ = std::make_unique<Board>();
 
-    // 创建AI（如果不是PvP模式）
+    // Create AI (if not PvP mode)
     if (mode != GameMode::PvP) {
-        // 根据 algorithm 选择 AI 类型
+        // Select AI type based on algorithm
         qDebug() << "GameController: Creating AI, algorithm type:" << algorithm;
         switch (algorithm) {
             case 0: // Minimax
@@ -74,24 +74,24 @@ void GameController::startNewGame(GameMode mode, PlayerColor humanColor,
             return;
         }
 
-        // 设置 AI 搜索深度
+        // Set AI search depth
         aiDepth_ = depth;
     } else {
-        ai_.reset();  // PvP模式不需要AI
+        ai_.reset();  // PvP mode doesn't need AI
     }
 
-    // 确定初始阶段（根据谁先手）
+    // Determine initial phase (based on who goes first)
     if (mode == GameMode::PvE && humanColor_ == PlayerColor::White) {
-        // AI先手（人类是白棋），AI应该先走
+        // AI goes first (human is white), AI should move first
         currentPhase_ = GamePhase::AITurn;
-        // 延迟执行AI移动，避免阻塞UI
+        // Delayed AI move to avoid blocking UI
         QTimer::singleShot(500, this, &GameController::executeAIMove);
     } else {
-        // 人类先手
+        // Human goes first
         currentPhase_ = GamePhase::HumanTurn;
     }
 
-    // 发射游戏开始信号
+    // Emit game start signal
     emit gameStarted(mode, humanColor_);
     emit turnChanged(currentPlayer_);
     emit phaseChanged(currentPhase_);
@@ -102,7 +102,7 @@ void GameController::startNewGame(GameMode mode, PlayerColor humanColor,
 void GameController::resetGame() {
     qDebug() << "GameController: Resetting game";
 
-    // 重新创建棋盘
+    // Recreate board
     board_ = std::make_unique<Board>();
     currentPlayer_ = PlayerColor::Black;
     currentPhase_ = GamePhase::HumanTurn;
@@ -119,7 +119,7 @@ bool GameController::makeHumanMove(int row, int col) {
 
     Move move(row, col);
 
-    // 检查是否是有效移动
+    // Check if move is valid
     bool isValid = false;
     for (const auto& validMove : board_->getValidMoves()) {
         if (validMove.row == row && validMove.col == col) {
@@ -135,14 +135,14 @@ bool GameController::makeHumanMove(int row, int col) {
 
     qDebug() << "GameController: Human move at" << row << "," << col;
 
-    // 执行移动
+    // Execute move
     saveMoveForUndo();
     board_->makeMove(move);
 
-    // 发射移动信号
+    // Emit move signal
     emit moveMade(row, col, currentPlayer_);
 
-    // 切换回合
+    // Switch turn
     switchTurn();
 
     return true;
@@ -160,51 +160,51 @@ bool GameController::isValidMove(int row, int col) const {
 void GameController::switchTurn() {
     qDebug() << "GameController: Switching turn from" << (int)currentPlayer_;
 
-    // 切换玩家
+    // Switch player
     currentPlayer_ = (currentPlayer_ == PlayerColor::Black) ?
                      PlayerColor::White : PlayerColor::Black;
 
-    // 检查当前玩家是否有合法移动
+    // Check if current player has valid moves
     bool currentHasMoves = !board_->getValidMoves().empty();
 
-    // 检查对手是否有合法移动
+    // Check if opponent has valid moves
     PlayerColor opponent = (currentPlayer_ == PlayerColor::Black) ?
                            PlayerColor::White : PlayerColor::Black;
 
-    // 临时切换到对手检查是否有移动
+    // Temporarily switch to opponent to check for moves
     bool opponentHasMoves;
     const auto& originalTurn = board_->getCurrentTurn();
-    // 注意：这里我们直接检查当前棋盘状态下当前玩家的合法移动
-    // 对于完整实现，需要考虑pass的情况
+    // Note: Here we directly check valid moves for current player on current board state
+    // For complete implementation, need to consider pass scenario
 
     qDebug() << "GameController: Current player" << (int)currentPlayer_
              << "has" << board_->getValidMoves().size() << "valid moves";
 
-    // 检查游戏是否结束
+    // Check if game is over
     if (board_->isGameOver()) {
         checkGameOver();
         return;
     }
 
-    // 如果当前玩家没有合法移动，则跳过
+    // If current player has no valid moves, pass
     if (!currentHasMoves) {
         qDebug() << "GameController: Player" << (int)currentPlayer_ << "passes";
-        // 切换回对手
+        // Switch back to opponent
         currentPlayer_ = opponent;
 
-        // 再次检查游戏是否结束
+        // Check game over again
         if (board_->getValidMoves().empty()) {
             checkGameOver();
             return;
         }
 
-        // 注意：不要在这里发送 turnChanged，等 phase 更新后再发送
-        // 避免 UI 使用旧 phase 值绘制棋盘
+        // Note: Don't send turnChanged here, wait until phase is updated
+        // to avoid UI using old phase value to draw board
     }
 
-    // 决定下一阶段
-    // PvP模式下，两个玩家都是人类，所有回合都是HumanTurn
-    // PvE模式下，只有humanColor_玩家的回合是HumanTurn，AI回合是AITurn
+    // Determine next phase
+    // In PvP mode, both players are human, all turns are HumanTurn
+    // In PvE mode, only humanColor_ player's turns are HumanTurn, AI turns are AITurn
     bool isHumanTurn = (gameMode_ == GameMode::PvP) || (currentPlayer_ == humanColor_);
 
     currentPhase_ = isHumanTurn ? GamePhase::HumanTurn : GamePhase::AITurn;
@@ -215,7 +215,7 @@ void GameController::switchTurn() {
     emit turnChanged(currentPlayer_);
     emit phaseChanged(currentPhase_);
 
-    // 如果是AI回合，安排AI移动
+    // If AI turn, schedule AI move
     if (currentPhase_ == GamePhase::AITurn) {
         QTimer::singleShot(500, this, &GameController::executeAIMove);
     }
@@ -238,40 +238,40 @@ void GameController::executeAIMove() {
 
     emit aiThinkingStarted(QString::fromStdString(ai_->getName()));
 
-    // 设置搜索限制
+    // Set search limits
     SearchLimits limits = SearchLimits::createDefault();
-    limits.maxDepth = aiDepth_;  // 使用配置的搜索深度
+    limits.maxDepth = aiDepth_;  // Use configured search depth
 
-    // 找到最佳移动
+    // Find best move
     Move bestMove = ai_->findBestMove(*board_, limits);
 
     qDebug() << "GameController: AI selected move"
              << bestMove.row << "," << bestMove.col;
 
-    // 更新统计信息
+    // Update statistics
     AIStats stats = ai_->getStats();
     emit aiStatsUpdated(stats);
 
-    // 发射AI思考完成信号
+    // Emit AI thinking finished signal
     emit aiThinkingFinished(bestMove.row, bestMove.col);
 
-    // 执行移动
+    // Execute move
     saveMoveForUndo();
     board_->makeMove(bestMove);
 
-    // 发射移动信号
+    // Emit move signal
     emit moveMade(bestMove.row, bestMove.col, currentPlayer_);
 
-    // 切换回合
+    // Switch turn
     switchTurn();
 }
 
 void GameController::saveMoveForUndo() {
-    // 只保存最近N步
+    // Only keep recent N steps
     if (moveHistory_.size() >= MAX_UNDO_STEPS) {
         moveHistory_.erase(moveHistory_.begin());
     }
-    // 保存当前棋盘的副本
+    // Save copy of current board
     moveHistory_.push_back(std::make_unique<Board>(*board_));
 }
 
@@ -285,14 +285,14 @@ void GameController::undoMove() {
         return;
     }
 
-    // 恢复上一个状态
+    // Restore previous state
     board_ = std::make_unique<Board>(*moveHistory_.back());
     moveHistory_.pop_back();
 
-    // 恢复当前玩家 - 直接从恢复的棋盘获取，而不是从 moveHistory_ 获取
+    // Restore current player - get from restored board directly
     currentPlayer_ = board_->getCurrentTurn();
 
-    // 更新阶段
+    // Update phase
     bool isHumanTurn = (currentPlayer_ == humanColor_) &&
                        (gameMode_ == GameMode::PvE || gameMode_ == GameMode::PvP);
     currentPhase_ = isHumanTurn ? GamePhase::HumanTurn : GamePhase::AITurn;

@@ -9,7 +9,7 @@
 namespace Reversi {
 
 // ============================================================================
-// TestPosition 实现
+// TestPosition Implementation
 // ============================================================================
 
 std::string TestPosition::toString() const {
@@ -22,13 +22,13 @@ std::string TestPosition::toString() const {
 }
 
 // ============================================================================
-// PositionSuite 实现
+// PositionSuite Implementation
 // ============================================================================
 
 std::vector<TestPosition> PositionSuite::getStandard64() {
     std::vector<TestPosition> positions;
 
-    // 开局位置 (0-20步)
+    // Opening positions (0-20 moves)
     for (int i = 0; i < 15; ++i) {
         TestPosition pos;
         pos.name = "Opening_" + std::to_string(i + 1);
@@ -36,12 +36,12 @@ std::vector<TestPosition> PositionSuite::getStandard64() {
         pos.source = "Standard";
         pos.player = PlayerColor::Black;
 
-        // 生成指定步数的随机开局位置
+        // Generate random opening positions with specified number of moves
         std::string board_str(64, '.');
         board_str[27] = 'W'; board_str[28] = 'B';
         board_str[35] = 'B'; board_str[36] = 'W';
 
-        // 根据步数添加棋子
+        // Add pieces based on move count
         int pos_idx[] = {19, 26, 37, 44};
         for (int j = 0; j < std::min(i, 4); ++j) {
             if (j % 2 == 0) board_str[pos_idx[j]] = 'B';
@@ -52,7 +52,7 @@ std::vector<TestPosition> PositionSuite::getStandard64() {
         positions.push_back(pos);
     }
 
-    // 预设的合法落子序列（每步是 row, col）
+    // Predefined valid move sequence (each step is row, col)
     static const std::vector<std::pair<int,int>> MOVE_SEQ = {
         {2,3},{2,4},{2,5},{3,5},{4,5},{5,5},{5,4},{5,3},
         {5,2},{4,2},{3,2},{2,2},{1,3},{1,4},{1,5},{1,6},
@@ -60,7 +60,7 @@ std::vector<TestPosition> PositionSuite::getStandard64() {
         {6,1},{5,1},{4,1},{3,1},{2,1},{1,2}
     };
 
-    // 中局位置 (21-40步)
+    // Midgame positions (21-40 moves)
     for (int i = 0; i < 20; ++i) {
         TestPosition pos;
         pos.name = "Midgame_" + std::to_string(i + 1);
@@ -85,7 +85,7 @@ std::vector<TestPosition> PositionSuite::getStandard64() {
         positions.push_back(pos);
     }
 
-    // 残局位置 (41-60步)
+    // Endgame positions (41-60 moves)
     for (int i = 0; i < 29; ++i) {
         TestPosition pos;
         pos.name = "Endgame_" + std::to_string(i + 1);
@@ -196,12 +196,12 @@ bool PositionSuite::saveToFile(const std::vector<TestPosition>& positions,
 }
 
 bool PositionSuite::validate(const TestPosition& position) {
-    // 验证基本约束
+    // Validate basic constraints
     if (position.name.empty()) {
         return false;
     }
 
-    // 验证棋子数量
+    // Validate piece count
     int black_count = position.board.getScore(PlayerColor::Black);
     int white_count = position.board.getScore(PlayerColor::White);
     int total = black_count + white_count;
@@ -210,7 +210,7 @@ bool PositionSuite::validate(const TestPosition& position) {
         return false;
     }
 
-    // 验证没有重叠棋子
+    // Validate no overlapping pieces
     if ((position.board.getPlayerBits() & position.board.getOpponentBits()) != 0) {
         return false;
     }
@@ -253,7 +253,7 @@ TestPosition PositionSuite::createRandom(int move_count, uint64_t seed) {
     std::mt19937_64 rng(seed);
     std::uniform_int_distribution<int> dist(0, 63);
 
-    // 初始化标准开局
+    // Initialize standard opening
     std::string board_str(64, '.');
     board_str[27] = 'W'; board_str[28] = 'B';
     board_str[35] = 'B'; board_str[36] = 'W';
@@ -266,7 +266,7 @@ TestPosition PositionSuite::createRandom(int move_count, uint64_t seed) {
         }
     }
 
-    // 随机添加棋子直到达到指定步数
+    // Randomly add pieces until reaching specified move count
     std::shuffle(empty_positions.begin(), empty_positions.end(), rng);
     int target_total = 2 + move_count;
     int filled = 0;
@@ -288,7 +288,7 @@ TestPosition PositionSuite::createRandom(int move_count, uint64_t seed) {
 
 int PositionSuite::getMoveCount(const BitBoard& board) {
     int total = board.getScore(PlayerColor::Black) + board.getScore(PlayerColor::White);
-    return total - 4;  // 初始4子不算回合
+    return total - 4;  // Initial 4 pieces don't count as turns
 }
 
 BenchmarkPhase PositionSuite::getBenchmarkPhase(const BitBoard& board) {
@@ -300,7 +300,7 @@ BenchmarkPhase PositionSuite::getBenchmarkPhase(const BitBoard& board) {
 }
 
 // ============================================================================
-// PositionSuiteLoader 实现
+// PositionSuiteLoader Implementation
 // ============================================================================
 
 PositionSuiteLoader::Format PositionSuiteLoader::detectFormat(const std::string& filepath) {
@@ -313,7 +313,7 @@ PositionSuiteLoader::Format PositionSuiteLoader::detectFormat(const std::string&
     std::getline(file, first_line);
     file.close();
 
-    // 简单格式检测
+    // Simple format detection
     if (first_line.find(';') != std::string::npos) {
         return Format::SIMPLE;
     }

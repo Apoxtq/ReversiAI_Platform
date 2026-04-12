@@ -1,6 +1,6 @@
 /**
  * @file StatisticsManager.cpp
- * @brief 游戏统计管理器实现
+ * @brief Game statistics manager implementation
  */
 
 #include "ui/StatisticsManager.h"
@@ -14,25 +14,25 @@ namespace Reversi {
 StatisticsManager::StatisticsManager(QObject* parent)
     : QObject(parent)
     , currentMoveCount_(0) {
-    // 设置默认历史文件路径
+    // Set default history file path
     historyFilePath_ = getDefaultHistoryPath();
 
-    // 尝试加载历史记录
+    // Try to load history records
     loadFromFile();
 }
 
 StatisticsManager::~StatisticsManager() {
-    // 保存历史记录
+    // Save history records
     saveToFile();
 }
 
 void StatisticsManager::recordGame(const GameRecord& record) {
     history_.append(record);
 
-    // 保存到文件
+    // Save to file
     saveToFile();
 
-    // 发送信号
+    // Emit signal
     emit newGameRecorded(record);
     emit statsUpdated();
 
@@ -60,7 +60,7 @@ StatisticsManager::GameRecord StatisticsManager::createRecordFromCurrentGame(
     record.durationSeconds = durationSeconds;
     record.humanColor = humanColor;
 
-    // 统计棋子数量
+    // Count pieces
     record.blackCount = 0;
     record.whiteCount = 0;
     for (int i = 0; i < 8; i++) {
@@ -71,7 +71,7 @@ StatisticsManager::GameRecord StatisticsManager::createRecordFromCurrentGame(
         }
     }
 
-    // 判断游戏结果
+    // Determine game result
     if (record.blackCount > record.whiteCount) {
         record.result = GameResult::BlackWins;
         record.humanWon = (humanColor == "Black");
@@ -201,10 +201,10 @@ void StatisticsManager::clearHistory() {
 
 void StatisticsManager::onGameEnded(GameResult result, int blackCount, int whiteCount,
                                      int moveCount, const QString& humanColor) {
-    // 创建记录
+    // Create record
     GameRecord record;
     record.timestamp = gameStartTime_;
-    record.mode = GameMode::PvE;  // 默认
+    record.mode = GameMode::PvE;  // Default
     record.aiType = "MCTS";
     record.difficulty = Difficulty::MEDIUM;
     record.result = result;
@@ -212,7 +212,7 @@ void StatisticsManager::onGameEnded(GameResult result, int blackCount, int white
     record.whiteCount = whiteCount;
     record.moveCount = moveCount;
 
-    // 计算游戏时长
+    // Calculate game duration
     int duration = 0;
     if (gameStartTime_.isValid()) {
         duration = gameStartTime_.secsTo(QDateTime::currentDateTime());
@@ -235,10 +235,10 @@ bool StatisticsManager::exportToCSV(const QString& filename) {
 
     QTextStream out(&file);
 
-    // 写入CSV头部
+    // Write CSV header
     out << "Time,Mode,AI Type,Difficulty,Result,Black,White,Moves,Duration,Human Color,Human Won\n";
 
-    // 写入每条记录
+    // Write each record
     for (const auto& record : history_) {
         out << record.timestamp.toString("yyyy-MM-dd hh:mm:ss") << ","
             << gameModeToString(record.mode) << ","
@@ -342,7 +342,7 @@ bool StatisticsManager::importFromJSON(const QString& filename) {
         imported++;
     }
 
-    // 保存导入的数据
+    // Save imported data
     saveToFile();
     emit importCompleted(true, imported);
     emit statsUpdated();
@@ -360,7 +360,7 @@ bool StatisticsManager::loadFromFile(const QString& filename) {
 
     QFile file(targetFile);
     if (!file.exists()) {
-        // 文件不存在不是错误，只是没有历史记录
+        // File doesn't exist is not an error, just no history
         return true;
     }
 
@@ -368,7 +368,7 @@ bool StatisticsManager::loadFromFile(const QString& filename) {
 }
 
 QString StatisticsManager::getDefaultHistoryPath() {
-    // 在用户数据目录创建历史文件
+    // Create history file in user data directory
     QString dataPath = QDir(QCoreApplication::applicationDirPath()).filePath("game_history.json");
     return dataPath;
 }
