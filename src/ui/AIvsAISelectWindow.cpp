@@ -15,6 +15,7 @@
 #include <QPen>
 #include <QMessageBox>
 #include <QDebug>
+#include <QIcon>
 
 namespace Reversi {
 
@@ -37,6 +38,7 @@ AIvsAISelectWindow::~AIvsAISelectWindow()
 void AIvsAISelectWindow::setupUI()
 {
     setWindowTitle(tr("AI vs AI"));
+    setWindowIcon(QIcon(":/rsc/black.png"));
     setFixedSize(450, 400);
 
     // Central widget

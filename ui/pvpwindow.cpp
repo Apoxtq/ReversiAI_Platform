@@ -17,11 +17,13 @@
 #include "QPixmap"
 #include "QMouseEvent"
 #include "QDebug"
+#include "QIcon"
 
 PvPWindow::PvPWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::PvPWindow) {
     ui->setupUi(this);
+    setWindowIcon(QIcon(":/rsc/black.png"));
 
     // Initialize UI components
     initUI();

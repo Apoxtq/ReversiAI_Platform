@@ -11,6 +11,7 @@
 #include <QTextStream>
 #include <QDate>
 #include <QtConcurrent/QtConcurrent>
+#include <QIcon>
 #include <random>
 
 namespace Reversi {
@@ -26,6 +27,8 @@ AIvsAIWindow::AIvsAIWindow(QWidget* parent)
     , avgMoves_(0.0)
 {
     setupUI();
+    setWindowTitle(tr("AI vs AI Battle"));
+    setWindowIcon(QIcon(":/rsc/black.png"));
     setupConnections();
     clearStats();
 }

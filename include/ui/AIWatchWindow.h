@@ -98,6 +98,11 @@ protected:
     void paintEvent(QPaintEvent* event) override;
 
     /**
+     * @brief Handle window resize
+     */
+    void resizeEvent(QResizeEvent* event) override;
+
+    /**
      * @brief Handle window close event
      */
     void closeEvent(QCloseEvent* event) override;
@@ -252,6 +257,9 @@ private:
     QPixmap black_;          // Black piece image
     QPixmap white_;          // White piece image
     QPixmap hintwhite_;      // Valid move hint image
+
+    // Scale factor
+    double boardScale_;
 
     // Info display
     QLabel* turnIndicator_;

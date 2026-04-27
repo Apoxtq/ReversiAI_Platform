@@ -51,6 +51,8 @@ public:
         return tt_ ? tt_->getHitRate() : 0.0;
     }
 
+    int getLastScore() const { return bestScore_; }
+
     void clearTranspositionTable() {
         if (tt_) tt_->clear();
     }

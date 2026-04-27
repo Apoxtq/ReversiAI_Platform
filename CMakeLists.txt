@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 project(ReversiAI_Platform VERSION 1.0.2 LANGUAGES CXX)
 
+# Generate compile_commands.json for clangd
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Detect compiler
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(COMPILER_TYPE "MSVC")
     message(STATUS "Detected compiler: MSVC")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(COMPILER_TYPE "MinGW")
-    message(STATUS "Detected compiler: MinGW (GCC)")
 else()
     set(COMPILER_TYPE "Unknown")
     message(WARNING "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
@@ -18,14 +18,9 @@ endif()
 # Performance optimization flags
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     if(MSVC)
-        # MSVC Release optimizations
         add_compile_options(/O2 /Oi /Ot /GL /fp:fast)
         add_link_options(/LTCG)
         message(STATUS "Using MSVC Release optimizations: /O2 /Oi /Ot /GL /fp:fast /LTCG")
-    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        # GCC/MinGW Release optimizations
-        add_compile_options(-O3 -march=native -funroll-loops -ffast-math)
-        message(STATUS "Using GCC Release optimizations: -O3 -march=native -funroll-loops -ffast-math")
     endif()
 endif()
 
@@ -50,35 +45,17 @@ set(CMAKE_AUTOUIC ON)
 # Option to build with Qt GUI (default OFF until Qt is configured)
 option(BUILD_QT_GUI "Build Qt GUI application" OFF)
 
-# Set Qt installation path based on compiler
-# MSVC: Try system Qt6 first (user installed), then vcpkg
-# MinGW: Use system installed Qt6
+# Set Qt installation path for MSVC
 if(COMPILER_TYPE STREQUAL "MSVC")
-    # Check for system MSVC Qt6 (user installed) - highest priority
     if(EXISTS "D:/Dev/SDKs/Qt/6.10.2/msvc2022_64")
         set(DEFAULT_QT_PATH "D:/Dev/SDKs/Qt/6.10.2/msvc2022_64")
-        message(STATUS "MSVC detected, using system Qt6 at ${DEFAULT_QT_PATH}")
-    elseif(EXISTS "D:/Dev/SDKs/Qt/6.10.1/msvc2022_64")
-        set(DEFAULT_QT_PATH "D:/Dev/SDKs/Qt/6.10.1/msvc2022_64")
-        message(STATUS "MSVC detected, using system Qt6 at ${DEFAULT_QT_PATH}")
+        message(STATUS "Using Qt6 at ${DEFAULT_QT_PATH}")
     elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg/installed/x64-windows/lib/cmake/Qt6")
         set(DEFAULT_QT_PATH "C:/vcpkg/installed/x64-windows")
         set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake")
-        message(STATUS "MSVC detected, using vcpkg Qt6")
+        message(STATUS "Using vcpkg Qt6")
     else()
         message(WARNING "MSVC Qt6 not found. Please install Qt MSVC version via Qt MaintenanceTool")
-        set(DEFAULT_QT_PATH "")
-    endif()
-else()
-    # MinGW uses system Qt
-    set(DEFAULT_QT_PATH "D:/Dev/SDKs/Qt/6.10.1/mingw_64")
-    if(NOT EXISTS "${DEFAULT_QT_PATH}")
-        set(DEFAULT_QT_PATH "C:/Qt/6.10.1/mingw_64")
-    endif()
-    if(EXISTS "${DEFAULT_QT_PATH}")
-        message(STATUS "MinGW detected, using system Qt6 at ${DEFAULT_QT_PATH}")
-    else()
-        message(WARNING "MinGW Qt6 not found at ${DEFAULT_QT_PATH}")
         set(DEFAULT_QT_PATH "")
     endif()
 endif()
@@ -213,9 +190,6 @@ message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 if(NOT Qt6_ROOT)
     set(Qt6_ROOT "$ENV{Qt6_ROOT}")
 endif()
-if(NOT Qt6_ROOT)
-    set(Qt6_ROOT "D:/Dev/SDKs/Qt/6.10.1/mingw_64")
-endif()
 message(STATUS "Using Qt6_ROOT: ${Qt6_ROOT}")
 
 # Try to find Qt6 with explicit path
@@ -235,7 +209,6 @@ if(Qt6_FOUND)
         src/ui/SearchTreeWidget.cpp
         src/ui/SearchStatisticsPanel.cpp
         src/ui/BoardHeatmap.cpp
-        src/ui/ReplayAnalysisWindow.cpp
     )
     target_include_directories(ui_lib PUBLIC include include/ui network/include)
     target_compile_features(ui_lib PUBLIC cxx_std_17)
@@ -278,7 +251,6 @@ if(BUILD_QT_GUI)
             include/ui/SearchTreeWidget.h
             include/ui/SearchStatisticsPanel.h
             include/ui/BoardHeatmap.h
-            include/ui/ReplayAnalysisWindow.h
         )
         qt6_add_resources(QRC_SOURCES src/rsc.qrc)
     else()
@@ -299,7 +271,6 @@ if(BUILD_QT_GUI)
         main.cpp
         ui/mainwindow.cpp
         ui/menuwindow.cpp
-        ui/MenuWindowReplayAnalysis.cpp   # v0.9.0: Replay analysis
         ui/pvewindow.cpp
         ui/pvpwindow.cpp
         src/ui/networklobbywindow.cpp
@@ -311,7 +282,6 @@ if(BUILD_QT_GUI)
         src/ui/SearchTreeWidget.cpp
         src/ui/SearchStatisticsPanel.cpp
         src/ui/BoardHeatmap.cpp
-        src/ui/ReplayAnalysisWindow.cpp
         ${MOC_SOURCES}
         ${QRC_SOURCES}
     )

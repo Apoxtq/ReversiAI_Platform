@@ -98,7 +98,6 @@ HEADERS += \
     include/ui/NetworkLobbyWindow.h \
     include/ui/PvEWindow.h \
     include/ui/PvPWindow.h \
-    include/ui/ReplayAnalysisWindow.h \
     include/ui/SearchStatisticsPanel.h \
     include/ui/SearchTreeWidget.h \
     include/ui/StatisticsManager.h
@@ -112,7 +111,6 @@ SOURCES += \
     # UI layer (Qt Designer forms + logic)
     ui/mainwindow.cpp \
     ui/menuwindow.cpp \
-    ui/MenuWindowReplayAnalysis.cpp \
     ui/pvewindow.cpp \
     ui/pvpwindow.cpp \
     # UI layer (pure Qt/C++ logic)
@@ -123,7 +121,6 @@ SOURCES += \
     src/ui/GameController.cpp \
     src/ui/networkgamewindow.cpp \
     src/ui/networklobbywindow.cpp \
-    src/ui/ReplayAnalysisWindow.cpp \
     src/ui/SearchStatisticsPanel.cpp \
     src/ui/SearchTreeWidget.cpp \
     src/ui/StatisticsManager.cpp \

@@ -30,7 +30,6 @@ signals:
     void startPvEGame();          // Start Player vs AI game
     void startPvPGame();          // Start Local 2P game
     void startPvNGame();          // Start Network game
-    void startReplayAnalysis();    // v0.9.0: Start replay analysis
 
 private slots:
     void onPvEButtonClicked();
@@ -38,10 +37,11 @@ private slots:
     void onAiVsAiButtonClicked();        // Watch AI Battle button
     void onNetworkButtonClicked();        // Network button
     void onBenchmarkButtonClicked();     // Benchmark Suite button
-    void onReplayAnalysisButtonClicked(); // v0.9.0: Replay analysis button
 
 private:
     Ui::MenuWindow* ui;
     void setupConnections();
+protected:
+    void closeEvent(QCloseEvent* event) override;
 };
 

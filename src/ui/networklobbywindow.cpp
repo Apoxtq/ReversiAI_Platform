@@ -18,6 +18,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QDebug>
+#include <QIcon>
 
 NetworkLobbyWindow::NetworkLobbyWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -44,6 +45,7 @@ void NetworkLobbyWindow::setupUI()
     
     // Set window properties
     setWindowTitle(tr("Network Lobby - ReversiAI"));
+    setWindowIcon(QIcon(":/rsc/black.png"));
     resize(800, 600);
     
     // Central widget

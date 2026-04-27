@@ -12,6 +12,8 @@
 #include <QFont>
 #include <QDebug>
 #include <QApplication>
+#include <QIcon>
+#include <QResizeEvent>
 
 namespace Reversi {
 
@@ -41,6 +43,7 @@ AIWatchWindow::AIWatchWindow(QWidget* parent)
     , moveDelayMs_(DELAY_1S)
     , gameResult_(GameResult::Unknown)
     , moveTimer_(nullptr)
+    , boardScale_(1.0)
 {
     qDebug() << "AIWatchWindow::AIWatchWindow() - Constructor START";
 
@@ -53,6 +56,9 @@ AIWatchWindow::AIWatchWindow(QWidget* parent)
     updateButtonStates();
 
     qDebug() << "AIWatchWindow::AIWatchWindow() - Constructor END";
+
+    // Initial board render
+    repaint();
 }
 
 AIWatchWindow::~AIWatchWindow()
@@ -70,6 +76,7 @@ AIWatchWindow::~AIWatchWindow()
 void AIWatchWindow::setupUI()
 {
     setWindowTitle(tr("AI Watch"));
+    setWindowIcon(QIcon(":/rsc/black.png"));
     setFixedSize(830, 580);
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -177,7 +184,7 @@ void AIWatchWindow::setupUI()
     // Add stretch to fill remaining space
     leftLayout_->addStretch();
 
-    // Left panel takes 70% of width (equal margins with right panel)
+    // Left panel takes 70% of width
     mainLayout->addWidget(leftPanel, 70);
 
     // ==================== Right Panel: Controls ====================
@@ -197,7 +204,6 @@ void AIWatchWindow::setupUI()
     delayGroup->setStyleSheet(
         "QGroupBox {"
         "    font-weight: bold;"
-        "    font-size: 13px;"
         "    border: 2px solid #34495e;"
         "    border-radius: 6px;"
         "    margin-top: 8px;"
@@ -221,7 +227,6 @@ void AIWatchWindow::setupUI()
     delayCombo_->setStyleSheet(
         "QComboBox {"
         "    padding: 5px 10px;"
-        "    font-size: 13px;"
         "    border: 1px solid #34495e;"
         "    border-radius: 4px;"
         "}"
@@ -254,7 +259,6 @@ void AIWatchWindow::setupAIConfig()
     blackConfigGroup_->setStyleSheet(
         "QGroupBox {"
         "    font-weight: bold;"
-        "    font-size: 13px;"
         "    border: 2px solid #2c3e50;"
         "    border-radius: 6px;"
         "    margin-top: 8px;"
@@ -272,18 +276,16 @@ void AIWatchWindow::setupAIConfig()
 
     // Algorithm type
     QLabel* algoLabel = new QLabel(tr("Algorithm:"), this);
-    algoLabel->setStyleSheet("font-size: 12px;");
     blackLayout->addWidget(algoLabel, 0, 0);
 
     blackAlgorithmCombo_ = new QComboBox(this);
     blackAlgorithmCombo_->addItem("Minimax", static_cast<int>(AIWatchConfig::AIType::MINIMAX));
     blackAlgorithmCombo_->addItem("MCTS", static_cast<int>(AIWatchConfig::AIType::MCTS));
     blackAlgorithmCombo_->addItem("Random", static_cast<int>(AIWatchConfig::AIType::RANDOM));
-    blackAlgorithmCombo_->setFixedHeight(28);
+    blackAlgorithmCombo_->setFixedHeight(30);
     blackAlgorithmCombo_->setStyleSheet(
         "QComboBox {"
         "    padding: 3px 8px;"
-        "    font-size: 12px;"
         "    border: 1px solid #bdc3c7;"
         "    border-radius: 4px;"
         "}"
@@ -292,18 +294,16 @@ void AIWatchWindow::setupAIConfig()
 
     // Difficulty
     QLabel* diffLabel = new QLabel(tr("Difficulty:"), this);
-    diffLabel->setStyleSheet("font-size: 12px;");
     blackLayout->addWidget(diffLabel, 1, 0);
 
     blackDifficultyCombo_ = new QComboBox(this);
     blackDifficultyCombo_->addItem("Easy", static_cast<int>(Difficulty::EASY));
     blackDifficultyCombo_->addItem("Medium", static_cast<int>(Difficulty::MEDIUM));
     blackDifficultyCombo_->addItem("Hard", static_cast<int>(Difficulty::HARD));
-    blackDifficultyCombo_->setFixedHeight(28);
+    blackDifficultyCombo_->setFixedHeight(30);
     blackDifficultyCombo_->setStyleSheet(
         "QComboBox {"
         "    padding: 3px 8px;"
-        "    font-size: 12px;"
         "    border: 1px solid #bdc3c7;"
         "    border-radius: 4px;"
         "}"
@@ -312,7 +312,6 @@ void AIWatchWindow::setupAIConfig()
 
     // Depth
     QLabel* depthLabel = new QLabel(tr("Depth:"), this);
-    depthLabel->setStyleSheet("font-size: 12px;");
     blackLayout->addWidget(depthLabel, 2, 0);
 
     blackDepthCombo_ = new QComboBox(this);
@@ -321,12 +320,11 @@ void AIWatchWindow::setupAIConfig()
     blackDepthCombo_->addItem("4");
     blackDepthCombo_->addItem("5");
     blackDepthCombo_->addItem("6");
-    blackDepthCombo_->setCurrentIndex(2); // Default: 4
-    blackDepthCombo_->setFixedHeight(28);
+    blackDepthCombo_->setCurrentIndex(2);
+    blackDepthCombo_->setFixedHeight(30);
     blackDepthCombo_->setStyleSheet(
         "QComboBox {"
         "    padding: 3px 8px;"
-        "    font-size: 12px;"
         "    border: 1px solid #bdc3c7;"
         "    border-radius: 4px;"
         "}"
@@ -338,7 +336,6 @@ void AIWatchWindow::setupAIConfig()
     whiteConfigGroup_->setStyleSheet(
         "QGroupBox {"
         "    font-weight: bold;"
-        "    font-size: 13px;"
         "    border: 2px solid #7f8c8d;"
         "    border-radius: 6px;"
         "    margin-top: 8px;"
@@ -356,18 +353,16 @@ void AIWatchWindow::setupAIConfig()
 
     // Algorithm type
     algoLabel = new QLabel(tr("Algorithm:"), this);
-    algoLabel->setStyleSheet("font-size: 12px;");
     whiteLayout->addWidget(algoLabel, 0, 0);
 
     whiteAlgorithmCombo_ = new QComboBox(this);
     whiteAlgorithmCombo_->addItem("Minimax", static_cast<int>(AIWatchConfig::AIType::MINIMAX));
     whiteAlgorithmCombo_->addItem("MCTS", static_cast<int>(AIWatchConfig::AIType::MCTS));
     whiteAlgorithmCombo_->addItem("Random", static_cast<int>(AIWatchConfig::AIType::RANDOM));
-    whiteAlgorithmCombo_->setFixedHeight(28);
+    whiteAlgorithmCombo_->setFixedHeight(30);
     whiteAlgorithmCombo_->setStyleSheet(
         "QComboBox {"
         "    padding: 3px 8px;"
-        "    font-size: 12px;"
         "    border: 1px solid #bdc3c7;"
         "    border-radius: 4px;"
         "}"
@@ -376,18 +371,16 @@ void AIWatchWindow::setupAIConfig()
 
     // Difficulty
     diffLabel = new QLabel(tr("Difficulty:"), this);
-    diffLabel->setStyleSheet("font-size: 12px;");
     whiteLayout->addWidget(diffLabel, 1, 0);
 
     whiteDifficultyCombo_ = new QComboBox(this);
     whiteDifficultyCombo_->addItem("Easy", static_cast<int>(Difficulty::EASY));
     whiteDifficultyCombo_->addItem("Medium", static_cast<int>(Difficulty::MEDIUM));
     whiteDifficultyCombo_->addItem("Hard", static_cast<int>(Difficulty::HARD));
-    whiteDifficultyCombo_->setFixedHeight(28);
+    whiteDifficultyCombo_->setFixedHeight(30);
     whiteDifficultyCombo_->setStyleSheet(
         "QComboBox {"
         "    padding: 3px 8px;"
-        "    font-size: 12px;"
         "    border: 1px solid #bdc3c7;"
         "    border-radius: 4px;"
         "}"
@@ -396,7 +389,6 @@ void AIWatchWindow::setupAIConfig()
 
     // Depth
     depthLabel = new QLabel(tr("Depth:"), this);
-    depthLabel->setStyleSheet("font-size: 12px;");
     whiteLayout->addWidget(depthLabel, 2, 0);
 
     whiteDepthCombo_ = new QComboBox(this);
@@ -405,12 +397,11 @@ void AIWatchWindow::setupAIConfig()
     whiteDepthCombo_->addItem("4");
     whiteDepthCombo_->addItem("5");
     whiteDepthCombo_->addItem("6");
-    whiteDepthCombo_->setCurrentIndex(2); // Default: 4
-    whiteDepthCombo_->setFixedHeight(28);
+    whiteDepthCombo_->setCurrentIndex(2);
+    whiteDepthCombo_->setFixedHeight(30);
     whiteDepthCombo_->setStyleSheet(
         "QComboBox {"
         "    padding: 3px 8px;"
-        "    font-size: 12px;"
         "    border: 1px solid #bdc3c7;"
         "    border-radius: 4px;"
         "}"
@@ -437,7 +428,6 @@ void AIWatchWindow::setupControls()
     controlGroup->setStyleSheet(
         "QGroupBox {"
         "    font-weight: bold;"
-        "    font-size: 13px;"
         "    border: 2px solid #34495e;"
         "    border-radius: 6px;"
         "    margin-top: 8px;"
@@ -454,14 +444,13 @@ void AIWatchWindow::setupControls()
 
     // Start button
     startButton_ = new QPushButton(tr("Start"), this);
-    startButton_->setFixedHeight(40);
+    startButton_->setFixedHeight(30);
     startButton_->setStyleSheet(
         "QPushButton {"
         "    background-color: #27ae60;"
         "    color: white;"
         "    border-radius: 6px;"
         "    font-weight: bold;"
-        "    font-size: 14px;"
         "    padding: 8px;"
         "}"
         "QPushButton:hover { background-color: #219a52; }"
@@ -470,7 +459,7 @@ void AIWatchWindow::setupControls()
 
     // Pause/Resume button (combined)
     pauseResumeButton_ = new QPushButton(tr("Pause"), this);
-    pauseResumeButton_->setFixedHeight(40);
+    pauseResumeButton_->setFixedHeight(30);
     pauseResumeButton_->setEnabled(false);
     pauseResumeButton_->setStyleSheet(
         "QPushButton {"
@@ -478,7 +467,6 @@ void AIWatchWindow::setupControls()
         "    color: white;"
         "    border-radius: 6px;"
         "    font-weight: bold;"
-        "    font-size: 14px;"
         "    padding: 8px;"
         "}"
         "QPushButton:hover { background-color: #e68a00; }"
@@ -487,7 +475,7 @@ void AIWatchWindow::setupControls()
 
     // New Game button
     newGameButton_ = new QPushButton(tr("New Game"), this);
-    newGameButton_->setFixedHeight(40);
+    newGameButton_->setFixedHeight(30);
     newGameButton_->setEnabled(false);
     newGameButton_->setStyleSheet(
         "QPushButton {"
@@ -495,7 +483,6 @@ void AIWatchWindow::setupControls()
         "    color: white;"
         "    border-radius: 6px;"
         "    font-weight: bold;"
-        "    font-size: 14px;"
         "    padding: 8px;"
         "}"
         "QPushButton:hover { background-color: #8e44ad; }"
@@ -504,14 +491,13 @@ void AIWatchWindow::setupControls()
 
     // Back button
     backButton_ = new QPushButton(tr("Back to Menu"), this);
-    backButton_->setFixedHeight(40);
+    backButton_->setFixedHeight(30);
     backButton_->setStyleSheet(
         "QPushButton {"
         "    background-color: #95a5a6;"
         "    color: white;"
         "    border-radius: 6px;"
         "    font-weight: bold;"
-        "    font-size: 14px;"
         "    padding: 8px;"
         "}"
         "QPushButton:hover { background-color: #7f8c8d; }"
@@ -796,76 +782,75 @@ void AIWatchWindow::updateButtonStates()
 void AIWatchWindow::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
+    if (!boardLabel_) return;
 
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    QSize labelSize = boardLabel_->size();
+    int scaledSize = qMin(labelSize.width(), labelSize.height());
+    if (scaledSize < 8) return;
 
-    // Calculate board position
-    int boardX = BOARD_OFFSET_X;
-    int boardY = BOARD_OFFSET_Y;
+    int cellSize = scaledSize / 8;
+    boardScale_ = static_cast<double>(cellSize) / CELL_SIZE;
 
-    // Draw board background
-    if (!background_.isNull()) {
-        painter.drawPixmap(boardX, boardY, BOARD_SIZE, BOARD_SIZE, background_);
-    } else {
-        // Fallback: draw green background and grid
-        painter.fillRect(boardX, boardY, BOARD_SIZE, BOARD_SIZE, QColor(120, 150, 90));
-        painter.setPen(QPen(Qt::black, 1));
-        for (int i = 0; i <= 8; ++i) {
-            painter.drawLine(boardX + i * CELL_SIZE, boardY,
-                             boardX + i * CELL_SIZE, boardY + BOARD_SIZE);
-            painter.drawLine(boardX, boardY + i * CELL_SIZE,
-                             boardX + BOARD_SIZE, boardY + i * CELL_SIZE);
+    QPixmap offScreen(BOARD_SIZE, BOARD_SIZE);
+    offScreen.fill(Qt::transparent);
+    {
+        QPainter p(&offScreen);
+        p.setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+        // Draw board background
+        if (!background_.isNull()) {
+            p.drawPixmap(0, 0, BOARD_SIZE, BOARD_SIZE, background_);
+        } else {
+            p.fillRect(0, 0, BOARD_SIZE, BOARD_SIZE, QColor(120, 150, 90));
+            p.setPen(QPen(Qt::black, 1));
+            for (int i = 0; i <= 8; ++i) {
+                p.drawLine(i * CELL_SIZE, 0, i * CELL_SIZE, BOARD_SIZE);
+                p.drawLine(0, i * CELL_SIZE, BOARD_SIZE, i * CELL_SIZE);
+            }
         }
-    }
 
-    // Get valid moves for current player
-    auto validMoves = board_.getValidMoves();
-
-    // Draw valid move hints
-    if (!hintwhite_.isNull()) {
-        for (const auto& move : validMoves) {
-            painter.drawPixmap(boardX + move.col * CELL_SIZE,
-                             boardY + move.row * CELL_SIZE,
-                             CELL_SIZE, CELL_SIZE,
-                             hintwhite_);
+        // Draw valid move hints
+        auto validMoves = board_.getValidMoves();
+        if (!hintwhite_.isNull()) {
+            for (const auto& move : validMoves) {
+                p.drawPixmap(move.col * CELL_SIZE, move.row * CELL_SIZE,
+                           CELL_SIZE, CELL_SIZE, hintwhite_);
+            }
         }
-    }
 
-    // Draw pieces
-    for (int row = 0; row < 8; ++row) {
-        for (int col = 0; col < 8; ++col) {
-            int cellValue = board_.at(row, col);
-
-            if (cellValue == 1) { // White piece
-                if (!white_.isNull()) {
-                    painter.drawPixmap(boardX + col * CELL_SIZE,
-                                     boardY + row * CELL_SIZE,
-                                     CELL_SIZE, CELL_SIZE,
-                                     white_);
-                } else {
-                    painter.setBrush(Qt::white);
-                    painter.setPen(QPen(Qt::lightGray, 1));
-                    painter.drawEllipse(boardX + col * CELL_SIZE + 4,
-                                       boardY + row * CELL_SIZE + 4,
-                                       CELL_SIZE - 8, CELL_SIZE - 8);
-                }
-            } else if (cellValue == 2) { // Black piece
-                if (!black_.isNull()) {
-                    painter.drawPixmap(boardX + col * CELL_SIZE,
-                                     boardY + row * CELL_SIZE,
-                                     CELL_SIZE, CELL_SIZE,
-                                     black_);
-                } else {
-                    painter.setBrush(Qt::black);
-                    painter.setPen(Qt::NoPen);
-                    painter.drawEllipse(boardX + col * CELL_SIZE + 4,
-                                       boardY + row * CELL_SIZE + 4,
-                                       CELL_SIZE - 8, CELL_SIZE - 8);
+        // Draw pieces
+        for (int row = 0; row < 8; ++row) {
+            for (int col = 0; col < 8; ++col) {
+                int cellValue = board_.at(row, col);
+                if (cellValue == 1) {
+                    if (!white_.isNull()) {
+                        p.drawPixmap(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE, white_);
+                    } else {
+                        p.setBrush(Qt::white);
+                        p.setPen(QPen(Qt::lightGray, 1));
+                        p.drawEllipse(col * CELL_SIZE + 4, row * CELL_SIZE + 4, CELL_SIZE - 8, CELL_SIZE - 8);
+                    }
+                } else if (cellValue == 2) {
+                    if (!black_.isNull()) {
+                        p.drawPixmap(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE, black_);
+                    } else {
+                        p.setBrush(Qt::black);
+                        p.setPen(Qt::NoPen);
+                        p.drawEllipse(col * CELL_SIZE + 4, row * CELL_SIZE + 4, CELL_SIZE - 8, CELL_SIZE - 8);
+                    }
                 }
             }
         }
     }
+
+    QPixmap scaled = offScreen.scaled(scaledSize, scaledSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    boardLabel_->setPixmap(scaled);
+}
+
+void AIWatchWindow::resizeEvent(QResizeEvent* event)
+{
+    QMainWindow::resizeEvent(event);
+    repaint();
 }
 
 // ==================== Slots ====================

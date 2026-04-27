@@ -1,4 +1,4 @@
-#include "ui/MenuWindow.h"
+﻿#include "ui/MenuWindow.h"
 #include "ui/PvEWindow.h"
 #include "ui/PvPWindow.h"
 #include "ui/NetworkLobbyWindow.h"
@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QDebug>
+#include <QCloseEvent>
 
 MenuWindow::MenuWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -96,19 +97,23 @@ void MenuWindow::setupConnections() {
 }
 
 void MenuWindow::onPvEButtonClicked() {
-    qDebug() << "MenuWindow: Starting PvE game";
+    qDebug() << "MenuWindow: onPvEButtonClicked - START";
     emit startPvEGame();
 
     // Create and show PvE window
-    PvEWindow* pveWindow = new PvEWindow(this);
+    PvEWindow* pveWindow = new PvEWindow(nullptr);
     pveWindow->setAttribute(Qt::WA_DeleteOnClose);
+    qDebug() << "MenuWindow: PvEWindow created, connecting signal";
     connect(pveWindow, &PvEWindow::backToMenu, this, [this, pveWindow]() {
+        qDebug() << "MenuWindow: PvE backToMenu signal received";
         pveWindow->close();
         this->show();
     });
 
+    qDebug() << "MenuWindow: Showing PvEWindow, hiding MenuWindow";
     pveWindow->show();
     this->hide();
+    qDebug() << "MenuWindow: onPvEButtonClicked - END";
 }
 
 void MenuWindow::onPvPButtonClicked() {
@@ -116,7 +121,7 @@ void MenuWindow::onPvPButtonClicked() {
     emit startPvPGame();
 
     // Create and show PvP window
-    PvPWindow* pvpWindow = new PvPWindow(this);
+    PvPWindow* pvpWindow = new PvPWindow(nullptr);
     pvpWindow->setAttribute(Qt::WA_DeleteOnClose);
     connect(pvpWindow, &PvPWindow::backToMenu, this, [this, pvpWindow]() {
         pvpWindow->close();
@@ -131,7 +136,7 @@ void MenuWindow::onAiVsAiButtonClicked() {
     qDebug() << "MenuWindow: Opening Watch AI Battle";
 
     // Directly open Watch Single Battle window
-    Reversi::AIWatchWindow* watchWindow = new Reversi::AIWatchWindow(this);
+    Reversi::AIWatchWindow* watchWindow = new Reversi::AIWatchWindow(nullptr);
     watchWindow->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(watchWindow, &Reversi::AIWatchWindow::backToMenu, this, [this, watchWindow]() {
@@ -147,7 +152,7 @@ void MenuWindow::onBenchmarkButtonClicked() {
     qDebug() << "MenuWindow: Opening Benchmark Suite";
 
     // Open AI Research Mode (Benchmark)
-    Reversi::AIvsAIWindow* aiWindow = new Reversi::AIvsAIWindow(this);
+    Reversi::AIvsAIWindow* aiWindow = new Reversi::AIvsAIWindow(nullptr);
     aiWindow->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(aiWindow, &Reversi::AIvsAIWindow::backToMenu, this, [this, aiWindow]() {
@@ -164,7 +169,7 @@ void MenuWindow::onNetworkButtonClicked() {
     emit startPvNGame();
 
     // Create and show network lobby
-    NetworkLobbyWindow* lobbyWindow = new NetworkLobbyWindow(this);
+    NetworkLobbyWindow* lobbyWindow = new NetworkLobbyWindow(nullptr);
     lobbyWindow->setAttribute(Qt::WA_DeleteOnClose);
     lobbyWindow->initNetwork();
 
@@ -183,7 +188,7 @@ void MenuWindow::onNetworkButtonClicked() {
         lobbyWindow->hide();
 
         // Create network game window
-        NetworkGameWindow* gameWindow = new NetworkGameWindow(this);
+        NetworkGameWindow* gameWindow = new NetworkGameWindow(nullptr);
         gameWindow->setAttribute(Qt::WA_DeleteOnClose);
         gameWindow->initNetwork(hostAddress, port, playerName);
 
@@ -206,7 +211,7 @@ void MenuWindow::onNetworkButtonClicked() {
         lobbyWindow->hide();
 
         // Create network game window (as host)
-        NetworkGameWindow* gameWindow = new NetworkGameWindow(this);
+        NetworkGameWindow* gameWindow = new NetworkGameWindow(nullptr);
         gameWindow->setAttribute(Qt::WA_DeleteOnClose);
         gameWindow->startHosting(playerName, roomName, 45455);  // Default port
 
@@ -222,5 +227,10 @@ void MenuWindow::onNetworkButtonClicked() {
 
     lobbyWindow->show();
     this->hide();
+}
+
+void MenuWindow::closeEvent(QCloseEvent* event) {
+    qDebug() << "MenuWindow: closeEvent called";
+    event->accept();
 }
 

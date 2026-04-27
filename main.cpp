@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui/MenuWindow.h"
+#include "include/mainwindow.h"
+#include "include/ui/MenuWindow.h"
 #include <QApplication>
 #include <QMessageBox>
 #include <QFile>
@@ -11,10 +11,10 @@
 
 #pragma comment(lib, "dbgeng.lib")
 
-// 日志文件路径
+// Log file path
 static QString g_logFilePath;
 
-// 自定义消息处理器
+// Custom message handler
 void customMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg) {
     QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
     QString logMessage;
@@ -37,10 +37,10 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext& context, con
             break;
     }
     
-    // 输出到控制台
+    // Output to console
     std::cerr << logMessage.toStdString() << std::endl;
     
-    // 输出到日志文件
+    // Output to log file
     QFile logFile(g_logFilePath);
     if (logFile.open(QIODevice::Append | QIODevice::Text)) {
         QTextStream out(&logFile);
@@ -49,7 +49,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext& context, con
     }
 }
 
-// 全局崩溃处理器
+// Global crash handler
 LONG WINAPI crashHandler(EXCEPTION_POINTERS* ExceptionInfo) {
     QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss");
     QString crashLogPath = QCoreApplication::applicationDirPath() + 
@@ -79,48 +79,48 @@ LONG WINAPI crashHandler(EXCEPTION_POINTERS* ExceptionInfo) {
         file.close();
     }
     
-    // 也输出到 stderr
+    // Also output to stderr
     std::cerr << "CRASH: Exception 0x" << std::hex << ExceptionInfo->ExceptionRecord->ExceptionCode 
               << " at 0x" << ExceptionInfo->ExceptionRecord->ExceptionAddress << std::endl;
     
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
-// 测试BitBoard功能是否正常
+// Test if BitBoard functionality works correctly
 void testBitBoard()
 {
-    // 这里可以添加简单的BitBoard测试
-    // 确保Qt版本能正确链接到我们的核心库
+    // Add simple BitBoard tests here
+    // Ensure Qt version links correctly to our core library
 }
 
 int main(int argc, char *argv[])
 {
-    // 设置崩溃处理器
+    // Set up crash handler
     SetUnhandledExceptionFilter(crashHandler);
     
     QApplication a(argc, argv);
 
-    // 设置日志文件
+    // Set log file
     QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss");
     g_logFilePath = QCoreApplication::applicationDirPath() + 
                     QString("/reversi_debug_%1.log").arg(timestamp);
     
-    // 安装自定义消息处理器
+    // Install custom message handler
     qInstallMessageHandler(customMessageHandler);
     
     qDebug() << "=== Application Starting ===";
     qDebug() << "Log file:" << g_logFilePath;
 
-    // 设置应用程序信息
+    // Set application info
     a.setApplicationName("ReversiAI_Platform");
     a.setApplicationVersion("0.4.0");
     a.setOrganizationName("University of Liverpool");
 
     try {
-        // 测试核心功能
+        // Test core functionality
         testBitBoard();
 
-        // 创建目录界面
+        // Create menu interface
         MenuWindow menu;
         menu.setWindowTitle("ReversiAI_Platform v0.4.0");
         menu.show();
@@ -128,13 +128,13 @@ int main(int argc, char *argv[])
         return a.exec();
     }
     catch (const std::exception& e) {
-        QMessageBox::critical(nullptr, "启动错误",
-            QString("应用程序启动失败:\n%1").arg(e.what()));
+        QMessageBox::critical(nullptr, "Startup Error",
+            QString("Application failed to start:\n%1").arg(e.what()));
         return 1;
     }
     catch (...) {
-        QMessageBox::critical(nullptr, "启动错误",
-            "应用程序启动失败: 未知错误");
+        QMessageBox::critical(nullptr, "Startup Error",
+            "Application failed to start: Unknown error");
         return 1;
     }
 }

@@ -8,6 +8,13 @@
 #include <QFont>
 #include <QDebug>
 #include <QApplication>
+#include <QIcon>
+#include <QResizeEvent>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QRadioButton>
 
 PvEWindow::PvEWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -33,14 +40,28 @@ PvEWindow::PvEWindow(QWidget* parent)
     , gameResult_(Reversi::GameResult::Unknown)
     , moveDelayMs_(500)
     , moveDelayTimer_(nullptr)
+    , boardLabel_(nullptr)
+    , boardScale_(1.0)
 {
     qDebug() << "PvEWindow::PvEWindow() - Constructor START";
 
     board_ = Reversi::Board();
 
+    qDebug() << "PvEWindow: calling setupUI()";
     setupUI();
+    qDebug() << "PvEWindow: setupUI() done";
+
+    qDebug() << "PvEWindow: calling loadResources()";
     loadResources();
+    qDebug() << "PvEWindow: loadResources() done";
+
+    qDebug() << "PvEWindow: calling initGame()";
     initGame();
+    qDebug() << "PvEWindow: initGame() done";
+
+    // Initial board render
+    repaint();
+
     updateButtonStates();
 
     qDebug() << "PvEWindow::PvEWindow() - Constructor END";
@@ -59,6 +80,7 @@ PvEWindow::~PvEWindow()
 void PvEWindow::setupUI()
 {
     setWindowTitle(tr("PvE Mode"));
+    setWindowIcon(QIcon(":/rsc/black.png"));
     setFixedSize(830, 580);
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -86,6 +108,11 @@ void PvEWindow::setupUI()
 
     QWidget* boardContainer = new QWidget(this);
     boardContainer->setFixedSize(BOARD_SIZE, BOARD_SIZE);
+
+    boardLabel_ = new QLabel(boardContainer);
+    boardLabel_->setFixedSize(BOARD_SIZE, BOARD_SIZE);
+    boardLabel_->move(BOARD_OFFSET_X, BOARD_OFFSET_Y);
+
     leftLayout_->addWidget(boardContainer, 0, Qt::AlignHCenter);
 
     QHBoxLayout* infoLayout = new QHBoxLayout();
@@ -133,7 +160,6 @@ void PvEWindow::setupUI()
     setupControls();
     rightLayout_->addWidget(controlsGroup_);
 
-    // Add stretch to push controls to the bottom
     rightLayout_->addStretch(2);
 
     mainLayout->addWidget(leftPanel, 65);
@@ -276,12 +302,17 @@ void PvEWindow::setupControls()
 
 void PvEWindow::loadResources()
 {
+    qDebug() << "PvEWindow::loadResources() - START";
     pixmapBackground_.load(":/rsc/board.png");
+    qDebug() << "  board:" << pixmapBackground_.isNull();
     pixmapBlack_.load(":/rsc/black.png");
+    qDebug() << "  black:" << pixmapBlack_.isNull();
     pixmapWhite_.load(":/rsc/white.png");
+    qDebug() << "  white:" << pixmapWhite_.isNull();
     pixmapHintWhite_.load(":/rsc/whitepotential.png");
     pixmapHintBlack_.load(":/rsc/blackpotential.png");
     pixmapHintRed_.load(":/rsc/redpotential.png");
+    qDebug() << "PvEWindow::loadResources() - END";
 }
 
 void PvEWindow::initGame()
@@ -376,48 +407,58 @@ void PvEWindow::updateButtonStates()
 void PvEWindow::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    if (!boardLabel_ || !gameController_) return;
 
-    painter.drawPixmap(BOARD_OFFSET_X, BOARD_OFFSET_Y, BOARD_SIZE, BOARD_SIZE, pixmapBackground_);
+    QSize labelSize = boardLabel_->size();
+    int scaledSize = qMin(labelSize.width(), labelSize.height());
+    if (scaledSize < 8) return;
 
-    const Reversi::Board& board = gameController_->getBoard();
-    currentPlayer_ = gameController_->getCurrentPlayer();
+    int cellSize = scaledSize / 8;
+    boardScale_ = static_cast<double>(cellSize) / CELL_SIZE;
 
-    int tile = (currentPlayer_ == Reversi::PlayerColor::Black) ? 2 : 1;
+    QPixmap offScreen(BOARD_SIZE, BOARD_SIZE);
+    offScreen.fill(Qt::transparent);
+    {
+        QPainter p(&offScreen);
+        p.setRenderHint(QPainter::SmoothPixmapTransform, true);
+        p.drawPixmap(0, 0, BOARD_SIZE, BOARD_SIZE, pixmapBackground_);
 
-    int markHaveDraw[8][8] = {0};
-    auto validMoves = board.getValidMoves();
-    for (const auto& move : validMoves) {
-        markHaveDraw[move.row][move.col] = tile;
-    }
+        const Reversi::Board& board = gameController_->getBoard();
+        currentPlayer_ = gameController_->getCurrentPlayer();
+        int tile = (currentPlayer_ == Reversi::PlayerColor::Black) ? 2 : 1;
 
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            int cellValue = board.at(j, i);
+        int markHaveDraw[8][8] = {0};
+        auto validMoves = board.getValidMoves();
+        for (const auto& move : validMoves) {
+            markHaveDraw[move.row][move.col] = tile;
+        }
 
-            if (cellValue == 1) {
-                painter.drawPixmap(BOARD_OFFSET_X + CELL_SIZE * i,
-                                 BOARD_OFFSET_Y + CELL_SIZE * j,
-                                 CELL_SIZE, CELL_SIZE, pixmapWhite_);
-            } else if (cellValue == 2) {
-                painter.drawPixmap(BOARD_OFFSET_X + CELL_SIZE * i,
-                                 BOARD_OFFSET_Y + CELL_SIZE * j,
-                                 CELL_SIZE, CELL_SIZE, pixmapBlack_);
-            }
-
-            if (markHaveDraw[j][i] == 2) {
-                painter.drawPixmap(BOARD_OFFSET_X + CELL_SIZE * i,
-                                 BOARD_OFFSET_Y + CELL_SIZE * j,
-                                 CELL_SIZE, CELL_SIZE, pixmapHintBlack_);
-            }
-            if (markHaveDraw[j][i] == 1) {
-                painter.drawPixmap(BOARD_OFFSET_X + CELL_SIZE * i,
-                                 BOARD_OFFSET_Y + CELL_SIZE * j,
-                                 CELL_SIZE, CELL_SIZE, pixmapHintWhite_);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                int cellValue = board.at(j, i);
+                if (cellValue == 1) {
+                    p.drawPixmap(CELL_SIZE * i, CELL_SIZE * j, CELL_SIZE, CELL_SIZE, pixmapWhite_);
+                } else if (cellValue == 2) {
+                    p.drawPixmap(CELL_SIZE * i, CELL_SIZE * j, CELL_SIZE, CELL_SIZE, pixmapBlack_);
+                }
+                if (markHaveDraw[j][i] == 2) {
+                    p.drawPixmap(CELL_SIZE * i, CELL_SIZE * j, CELL_SIZE, CELL_SIZE, pixmapHintBlack_);
+                }
+                if (markHaveDraw[j][i] == 1) {
+                    p.drawPixmap(CELL_SIZE * i, CELL_SIZE * j, CELL_SIZE, CELL_SIZE, pixmapHintWhite_);
+                }
             }
         }
     }
+
+    QPixmap scaled = offScreen.scaled(scaledSize, scaledSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    boardLabel_->setPixmap(scaled);
+}
+
+void PvEWindow::resizeEvent(QResizeEvent* event)
+{
+    QMainWindow::resizeEvent(event);
+    repaint();
 }
 
 void PvEWindow::mousePressEvent(QMouseEvent* e)

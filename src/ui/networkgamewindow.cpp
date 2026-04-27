@@ -17,6 +17,7 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QDebug>
+#include <QIcon>
 
 // Board parameters: window 800x600, right panel ~300px, left board area ~500x600
 const int BOARD_OFFSET_X = 0;
@@ -99,6 +100,7 @@ void NetworkGameWindow::initGameUI()
     // Reference: PvPWindow initUI pattern
     
     setWindowTitle(tr("Network Game - ReversiAI"));
+    setWindowIcon(QIcon(":/rsc/black.png"));
     resize(800, 600);
     
     // Create main layout (horizontal, left board+scores, right control panel)

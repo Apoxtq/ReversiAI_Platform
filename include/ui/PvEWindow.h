@@ -37,6 +37,7 @@ signals:
 protected:
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* e) override;
+    void resizeEvent(QResizeEvent* event) override;
 
 private slots:
     void onStartGameClicked();
@@ -75,8 +76,12 @@ private:
     QVBoxLayout* rightLayout_;
 
     // Board display
+    QLabel* boardLabel_;
     QPixmap pixmapBackground_, pixmapWhite_, pixmapBlack_;
     QPixmap pixmapHintWhite_, pixmapHintBlack_, pixmapHintRed_;
+
+    // Scale factors
+    double boardScale_;
 
     // Info display
     QLabel* resultLabel_;           // Victory announcement

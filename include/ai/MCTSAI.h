@@ -2,10 +2,13 @@
 
 #include "ai/AIStrategy.h"
 #include "ai/Evaluator.h"
+#include "ai/TranspositionTable.h"
 #include <memory>
 #include <unordered_map>
 #include <vector>
 #include <random>
+#include <optional>
+#include <atomic>
 
 /**
  * @file MCTSAI.h
@@ -100,24 +103,69 @@ struct MCTSNode {
  * @brief MCTS configuration parameters
  */
 struct MCTSConfig {
-    int num_simulations = 5000;    ///< Simulations per move
-    double c_puct = 1.5;           ///< Exploration constant
-    bool use_dirichlet_noise = false;  ///< Dirichlet noise (disabled for performance)
-    double dirichlet_alpha = 0.3;  ///< Dirichlet noise parameter
-    double dirichlet_epsilon = 0.25;  ///< Noise mixing ratio
+    int num_simulations = 5000;         ///< Simulations per move
+    double c_puct = 1.4142;            ///< Base exploration constant (default: sqrt(2))
+    bool use_dirichlet_noise = false;   ///< Dirichlet noise for root exploration
+    double dirichlet_alpha = 0.3;      ///< Dirichlet noise parameter
+    double dirichlet_epsilon = 0.25;    ///< Noise mixing ratio
 
     // Time control
     std::chrono::milliseconds time_limit = std::chrono::milliseconds(3000);
 
-    // Improved playout settings
-    bool use_smart_playout = true;    ///< Use heuristic-based playout
-    int playout_max_depth = 50;       ///< Maximum depth for playout
+    // AI player color for simulation result evaluation
+    std::optional<PlayerColor> ai_player_color;
+
+    // === v1.1.0: MCTS Enhancement ===
+
+    // Dynamic c_puct thresholds (empty squares count)
+    double c_puct_early = 1.5;      ///< Exploration constant for early game (>40 empty)
+    double c_puct_mid = 1.3;        ///< Exploration constant for mid game (20-40 empty)
+    double c_puct_late = 1.1;       ///< Exploration constant for late game (12-20 empty)
+    double c_puct_endgame = 0.8;    ///< Exploration constant for endgame (<=12 empty)
+    bool use_dynamic_cpuct = false;   ///< Enable dynamic c_puct adjustment
+
+    // Endgame solver: use Minimax when empty squares <= this threshold
+    // Default 0 (disabled) for automated testing performance.
+    // Set to 8-12 for better endgame play in human vs AI games.
+    int endgame_solver_threshold = 0;
+    bool use_endgame_solver = false;
+
+    // Transposition table for MCTS
+    // Note: Full integration pending. Basic TT storing is available.
+    bool use_mcts_tt = false;
+    size_t mcts_tt_size_mb = 16;    ///< MCTS TT size (MB)
+
+    // Selection policy
+    bool use_puct = true;             ///< Use PUCT (AlphaZero-style) instead of UCB1
+};
+
+/**
+ * @brief MCTS-specific transposition table entry
+ *
+ * Stores aggregated MCTS statistics (Q-value sum, visit count, best move)
+ * for previously visited board states. Used for tree reuse and node merging.
+ */
+struct MCTSTTEntry {
+    uint32_t hash = 0;           ///< Board Zobrist hash
+    double q_sum = 0.0;          ///< Sum of Q values (for averaging)
+    int visit_count = 0;         ///< Total visit count
+    Move best_move;               ///< Best move from this position
+    uint8_t used = 0;            ///< Whether entry is valid
+
+    void clear() {
+        hash = 0; q_sum = 0.0; visit_count = 0; used = 0;
+    }
+    bool match(uint32_t h) const { return used && hash == h; }
+    double getQ() const { return visit_count > 0 ? q_sum / visit_count : 0.0; }
 };
 
 /**
  * @brief MCTS AI implementation
  *
- * Based on alpha-zero-general UCT algorithm, adapted for BitBoard system
+ * Uses UCT (Upper Confidence Bound for Trees) algorithm with hybrid playout strategy:
+ * - Mid-game (empty squares > 12): uses heuristic evaluation for better simulation quality
+ * - Endgame (empty squares <= 12): plays to terminal state with pure random moves
+ *
  * Reference: alpha-zero-general/MCTS.py
  */
 class MCTSAI : public AIStrategy {
@@ -139,6 +187,8 @@ public:
     std::string getConfigDescription() const override;
     void reset() override;
     bool supportsFeature(const std::string& feature) const override;
+    void setColor(PlayerColor color) override;
+    PlayerColor getColor() const override;
 
     /**
      * @brief Get MCTS configuration
@@ -151,64 +201,78 @@ public:
     void setConfig(const MCTSConfig& config) { config_ = config; }
 
 private:
-    /**
-     * @brief Execute single MCTS search
-     * @param board Current board state
-     * @param limits Search limits
-     *
-     * Reference: alpha-zero-general/MCTS.py search() method
-     */
-    void search(const Board& board, const SearchLimits& limits);
-
-    /**
-     * @brief Simulation phase: random rollout or quick evaluation
-     * @param board Current board state
-     * @param max_depth Maximum simulation depth
-     * @return Simulation result (-1 to 1)
-     *
-     * Reference: alpha-zero-general/MCTS.py random rollout
-     */
-    double simulate(const Board& board, int max_depth = 50);
-
-    /**
-     * @brief Backpropagation: propagate result up
-     * @param node Leaf node
-     * @param value Simulation result
-     *
-     * Reference: alpha-zero-general/MCTS.py backpropagation
-     */
+    void search(const Board& board);
+    double simulateWithHeuristic(Board board);
+    double getTerminalResult(const Board& board);
     void backpropagate(MCTSNode* node, double value);
+
+    // === v1.1.0: Enhancement ===
+
+    /**
+     * @brief Get dynamic c_puct based on game phase
+     * @param empty_count Number of empty squares on board
+     * @return c_puct value for current game phase
+     */
+    double getDynamicCPuct(int empty_count) const;
+
+    /**
+     * @brief Get effective c_puct for selection
+     * @param board Current board state
+     * @return c_puct value
+     */
+    double getEffectiveCPuct(const Board& board) const;
+
+    /**
+     * @brief Endgame solver: use Minimax for terminal search
+     * @param board Board state
+     * @return Terminal game result (+1, 0, -1)
+     *
+     * Called when empty squares <= endgame_solver_threshold.
+     * Delegates to MinimaxAI with max depth for perfect reading.
+     */
+    double solveWithMinimax(const Board& board);
 
     /**
      * @brief Get prior probabilities for moves
-     * @param board Current board state
-     * @return Probability vector for each move
-     *
-     * Simplified version: all valid moves equal probability.
-     * Future: integrate neural network policy.
      */
     std::vector<double> getPriorProbabilities(const Board& board);
 
     /**
      * @brief Add Dirichlet noise (for root node diversity)
-     * @param priors Prior probabilities
-     * @return Priors with noise added
-     *
-     * Reference: alpha-zero-general paper
      */
     std::vector<double> addDirichletNoise(const std::vector<double>& priors);
 
     /**
      * @brief Generate Dirichlet distribution random numbers
-     * @param alpha Concentration parameter
-     * @param size Vector size
-     * @return Dirichlet distribution sample
      */
     std::vector<double> sampleDirichlet(double alpha, size_t size);
+
+    // === MCTS Transposition Table ===
+    /**
+     * @brief Probe MCTS transposition table
+     * @param hash Board hash
+     * @return MCTSTTEntry pointer if found, nullptr otherwise
+     */
+    const MCTSTTEntry* probeMCTSTT(uint32_t hash) const;
+
+    /**
+     * @brief Store to MCTS transposition table
+     * @param hash Board hash
+     * @param q_sum Q value sum
+     * @param visits Visit count
+     * @param move Best move
+     */
+    void storeMCTSTT(uint32_t hash, double q_sum, int visits, const Move& move);
+
+    /**
+     * @brief Get board Zobrist hash
+     */
+    uint32_t getBoardHash(const Board& board) const;
 
     // Configuration and components
     MCTSConfig config_;
     std::unique_ptr<Evaluator> evaluator_;
+    mutable std::unique_ptr<TranspositionTable> mcts_tt_;  ///< MCTS transposition table
 
     // MCTS tree
     std::unique_ptr<MCTSNode> root_;
